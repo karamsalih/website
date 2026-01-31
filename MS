@@ -1,144 +1,1392 @@
-const express = require("express");
-const fs = require("fs");
-const crypto = require("crypto");
-
-const app = express();
-app.use(express.json());
-
-const DB_FILE = "./db.json";
-
-/* ===== DATABASE ===== */
-if (!fs.existsSync(DB_FILE)) {
-  fs.writeFileSync(
-    DB_FILE,
-    JSON.stringify({ users: [], products: [], sales: [] }, null, 2)
-  );
-}
-
-const readDB = () => JSON.parse(fs.readFileSync(DB_FILE));
-const writeDB = (data) =>
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
-
-const hash = (t) =>
-  crypto.createHash("sha256").update(t).digest("hex");
-
-/* ===== AUTH ===== */
-app.post("/register", (req, res) => {
-  const db = readDB();
-  if (db.users.find((u) => u.username === req.body.username))
-    return res.send("User exists");
-
-  db.users.push({
-    id: Date.now(),
-    username: req.body.username,
-    password: hash(req.body.password),
-  });
-  writeDB(db);
-  res.send("Account created");
-});
-
-app.post("/login", (req, res) => {
-  const db = readDB();
-  const user = db.users.find(
-    (u) =>
-      u.username === req.body.username &&
-      u.password === hash(req.body.password)
-  );
-  if (!user) return res.send("Login failed");
-  res.send("OK");
-});
-
-/* ===== PRODUCTS ===== */
-app.post("/product", (req, res) => {
-  const db = readDB();
-  db.products.push({
-    id: Date.now(),
-    ...req.body,
-  });
-  writeDB(db);
-  res.send("Product added");
-});
-
-app.get("/products", (req, res) => {
-  res.json(readDB().products);
-});
-
-/* ===== SALES ===== */
-app.post("/sale", (req, res) => {
-  const db = readDB();
-  const p = db.products.find((x) => x.id == req.body.productId);
-  if (!p) return res.send("Product not found");
-
-  const profit =
-    (p.sellPrice - p.buyPrice) * req.body.quantity;
-
-  db.sales.push({
-    id: Date.now(),
-    product: p.name,
-    quantity: req.body.quantity,
-    total: p.sellPrice * req.body.quantity,
-    profit,
-    currency: p.currency,
-    date: new Date(),
-  });
-
-  writeDB(db);
-  res.send("Sale saved");
-});
-
-/* ===== FRONTEND ===== */
-app.get("/", (req, res) => {
-  res.send(`
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width">
-<title>MS Accounting</title>
-<style>
-body{font-family:sans-serif;background:#111;color:#fff;padding:20px}
-input,button{width:100%;padding:10px;margin:5px 0}
-button{background:#00c853;border:0;color:#000}
-</style>
-</head>
-<body>
-
-<h2>MS Accounting System</h2>
-
-<input id="u" placeholder="Username">
-<input id="p" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
-<button onclick="register()">Register</button>
-
-<hr>
-
-<h3>Add Product</h3>
-<input id="pn" placeholder="Name">
-<input id="bp" placeholder="Buy Price">
-<input id="sp" placeholder="Sell Price">
-<input id="cu" placeholder="Currency IQD / USD">
-<button onclick="addProduct()">Add</button>
-
-<script>
-const api = (url,data)=>
-fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)}).then(r=>r.text()).then(alert)
-
-function login(){
- api("/login",{username:u.value,password:p.value})
-}
-function register(){
- api("/register",{username:u.value,password:p.value})
-}
-function addProduct(){
- api("/product",{name:pn.value,buyPrice:+bp.value,sellPrice:+sp.value,currency:cu.value})
-}
-</script>
-
-</body>
+<!doctype html>
+<html lang="ar" dir="rtl" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نظام المحاسبة</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+      font-family: 'Cairo', sans-serif;
+    }
+    
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: #3b82f6 #1e1e1e;
+    }
+    
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #1e1e1e;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #3b82f6;
+      border-radius: 3px;
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .slide-in {
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+    
+    .pulse-green {
+      animation: pulseGreen 2s infinite;
+    }
+    
+    @keyframes pulseGreen {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+      50% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+    }
+    
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+    
+    .card-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      transform: translateY(-1px);
+    }
+    
+    .btn-success {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-success:hover {
+      background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    }
+    
+    .btn-danger {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-danger:hover {
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    }
+    
+    .nav-item {
+      transition: all 0.2s ease;
+    }
+    
+    .nav-item:hover, .nav-item.active {
+      background: rgba(59, 130, 246, 0.1);
+      border-right: 3px solid #3b82f6;
+    }
+    
+    .stat-card {
+      background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+    }
+    
+    .chart-bar {
+      transition: height 0.5s ease;
+    }
+    
+    .toast {
+      animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s;
+    }
+    
+    @keyframes toastIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    @keyframes toastOut {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full bg-[#0f0f0f] text-gray-100">
+  <div id="app" class="h-full overflow-auto"><!-- Toast Container -->
+   <div id="toast-container" class="fixed top-4 left-4 z-50 flex flex-col gap-2"></div><!-- Login Page -->
+   <div id="login-page" class="min-h-full flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+     <div class="bg-[#1e1e1e] rounded-2xl p-8 shadow-2xl fade-in"><!-- Logo -->
+      <div class="text-center mb-8">
+       <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl mx-auto flex items-center justify-center mb-4">
+        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+       </div>
+       <h1 id="login-title" class="text-2xl font-bold text-white">نظام المحاسبة</h1>
+       <p class="text-gray-400 mt-2">تسجيل الدخول إلى حسابك</p>
+      </div>
+      <form id="login-form" class="space-y-5">
+       <div><label class="block text-sm font-medium text-gray-300 mb-2">البريد الإلكتروني</label>
+        <div class="relative"><span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+          </svg></span> <input type="email" id="login-email" required class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 pr-10 pl-4 text-white placeholder-gray-500 focus:border-blue-500" placeholder="example@email.com">
+        </div>
+       </div>
+       <div><label class="block text-sm font-medium text-gray-300 mb-2">كلمة المرور</label>
+        <div class="relative"><span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+          </svg></span> <input type="password" id="login-password" required class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 pr-10 pl-4 text-white placeholder-gray-500 focus:border-blue-500" placeholder="••••••••">
+        </div>
+       </div>
+       <div class="flex items-center justify-between"><label class="flex items-center gap-2 cursor-pointer"> <input type="checkbox" id="remember-me" class="w-4 h-4 rounded border-gray-600 bg-[#2a2a2a] text-blue-500 focus:ring-blue-500"> <span class="text-sm text-gray-400">تذكرني</span> </label> <button type="button" onclick="showForgotPassword()" class="text-sm text-blue-400 hover:text-blue-300 transition"> نسيت كلمة المرور؟ </button>
+       </div><button type="submit" class="w-full btn-primary text-white font-semibold py-3 rounded-xl"> تسجيل الدخول </button>
+      </form>
+      <div class="mt-6 text-center">
+       <p class="text-gray-400">ليس لديك حساب؟ <button onclick="showRegister()" class="text-blue-400 hover:text-blue-300 font-medium transition"> إنشاء حساب جديد </button></p>
+      </div>
+     </div>
+    </div>
+   </div><!-- Register Page -->
+   <div id="register-page" class="min-h-full flex items-center justify-center p-4 hidden">
+    <div class="w-full max-w-md">
+     <div class="bg-[#1e1e1e] rounded-2xl p-8 shadow-2xl fade-in">
+      <div class="text-center mb-8">
+       <div class="w-20 h-20 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-2xl mx-auto flex items-center justify-center mb-4">
+        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+        </svg>
+       </div>
+       <h1 class="text-2xl font-bold text-white">إنشاء حساب جديد</h1>
+       <p class="text-gray-400 mt-2">أنشئ حسابك للبدء</p>
+      </div>
+      <form id="register-form" class="space-y-4">
+       <div><label class="block text-sm font-medium text-gray-300 mb-2">الاسم الكامل</label> <input type="text" id="register-name" required class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white placeholder-gray-500" placeholder="أدخل اسمك الكامل">
+       </div>
+       <div><label class="block text-sm font-medium text-gray-300 mb-2">البريد الإلكتروني</label> <input type="email" id="register-email" required class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white placeholder-gray-500" placeholder="example@email.com">
+       </div>
+       <div><label class="block text-sm font-medium text-gray-300 mb-2">كلمة المرور</label> <input type="password" id="register-password" required minlength="6" class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white placeholder-gray-500" placeholder="••••••••">
+       </div>
+       <div><label class="block text-sm font-medium text-gray-300 mb-2">تأكيد كلمة المرور</label> <input type="password" id="register-confirm" required class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white placeholder-gray-500" placeholder="••••••••">
+       </div><button type="submit" class="w-full btn-success text-white font-semibold py-3 rounded-xl mt-6"> إنشاء الحساب </button>
+      </form>
+      <div class="mt-6 text-center">
+       <p class="text-gray-400">لديك حساب بالفعل؟ <button onclick="showLogin()" class="text-blue-400 hover:text-blue-300 font-medium transition"> تسجيل الدخول </button></p>
+      </div>
+     </div>
+    </div>
+   </div><!-- Forgot Password Modal -->
+   <div id="forgot-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-[#1e1e1e] rounded-2xl p-6 w-full max-w-md fade-in">
+     <h2 class="text-xl font-bold text-white mb-4">استعادة كلمة المرور</h2>
+     <p class="text-gray-400 mb-4">أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة تعيين كلمة المرور</p><input type="email" id="forgot-email" class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white placeholder-gray-500 mb-4" placeholder="example@email.com">
+     <div class="flex gap-3"><button onclick="sendResetEmail()" class="flex-1 btn-primary text-white font-semibold py-3 rounded-xl"> إرسال الرابط </button> <button onclick="closeForgotModal()" class="px-6 py-3 bg-gray-700 text-white rounded-xl hover:bg-gray-600 transition"> إلغاء </button>
+     </div>
+    </div>
+   </div><!-- Main App (After Login) -->
+   <div id="main-app" class="hidden h-full">
+    <div class="flex h-full"><!-- Sidebar -->
+     <aside id="sidebar" class="w-64 bg-[#1a1a1a] border-l border-gray-800 flex-shrink-0 flex flex-col transition-all duration-300 lg:translate-x-0 fixed lg:relative h-full z-40 translate-x-full lg:translate-x-0"><!-- Logo -->
+      <div class="p-4 border-b border-gray-800">
+       <div class="flex items-center gap-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center">
+         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+         </svg>
+        </div>
+        <div>
+         <h1 id="sidebar-title" class="font-bold text-white">نظام المحاسبة</h1>
+         <p id="sidebar-company" class="text-xs text-gray-500">شركتي</p>
+        </div>
+       </div>
+      </div><!-- Navigation -->
+      <nav class="flex-1 p-3 space-y-1"><button onclick="showPage('dashboard')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:text-white" data-page="dashboard">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+        </svg><span>لوحة التحكم</span> </button> <button onclick="showPage('income')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:text-white" data-page="income">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg><span>الإيرادات</span> </button> <button onclick="showPage('expenses')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:text-white" data-page="expenses">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+        </svg><span>المصروفات</span> </button> <button onclick="showPage('ledger')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:text-white" data-page="ledger">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+        </svg><span>دفتر الحسابات</span> </button> <button onclick="showPage('currency')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:text-white" data-page="currency">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+        </svg><span>تحويل العملات</span> </button> <button onclick="showPage('profile')" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-300 hover:text-white" data-page="profile">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+        </svg><span>الملف الشخصي</span> </button>
+      </nav><!-- Logout -->
+      <div class="p-3 border-t border-gray-800"><button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 transition">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+        </svg><span>تسجيل الخروج</span> </button>
+      </div>
+     </aside><!-- Sidebar Overlay (Mobile) -->
+     <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 z-30 lg:hidden hidden" onclick="toggleSidebar()"></div><!-- Main Content -->
+     <main class="flex-1 overflow-auto"><!-- Header -->
+      <header class="bg-[#1a1a1a] border-b border-gray-800 px-4 lg:px-6 py-4 sticky top-0 z-20">
+       <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4"><button onclick="toggleSidebar()" class="lg:hidden p-2 text-gray-400 hover:text-white">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg></button>
+         <h2 id="page-title" class="text-xl font-bold text-white">لوحة التحكم</h2>
+        </div>
+        <div class="flex items-center gap-4">
+         <div class="text-left">
+          <p id="header-user-name" class="text-sm font-medium text-white">المستخدم</p>
+          <p id="header-user-role" class="text-xs text-gray-500">محاسب</p>
+         </div>
+         <div id="header-avatar" class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+          م
+         </div>
+        </div>
+       </div>
+      </header><!-- Pages Container -->
+      <div class="p-4 lg:p-6"><!-- Dashboard Page -->
+       <div id="page-dashboard" class="page fade-in"><!-- Stats Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+         <div class="stat-card rounded-2xl p-5 card-hover border border-gray-800">
+          <div class="flex items-center justify-between mb-3"><span class="text-gray-400 text-sm">إجمالي الإيرادات</span>
+           <div class="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center">
+            <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
+            </svg>
+           </div>
+          </div>
+          <p id="stat-income" class="text-2xl font-bold text-white">0</p>
+          <p class="text-xs text-emerald-400 mt-1">دينار عراقي</p>
+         </div>
+         <div class="stat-card rounded-2xl p-5 card-hover border border-gray-800">
+          <div class="flex items-center justify-between mb-3"><span class="text-gray-400 text-sm">إجمالي المصروفات</span>
+           <div class="w-10 h-10 bg-red-500/20 rounded-xl flex items-center justify-center">
+            <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path>
+            </svg>
+           </div>
+          </div>
+          <p id="stat-expenses" class="text-2xl font-bold text-white">0</p>
+          <p class="text-xs text-red-400 mt-1">دينار عراقي</p>
+         </div>
+         <div class="stat-card rounded-2xl p-5 card-hover border border-gray-800">
+          <div class="flex items-center justify-between mb-3"><span class="text-gray-400 text-sm">صافي الربح</span>
+           <div class="w-10 h-10 bg-blue-500/20 rounded-xl flex items-center justify-center">
+            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+            </svg>
+           </div>
+          </div>
+          <p id="stat-profit" class="text-2xl font-bold text-white">0</p>
+          <p id="stat-profit-label" class="text-xs text-blue-400 mt-1">دينار عراقي</p>
+         </div>
+         <div class="stat-card rounded-2xl p-5 card-hover border border-gray-800 pulse-green">
+          <div class="flex items-center justify-between mb-3"><span class="text-gray-400 text-sm">الرصيد الحالي</span>
+           <div class="w-10 h-10 bg-purple-500/20 rounded-xl flex items-center justify-center">
+            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path>
+            </svg>
+           </div>
+          </div>
+          <p id="stat-balance" class="text-2xl font-bold text-white">0</p>
+          <p class="text-xs text-purple-400 mt-1">دينار عراقي</p>
+         </div>
+        </div><!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6"><!-- Monthly Chart -->
+         <div class="bg-[#1e1e1e] rounded-2xl p-5 border border-gray-800">
+          <h3 class="text-lg font-semibold text-white mb-4">الإيرادات vs المصروفات (الأشهر)</h3>
+          <div class="h-48 flex items-end justify-around gap-2">
+           <div class="flex flex-col items-center gap-1">
+            <div class="flex gap-1 h-36">
+             <div id="chart-income-1" class="w-8 bg-emerald-500 rounded-t chart-bar" style="height: 60%"></div>
+             <div id="chart-expense-1" class="w-8 bg-red-500 rounded-t chart-bar" style="height: 40%"></div>
+            </div><span class="text-xs text-gray-500">يناير</span>
+           </div>
+           <div class="flex flex-col items-center gap-1">
+            <div class="flex gap-1 h-36">
+             <div id="chart-income-2" class="w-8 bg-emerald-500 rounded-t chart-bar" style="height: 70%"></div>
+             <div id="chart-expense-2" class="w-8 bg-red-500 rounded-t chart-bar" style="height: 50%"></div>
+            </div><span class="text-xs text-gray-500">فبراير</span>
+           </div>
+           <div class="flex flex-col items-center gap-1">
+            <div class="flex gap-1 h-36">
+             <div id="chart-income-3" class="w-8 bg-emerald-500 rounded-t chart-bar" style="height: 80%"></div>
+             <div id="chart-expense-3" class="w-8 bg-red-500 rounded-t chart-bar" style="height: 45%"></div>
+            </div><span class="text-xs text-gray-500">مارس</span>
+           </div>
+           <div class="flex flex-col items-center gap-1">
+            <div class="flex gap-1 h-36">
+             <div id="chart-income-4" class="w-8 bg-emerald-500 rounded-t chart-bar" style="height: 65%"></div>
+             <div id="chart-expense-4" class="w-8 bg-red-500 rounded-t chart-bar" style="height: 55%"></div>
+            </div><span class="text-xs text-gray-500">أبريل</span>
+           </div>
+           <div class="flex flex-col items-center gap-1">
+            <div class="flex gap-1 h-36">
+             <div id="chart-income-5" class="w-8 bg-emerald-500 rounded-t chart-bar" style="height: 90%"></div>
+             <div id="chart-expense-5" class="w-8 bg-red-500 rounded-t chart-bar" style="height: 35%"></div>
+            </div><span class="text-xs text-gray-500">مايو</span>
+           </div>
+           <div class="flex flex-col items-center gap-1">
+            <div class="flex gap-1 h-36">
+             <div id="chart-income-6" class="w-8 bg-emerald-500 rounded-t chart-bar" style="height: 75%"></div>
+             <div id="chart-expense-6" class="w-8 bg-red-500 rounded-t chart-bar" style="height: 60%"></div>
+            </div><span class="text-xs text-gray-500">يونيو</span>
+           </div>
+          </div>
+          <div class="flex items-center justify-center gap-6 mt-4">
+           <div class="flex items-center gap-2">
+            <div class="w-3 h-3 bg-emerald-500 rounded"></div><span class="text-xs text-gray-400">الإيرادات</span>
+           </div>
+           <div class="flex items-center gap-2">
+            <div class="w-3 h-3 bg-red-500 rounded"></div><span class="text-xs text-gray-400">المصروفات</span>
+           </div>
+          </div>
+         </div><!-- Quick Actions -->
+         <div class="bg-[#1e1e1e] rounded-2xl p-5 border border-gray-800">
+          <h3 class="text-lg font-semibold text-white mb-4">إجراءات سريعة</h3>
+          <div class="grid grid-cols-2 gap-3"><button onclick="showPage('income'); setTimeout(() => document.getElementById('income-form').scrollIntoView(), 100)" class="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 text-center hover:bg-emerald-500/20 transition">
+            <div class="w-12 h-12 bg-emerald-500/20 rounded-xl mx-auto flex items-center justify-center mb-2">
+             <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+             </svg>
+            </div><span class="text-emerald-400 font-medium">إضافة إيراد</span> </button> <button onclick="showPage('expenses'); setTimeout(() => document.getElementById('expense-form').scrollIntoView(), 100)" class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 text-center hover:bg-red-500/20 transition">
+            <div class="w-12 h-12 bg-red-500/20 rounded-xl mx-auto flex items-center justify-center mb-2">
+             <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+             </svg>
+            </div><span class="text-red-400 font-medium">إضافة مصروف</span> </button> <button onclick="showPage('currency')" class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 text-center hover:bg-blue-500/20 transition">
+            <div class="w-12 h-12 bg-blue-500/20 rounded-xl mx-auto flex items-center justify-center mb-2">
+             <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+             </svg>
+            </div><span class="text-blue-400 font-medium">تحويل العملات</span> </button> <button onclick="showPage('ledger')" class="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4 text-center hover:bg-purple-500/20 transition">
+            <div class="w-12 h-12 bg-purple-500/20 rounded-xl mx-auto flex items-center justify-center mb-2">
+             <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+             </svg>
+            </div><span class="text-purple-400 font-medium">عرض الحسابات</span> </button>
+          </div>
+         </div>
+        </div><!-- Recent Transactions -->
+        <div class="bg-[#1e1e1e] rounded-2xl p-5 border border-gray-800">
+         <h3 class="text-lg font-semibold text-white mb-4">آخر المعاملات</h3>
+         <div id="recent-transactions" class="space-y-3">
+          <p class="text-gray-500 text-center py-8">لا توجد معاملات بعد</p>
+         </div>
+        </div>
+       </div><!-- Income Page -->
+       <div id="page-income" class="page hidden fade-in">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><!-- Add Income Form -->
+         <div class="lg:col-span-1">
+          <div id="income-form" class="bg-[#1e1e1e] rounded-2xl p-5 border border-gray-800">
+           <h3 class="text-lg font-semibold text-white mb-4">إضافة إيراد جديد</h3>
+           <form id="add-income-form" class="space-y-4">
+            <div><label class="block text-sm text-gray-400 mb-2">الوصف</label> <input type="text" id="income-desc" required class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white placeholder-gray-500" placeholder="وصف الإيراد">
+            </div>
+            <div><label class="block text-sm text-gray-400 mb-2">المبلغ</label> <input type="number" id="income-amount" required min="0" step="0.01" class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white placeholder-gray-500" placeholder="0.00">
+            </div>
+            <div><label class="block text-sm text-gray-400 mb-2">العملة</label> <select id="income-currency" class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white"> <option value="IQD">دينار عراقي (IQD)</option> <option value="USD">دولار أمريكي (USD)</option> </select>
+            </div>
+            <div><label class="block text-sm text-gray-400 mb-2">التصنيف</label> <select id="income-category" class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white"> <option value="مبيعات">مبيعات</option> <option value="خدمات">خدمات</option> <option value="استثمارات">استثمارات</option> <option value="أخرى">أخرى</option> </select>
+            </div>
+            <div><label class="block text-sm text-gray-400 mb-2">التاريخ</label> <input type="date" id="income-date" required class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white">
+            </div><button type="submit" class="w-full btn-success text-white font-semibold py-3 rounded-xl"> <span id="income-btn-text">إضافة الإيراد</span> </button> <input type="hidden" id="income-edit-id" value="">
+           </form>
+          </div>
+         </div><!-- Income List -->
+         <div class="lg:col-span-2">
+          <div class="bg-[#1e1e1e] rounded-2xl p-5 border border-gray-800">
+           <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-white">قائمة الإيرادات</h3>
+            <div id="income-total" class="text-emerald-400 font-bold">
+             0 IQD
+            </div>
+           </div>
+           <div id="income-list" class="space-y-3">
+            <p class="text-gray-500 text-center py-8">لا توجد إيرادات بعد</p>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div><!-- Expenses Page -->
+       <div id="page-expenses" class="page hidden fade-in">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><!-- Add Expense Form -->
+         <div class="lg:col-span-1">
+          <div id="expense-form" class="bg-[#1e1e1e] rounded-2xl p-5 border border-gray-800">
+           <h3 class="text-lg font-semibold text-white mb-4">إضافة مصروف جديد</h3>
+           <form id="add-expense-form" class="space-y-4">
+            <div><label class="block text-sm text-gray-400 mb-2">الوصف</label> <input type="text" id="expense-desc" required class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white placeholder-gray-500" placeholder="وصف المصروف">
+            </div>
+            <div><label class="block text-sm text-gray-400 mb-2">المبلغ</label> <input type="number" id="expense-amount" required min="0" step="0.01" class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white placeholder-gray-500" placeholder="0.00">
+            </div>
+            <div><label class="block text-sm text-gray-400 mb-2">العملة</label> <select id="expense-currency" class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white"> <option value="IQD">دينار عراقي (IQD)</option> <option value="USD">دولار أمريكي (USD)</option> </select>
+            </div>
+            <div><label class="block text-sm text-gray-400 mb-2">التصنيف</label> <select id="expense-category" class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white"> <option value="رواتب">رواتب</option> <option value="إيجار">إيجار</option> <option value="مستلزمات">مستلزمات</option> <option value="فواتير">فواتير</option> <option value="نقل">نقل</option> <option value="أخرى">أخرى</option> </select>
+            </div>
+            <div><label class="block text-sm text-gray-400 mb-2">التاريخ</label> <input type="date" id="expense-date" required class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white">
+            </div><button type="submit" class="w-full btn-danger text-white font-semibold py-3 rounded-xl"> <span id="expense-btn-text">إضافة المصروف</span> </button> <input type="hidden" id="expense-edit-id" value="">
+           </form>
+          </div>
+         </div><!-- Expense List -->
+         <div class="lg:col-span-2">
+          <div class="bg-[#1e1e1e] rounded-2xl p-5 border border-gray-800">
+           <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-white">قائمة المصروفات</h3>
+            <div id="expense-total" class="text-red-400 font-bold">
+             0 IQD
+            </div>
+           </div>
+           <div id="expense-list" class="space-y-3">
+            <p class="text-gray-500 text-center py-8">لا توجد مصروفات بعد</p>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div><!-- Ledger Page -->
+       <div id="page-ledger" class="page hidden fade-in">
+        <div class="bg-[#1e1e1e] rounded-2xl p-5 border border-gray-800">
+         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+          <h3 class="text-lg font-semibold text-white">دفتر الحسابات</h3>
+          <div class="flex items-center gap-3"><select id="ledger-filter" class="bg-[#2a2a2a] border border-gray-700 rounded-xl py-2 px-4 text-white text-sm"> <option value="all">جميع المعاملات</option> <option value="income">الإيرادات فقط</option> <option value="expense">المصروفات فقط</option> </select>
+          </div>
+         </div><!-- Table -->
+         <div class="overflow-x-auto">
+          <table class="w-full">
+           <thead>
+            <tr class="border-b border-gray-700">
+             <th class="text-right py-3 px-4 text-gray-400 font-medium text-sm">التاريخ</th>
+             <th class="text-right py-3 px-4 text-gray-400 font-medium text-sm">الوصف</th>
+             <th class="text-right py-3 px-4 text-gray-400 font-medium text-sm">التصنيف</th>
+             <th class="text-right py-3 px-4 text-gray-400 font-medium text-sm">المبلغ</th>
+             <th class="text-right py-3 px-4 text-gray-400 font-medium text-sm">العملة</th>
+             <th class="text-right py-3 px-4 text-gray-400 font-medium text-sm">النوع</th>
+            </tr>
+           </thead>
+           <tbody id="ledger-body">
+            <tr>
+             <td colspan="6" class="text-center py-8 text-gray-500">لا توجد معاملات بعد</td>
+            </tr>
+           </tbody>
+          </table>
+         </div>
+        </div>
+       </div><!-- Currency Exchange Page -->
+       <div id="page-currency" class="page hidden fade-in">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"><!-- Currency Converter -->
+         <div class="bg-[#1e1e1e] rounded-2xl p-5 border border-gray-800">
+          <h3 class="text-lg font-semibold text-white mb-4">محول العملات</h3><!-- Exchange Rate Input -->
+          <div class="bg-[#2a2a2a] rounded-xl p-4 mb-6"><label class="block text-sm text-gray-400 mb-2">سعر الصرف (1 USD = ? IQD)</label>
+           <div class="flex items-center gap-3"><input type="number" id="exchange-rate" min="0" step="1" value="1460" class="flex-1 bg-[#1e1e1e] border border-gray-700 rounded-xl py-3 px-4 text-white text-xl font-bold" placeholder="1460"> <span class="text-gray-400">IQD</span>
+           </div>
+          </div><!-- Converter -->
+          <form id="convert-form" class="space-y-4">
+           <div><label class="block text-sm text-gray-400 mb-2">من</label>
+            <div class="flex gap-3"><select id="from-currency" class="w-32 bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white"> <option value="USD">USD</option> <option value="IQD">IQD</option> </select> <input type="number" id="from-amount" min="0" step="0.01" class="flex-1 bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white" placeholder="أدخل المبلغ">
+            </div>
+           </div>
+           <div class="flex justify-center"><button type="button" onclick="swapCurrencies()" class="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center text-blue-400 hover:bg-blue-500/30 transition">
+             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+             </svg></button>
+           </div>
+           <div><label class="block text-sm text-gray-400 mb-2">إلى</label>
+            <div class="flex gap-3"><select id="to-currency" class="w-32 bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white"> <option value="IQD">IQD</option> <option value="USD">USD</option> </select> <input type="text" id="to-amount" readonly class="flex-1 bg-[#1e1e1e] border border-gray-700 rounded-xl py-3 px-4 text-white text-xl font-bold" placeholder="النتيجة">
+            </div>
+           </div><button type="submit" class="w-full btn-primary text-white font-semibold py-3 rounded-xl"> تحويل وحفظ </button>
+          </form>
+         </div><!-- Conversion History -->
+         <div class="bg-[#1e1e1e] rounded-2xl p-5 border border-gray-800">
+          <h3 class="text-lg font-semibold text-white mb-4">سجل التحويلات</h3>
+          <div id="conversion-history" class="space-y-3 max-h-96 overflow-y-auto">
+           <p class="text-gray-500 text-center py-8">لا توجد تحويلات بعد</p>
+          </div>
+         </div>
+        </div>
+       </div><!-- Profile Page -->
+       <div id="page-profile" class="page hidden fade-in">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><!-- Profile Card -->
+         <div class="lg:col-span-1">
+          <div class="bg-[#1e1e1e] rounded-2xl p-6 border border-gray-800 text-center">
+           <div class="relative inline-block mb-4">
+            <div id="profile-avatar" class="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-3xl font-bold mx-auto">
+             م
+            </div><button class="absolute bottom-0 left-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white hover:bg-blue-600 transition">
+             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+             </svg></button>
+           </div>
+           <h3 id="profile-name" class="text-xl font-bold text-white">المستخدم</h3>
+           <p id="profile-email" class="text-gray-400 text-sm">user@example.com</p>
+           <div class="mt-3 inline-flex items-center px-3 py-1 bg-blue-500/20 rounded-full text-blue-400 text-sm"><span id="profile-role">محاسب</span>
+           </div>
+          </div>
+         </div><!-- Edit Profile -->
+         <div class="lg:col-span-2">
+          <div class="bg-[#1e1e1e] rounded-2xl p-5 border border-gray-800 mb-6">
+           <h3 class="text-lg font-semibold text-white mb-4">تعديل الملف الشخصي</h3>
+           <form id="profile-form" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+             <div><label class="block text-sm text-gray-400 mb-2">الاسم الكامل</label> <input type="text" id="edit-name" class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white" placeholder="الاسم الكامل">
+             </div>
+             <div><label class="block text-sm text-gray-400 mb-2">البريد الإلكتروني</label> <input type="email" id="edit-email" class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white" placeholder="example@email.com">
+             </div>
+            </div>
+            <div><label class="block text-sm text-gray-400 mb-2">الدور</label> <select id="edit-role" class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white"> <option value="محاسب">محاسب</option> <option value="مدير">مدير</option> </select>
+            </div><button type="submit" class="btn-primary text-white font-semibold py-3 px-6 rounded-xl"> حفظ التغييرات </button>
+           </form>
+          </div><!-- Change Password -->
+          <div class="bg-[#1e1e1e] rounded-2xl p-5 border border-gray-800">
+           <h3 class="text-lg font-semibold text-white mb-4">تغيير كلمة المرور</h3>
+           <form id="password-form" class="space-y-4">
+            <div><label class="block text-sm text-gray-400 mb-2">كلمة المرور الحالية</label> <input type="password" id="current-password" class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white" placeholder="••••••••">
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+             <div><label class="block text-sm text-gray-400 mb-2">كلمة المرور الجديدة</label> <input type="password" id="new-password" class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white" placeholder="••••••••">
+             </div>
+             <div><label class="block text-sm text-gray-400 mb-2">تأكيد كلمة المرور</label> <input type="password" id="confirm-new-password" class="w-full bg-[#2a2a2a] border border-gray-700 rounded-xl py-3 px-4 text-white" placeholder="••••••••">
+             </div>
+            </div><button type="submit" class="btn-primary text-white font-semibold py-3 px-6 rounded-xl"> تغيير كلمة المرور </button>
+           </form>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </main>
+    </div>
+   </div><!-- Delete Confirmation Modal -->
+   <div id="delete-modal" class="fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50 hidden">
+    <div class="bg-[#1e1e1e] rounded-2xl p-6 w-full max-w-sm fade-in text-center">
+     <div class="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+      <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+      </svg>
+     </div>
+     <h3 class="text-xl font-bold text-white mb-2">تأكيد الحذف</h3>
+     <p class="text-gray-400 mb-6">هل أنت متأكد من حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.</p>
+     <div class="flex gap-3"><button id="confirm-delete-btn" class="flex-1 btn-danger text-white font-semibold py-3 rounded-xl"> نعم، احذف </button> <button onclick="closeDeleteModal()" class="flex-1 py-3 bg-gray-700 text-white rounded-xl hover:bg-gray-600 transition"> إلغاء </button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    // ==================== Configuration ====================
+    const defaultConfig = {
+      app_title: 'نظام المحاسبة',
+      company_name: 'شركتي'
+    };
+    
+    let config = { ...defaultConfig };
+    
+    // ==================== State Management ====================
+    let currentUser = null;
+    let allData = [];
+    let deleteCallback = null;
+    let isLoading = false;
+    
+    // ==================== Toast Notifications ====================
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const bgColor = type === 'success' ? 'bg-emerald-500' : type === 'error' ? 'bg-red-500' : 'bg-blue-500';
+      
+      toast.className = `toast ${bgColor} text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3`;
+      toast.innerHTML = `
+        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          ${type === 'success' 
+            ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>'
+            : type === 'error'
+            ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>'
+            : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>'
+          }
+        </svg>
+        <span>${message}</span>
+      `;
+      
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+    
+    // ==================== Authentication ====================
+    function showLogin() {
+      document.getElementById('login-page').classList.remove('hidden');
+      document.getElementById('register-page').classList.add('hidden');
+    }
+    
+    function showRegister() {
+      document.getElementById('login-page').classList.add('hidden');
+      document.getElementById('register-page').classList.remove('hidden');
+    }
+    
+    function showForgotPassword() {
+      document.getElementById('forgot-modal').classList.remove('hidden');
+    }
+    
+    function closeForgotModal() {
+      document.getElementById('forgot-modal').classList.add('hidden');
+    }
+    
+    function sendResetEmail() {
+      const email = document.getElementById('forgot-email').value;
+      if (email) {
+        showToast('تم إرسال رابط إعادة التعيين إلى بريدك الإلكتروني');
+        closeForgotModal();
+      }
+    }
+    
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+      
+      // Demo login
+      currentUser = {
+        name: 'أحمد محمد',
+        email: email,
+        role: 'محاسب'
+      };
+      
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      enterApp();
+      showToast('تم تسجيل الدخول بنجاح');
+    });
+    
+    document.getElementById('register-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('register-name').value;
+      const email = document.getElementById('register-email').value;
+      const password = document.getElementById('register-password').value;
+      const confirm = document.getElementById('register-confirm').value;
+      
+      if (password !== confirm) {
+        showToast('كلمات المرور غير متطابقة', 'error');
+        return;
+      }
+      
+      currentUser = {
+        name: name,
+        email: email,
+        role: 'محاسب'
+      };
+      
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      enterApp();
+      showToast('تم إنشاء الحساب بنجاح');
+    });
+    
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('currentUser');
+      document.getElementById('main-app').classList.add('hidden');
+      document.getElementById('login-page').classList.remove('hidden');
+      showToast('تم تسجيل الخروج بنجاح');
+    }
+    
+    function enterApp() {
+      document.getElementById('login-page').classList.add('hidden');
+      document.getElementById('register-page').classList.add('hidden');
+      document.getElementById('main-app').classList.remove('hidden');
+      updateUserDisplay();
+      showPage('dashboard');
+    }
+    
+    function updateUserDisplay() {
+      if (!currentUser) return;
+      
+      document.getElementById('header-user-name').textContent = currentUser.name;
+      document.getElementById('header-user-role').textContent = currentUser.role;
+      document.getElementById('header-avatar').textContent = currentUser.name.charAt(0);
+      document.getElementById('profile-name').textContent = currentUser.name;
+      document.getElementById('profile-email').textContent = currentUser.email;
+      document.getElementById('profile-role').textContent = currentUser.role;
+      document.getElementById('profile-avatar').textContent = currentUser.name.charAt(0);
+      document.getElementById('edit-name').value = currentUser.name;
+      document.getElementById('edit-email').value = currentUser.email;
+      document.getElementById('edit-role').value = currentUser.role;
+    }
+    
+    // ==================== Navigation ====================
+    function showPage(pageName) {
+      // Hide all pages
+      document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+      
+      // Show selected page
+      const page = document.getElementById('page-' + pageName);
+      if (page) {
+        page.classList.remove('hidden');
+        page.classList.add('fade-in');
+      }
+      
+      // Update nav items
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.dataset.page === pageName) {
+          item.classList.add('active');
+        }
+      });
+      
+      // Update page title
+      const titles = {
+        dashboard: 'لوحة التحكم',
+        income: 'الإيرادات',
+        expenses: 'المصروفات',
+        ledger: 'دفتر الحسابات',
+        currency: 'تحويل العملات',
+        profile: 'الملف الشخصي'
+      };
+      document.getElementById('page-title').textContent = titles[pageName] || 'لوحة التحكم';
+      
+      // Close sidebar on mobile
+      if (window.innerWidth < 1024) {
+        closeSidebar();
+      }
+    }
+    
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      sidebar.classList.toggle('translate-x-full');
+      sidebar.classList.toggle('translate-x-0');
+      overlay.classList.toggle('hidden');
+    }
+    
+    function closeSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      sidebar.classList.add('translate-x-full');
+      sidebar.classList.remove('translate-x-0');
+      overlay.classList.add('hidden');
+    }
+    
+    // ==================== Data SDK Handler ====================
+    const dataHandler = {
+      onDataChanged(data) {
+        allData = data;
+        renderAllLists();
+        updateDashboardStats();
+      }
+    };
+    
+    // ==================== Helper Functions ====================
+    function formatNumber(num) {
+      return new Intl.NumberFormat('ar-IQ').format(num);
+    }
+    
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('ar-IQ', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+    
+    function getIncomes() {
+      return allData.filter(item => item.type === 'income');
+    }
+    
+    function getExpenses() {
+      return allData.filter(item => item.type === 'expense');
+    }
+    
+    function getConversions() {
+      return allData.filter(item => item.type === 'conversion');
+    }
+    
+    function convertToIQD(amount, currency, rate) {
+      if (currency === 'IQD') return amount;
+      return amount * rate;
+    }
+    
+    // ==================== Dashboard Stats ====================
+    function updateDashboardStats() {
+      const rate = parseFloat(document.getElementById('exchange-rate').value) || 1460;
+      
+      const totalIncome = getIncomes().reduce((sum, item) => {
+        return sum + convertToIQD(item.amount, item.currency, rate);
+      }, 0);
+      
+      const totalExpenses = getExpenses().reduce((sum, item) => {
+        return sum + convertToIQD(item.amount, item.currency, rate);
+      }, 0);
+      
+      const netProfit = totalIncome - totalExpenses;
+      
+      document.getElementById('stat-income').textContent = formatNumber(Math.round(totalIncome));
+      document.getElementById('stat-expenses').textContent = formatNumber(Math.round(totalExpenses));
+      document.getElementById('stat-profit').textContent = formatNumber(Math.round(Math.abs(netProfit)));
+      document.getElementById('stat-balance').textContent = formatNumber(Math.round(netProfit));
+      
+      // Update profit label color
+      const profitLabel = document.getElementById('stat-profit-label');
+      if (netProfit < 0) {
+        profitLabel.textContent = 'خسارة - دينار عراقي';
+        profitLabel.className = 'text-xs text-red-400 mt-1';
+      } else {
+        profitLabel.textContent = 'دينار عراقي';
+        profitLabel.className = 'text-xs text-blue-400 mt-1';
+      }
+      
+      // Update totals
+      const incomeTotal = getIncomes().reduce((sum, item) => {
+        if (item.currency === 'IQD') return sum + item.amount;
+        return sum;
+      }, 0);
+      const incomeTotalUSD = getIncomes().reduce((sum, item) => {
+        if (item.currency === 'USD') return sum + item.amount;
+        return sum;
+      }, 0);
+      
+      const expenseTotal = getExpenses().reduce((sum, item) => {
+        if (item.currency === 'IQD') return sum + item.amount;
+        return sum;
+      }, 0);
+      const expenseTotalUSD = getExpenses().reduce((sum, item) => {
+        if (item.currency === 'USD') return sum + item.amount;
+        return sum;
+      }, 0);
+      
+      let incomeStr = formatNumber(incomeTotal) + ' IQD';
+      if (incomeTotalUSD > 0) incomeStr += ' + ' + formatNumber(incomeTotalUSD) + ' USD';
+      document.getElementById('income-total').textContent = incomeStr;
+      
+      let expenseStr = formatNumber(expenseTotal) + ' IQD';
+      if (expenseTotalUSD > 0) expenseStr += ' + ' + formatNumber(expenseTotalUSD) + ' USD';
+      document.getElementById('expense-total').textContent = expenseStr;
+      
+      // Recent transactions
+      renderRecentTransactions();
+    }
+    
+    // ==================== Render Functions ====================
+    function renderAllLists() {
+      renderIncomeList();
+      renderExpenseList();
+      renderLedger();
+      renderConversionHistory();
+    }
+    
+    function renderIncomeList() {
+      const list = document.getElementById('income-list');
+      const incomes = getIncomes().sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      if (incomes.length === 0) {
+        list.innerHTML = '<p class="text-gray-500 text-center py-8">لا توجد إيرادات بعد</p>';
+        return;
+      }
+      
+      list.innerHTML = incomes.map(item => `
+        <div class="bg-[#2a2a2a] rounded-xl p-4 flex items-center justify-between" data-id="${item.__backendId}">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-white font-medium">${item.description}</p>
+              <p class="text-gray-500 text-sm">${item.category} • ${formatDate(item.date)}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="text-left">
+              <p class="text-emerald-400 font-bold">${formatNumber(item.amount)}</p>
+              <p class="text-gray-500 text-xs">${item.currency}</p>
+            </div>
+            <div class="flex gap-1">
+              <button onclick="editIncome('${item.__backendId}')" class="p-2 text-gray-400 hover:text-blue-400 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+              </button>
+              <button onclick="confirmDelete('${item.__backendId}', 'income')" class="p-2 text-gray-400 hover:text-red-400 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function renderExpenseList() {
+      const list = document.getElementById('expense-list');
+      const expenses = getExpenses().sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      if (expenses.length === 0) {
+        list.innerHTML = '<p class="text-gray-500 text-center py-8">لا توجد مصروفات بعد</p>';
+        return;
+      }
+      
+      list.innerHTML = expenses.map(item => `
+        <div class="bg-[#2a2a2a] rounded-xl p-4 flex items-center justify-between" data-id="${item.__backendId}">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-red-500/20 rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path>
+              </svg>
+            </div>
+            <div>
+              <p class="text-white font-medium">${item.description}</p>
+              <p class="text-gray-500 text-sm">${item.category} • ${formatDate(item.date)}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="text-left">
+              <p class="text-red-400 font-bold">${formatNumber(item.amount)}</p>
+              <p class="text-gray-500 text-xs">${item.currency}</p>
+            </div>
+            <div class="flex gap-1">
+              <button onclick="editExpense('${item.__backendId}')" class="p-2 text-gray-400 hover:text-blue-400 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+              </button>
+              <button onclick="confirmDelete('${item.__backendId}', 'expense')" class="p-2 text-gray-400 hover:text-red-400 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function renderLedger() {
+      const tbody = document.getElementById('ledger-body');
+      const filter = document.getElementById('ledger-filter').value;
+      
+      let transactions = [...getIncomes(), ...getExpenses()];
+      
+      if (filter === 'income') {
+        transactions = getIncomes();
+      } else if (filter === 'expense') {
+        transactions = getExpenses();
+      }
+      
+      transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      if (transactions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-gray-500">لا توجد معاملات بعد</td></tr>';
+        return;
+      }
+      
+      tbody.innerHTML = transactions.map(item => `
+        <tr class="border-b border-gray-800 hover:bg-[#2a2a2a] transition">
+          <td class="py-3 px-4 text-gray-300">${formatDate(item.date)}</td>
+          <td class="py-3 px-4 text-white">${item.description}</td>
+          <td class="py-3 px-4 text-gray-400">${item.category}</td>
+          <td class="py-3 px-4 font-bold ${item.type === 'income' ? 'text-emerald-400' : 'text-red-400'}">
+            ${item.type === 'income' ? '+' : '-'}${formatNumber(item.amount)}
+          </td>
+          <td class="py-3 px-4 text-gray-400">${item.currency}</td>
+          <td class="py-3 px-4">
+            <span class="px-2 py-1 rounded-full text-xs ${item.type === 'income' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">
+              ${item.type === 'income' ? 'إيراد' : 'مصروف'}
+            </span>
+          </td>
+        </tr>
+      `).join('');
+    }
+    
+    function renderRecentTransactions() {
+      const container = document.getElementById('recent-transactions');
+      const transactions = [...getIncomes(), ...getExpenses()]
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 5);
+      
+      if (transactions.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-8">لا توجد معاملات بعد</p>';
+        return;
+      }
+      
+      container.innerHTML = transactions.map(item => `
+        <div class="flex items-center justify-between py-3 border-b border-gray-800 last:border-0">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 ${item.type === 'income' ? 'bg-emerald-500/20' : 'bg-red-500/20'} rounded-xl flex items-center justify-center">
+              <svg class="w-5 h-5 ${item.type === 'income' ? 'text-emerald-400' : 'text-red-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                ${item.type === 'income' 
+                  ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5m0 0l5 5m-5-5v12"></path>'
+                  : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5m0 0l-5-5m5 5V6"></path>'
+                }
+              </svg>
+            </div>
+            <div>
+              <p class="text-white font-medium">${item.description}</p>
+              <p class="text-gray-500 text-sm">${formatDate(item.date)}</p>
+            </div>
+          </div>
+          <p class="font-bold ${item.type === 'income' ? 'text-emerald-400' : 'text-red-400'}">
+            ${item.type === 'income' ? '+' : '-'}${formatNumber(item.amount)} ${item.currency}
+          </p>
+        </div>
+      `).join('');
+    }
+    
+    function renderConversionHistory() {
+      const container = document.getElementById('conversion-history');
+      const conversions = getConversions().sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      if (conversions.length === 0) {
+        container.innerHTML = '<p class="text-gray-500 text-center py-8">لا توجد تحويلات بعد</p>';
+        return;
+      }
+      
+      container.innerHTML = conversions.map(item => `
+        <div class="bg-[#2a2a2a] rounded-xl p-4" data-id="${item.__backendId}">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-gray-400 text-sm">${formatDate(item.date)}</span>
+            <button onclick="confirmDelete('${item.__backendId}', 'conversion')" class="p-1 text-gray-400 hover:text-red-400 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="flex-1 text-center">
+              <p class="text-2xl font-bold text-white">${formatNumber(item.fromAmount)}</p>
+              <p class="text-blue-400 font-medium">${item.fromCurrency}</p>
+            </div>
+            <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+            </svg>
+            <div class="flex-1 text-center">
+              <p class="text-2xl font-bold text-emerald-400">${formatNumber(item.toAmount)}</p>
+              <p class="text-emerald-400 font-medium">${item.toCurrency}</p>
+            </div>
+          </div>
+          <p class="text-center text-gray-500 text-sm mt-2">سعر الصرف: ${formatNumber(item.rate)} IQD/USD</p>
+        </div>
+      `).join('');
+    }
+    
+    // ==================== CRUD Operations ====================
+    
+    // Income
+    document.getElementById('add-income-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      if (isLoading) return;
+      
+      const editId = document.getElementById('income-edit-id').value;
+      const data = {
+        type: 'income',
+        description: document.getElementById('income-desc').value,
+        amount: parseFloat(document.getElementById('income-amount').value),
+        currency: document.getElementById('income-currency').value,
+        category: document.getElementById('income-category').value,
+        date: document.getElementById('income-date').value
+      };
+      
+      if (allData.length >= 999 && !editId) {
+        showToast('تم الوصول للحد الأقصى من السجلات (999)', 'error');
+        return;
+      }
+      
+      isLoading = true;
+      document.getElementById('income-btn-text').textContent = 'جاري الحفظ...';
+      
+      let result;
+      if (editId) {
+        const existing = allData.find(item => item.__backendId === editId);
+        result = await window.dataSdk.update({ ...existing, ...data });
+      } else {
+        result = await window.dataSdk.create(data);
+      }
+      
+      isLoading = false;
+      document.getElementById('income-btn-text').textContent = 'إضافة الإيراد';
+      
+      if (result.isOk) {
+        showToast(editId ? 'تم تحديث الإيراد بنجاح' : 'تم إضافة الإيراد بنجاح');
+        this.reset();
+        document.getElementById('income-edit-id').value = '';
+        document.getElementById('income-date').value = new Date().toISOString().split('T')[0];
+      } else {
+        showToast('حدث خطأ أثناء الحفظ', 'error');
+      }
+    });
+    
+    function editIncome(id) {
+      const item = allData.find(i => i.__backendId === id);
+      if (!item) return;
+      
+      document.getElementById('income-desc').value = item.description;
+      document.getElementById('income-amount').value = item.amount;
+      document.getElementById('income-currency').value = item.currency;
+      document.getElementById('income-category').value = item.category;
+      document.getElementById('income-date').value = item.date;
+      document.getElementById('income-edit-id').value = id;
+      document.getElementById('income-btn-text').textContent = 'تحديث الإيراد';
+      
+      document.getElementById('income-form').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Expenses
+    document.getElementById('add-expense-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      if (isLoading) return;
+      
+      const editId = document.getElementById('expense-edit-id').value;
+      const data = {
+        type: 'expense',
+        description: document.getElementById('expense-desc').value,
+        amount: parseFloat(document.getElementById('expense-amount').value),
+        currency: document.getElementById('expense-currency').value,
+        category: document.getElementById('expense-category').value,
+        date: document.getElementById('expense-date').value
+      };
+      
+      if (allData.length >= 999 && !editId) {
+        showToast('تم الوصول للحد الأقصى من السجلات (999)', 'error');
+        return;
+      }
+      
+      isLoading = true;
+      document.getElementById('expense-btn-text').textContent = 'جاري الحفظ...';
+      
+      let result;
+      if (editId) {
+        const existing = allData.find(item => item.__backendId === editId);
+        result = await window.dataSdk.update({ ...existing, ...data });
+      } else {
+        result = await window.dataSdk.create(data);
+      }
+      
+      isLoading = false;
+      document.getElementById('expense-btn-text').textContent = 'إضافة المصروف';
+      
+      if (result.isOk) {
+        showToast(editId ? 'تم تحديث المصروف بنجاح' : 'تم إضافة المصروف بنجاح');
+        this.reset();
+        document.getElementById('expense-edit-id').value = '';
+        document.getElementById('expense-date').value = new Date().toISOString().split('T')[0];
+      } else {
+        showToast('حدث خطأ أثناء الحفظ', 'error');
+      }
+    });
+    
+    function editExpense(id) {
+      const item = allData.find(i => i.__backendId === id);
+      if (!item) return;
+      
+      document.getElementById('expense-desc').value = item.description;
+      document.getElementById('expense-amount').value = item.amount;
+      document.getElementById('expense-currency').value = item.currency;
+      document.getElementById('expense-category').value = item.category;
+      document.getElementById('expense-date').value = item.date;
+      document.getElementById('expense-edit-id').value = id;
+      document.getElementById('expense-btn-text').textContent = 'تحديث المصروف';
+      
+      document.getElementById('expense-form').scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Delete
+    function confirmDelete(id, type) {
+      document.getElementById('delete-modal').classList.remove('hidden');
+      
+      document.getElementById('confirm-delete-btn').onclick = async function() {
+        const item = allData.find(i => i.__backendId === id);
+        if (!item) return;
+        
+        isLoading = true;
+        this.textContent = 'جاري الحذف...';
+        
+        const result = await window.dataSdk.delete(item);
+        
+        isLoading = false;
+        this.textContent = 'نعم، احذف';
+        closeDeleteModal();
+        
+        if (result.isOk) {
+          showToast('تم الحذف بنجاح');
+        } else {
+          showToast('حدث خطأ أثناء الحذف', 'error');
+        }
+      };
+    }
+    
+    function closeDeleteModal() {
+      document.getElementById('delete-modal').classList.add('hidden');
+    }
+    
+    // ==================== Currency Converter ====================
+    document.getElementById('from-amount').addEventListener('input', calculateConversion);
+    document.getElementById('from-currency').addEventListener('change', calculateConversion);
+    document.getElementById('to-currency').addEventListener('change', calculateConversion);
+    document.getElementById('exchange-rate').addEventListener('input', calculateConversion);
+    
+    function calculateConversion() {
+      const fromAmount = parseFloat(document.getElementById('from-amount').value) || 0;
+      const fromCurrency = document.getElementById('from-currency').value;
+      const toCurrency = document.getElementById('to-currency').value;
+      const rate = parseFloat(document.getElementById('exchange-rate').value) || 1460;
+      
+      let result = 0;
+      
+      if (fromCurrency === toCurrency) {
+        result = fromAmount;
+      } else if (fromCurrency === 'USD' && toCurrency === 'IQD') {
+        result = fromAmount * rate;
+      } else if (fromCurrency === 'IQD' && toCurrency === 'USD') {
+        result = fromAmount / rate;
+      }
+      
+      document.getElementById('to-amount').value = formatNumber(parseFloat(result.toFixed(2)));
+    }
+    
+    function swapCurrencies() {
+      const fromCurrency = document.getElementById('from-currency');
+      const toCurrency = document.getElementById('to-currency');
+      const temp = fromCurrency.value;
+      fromCurrency.value = toCurrency.value;
+      toCurrency.value = temp;
+      calculateConversion();
+    }
+    
+    document.getElementById('convert-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      if (isLoading) return;
+      
+      const fromAmount = parseFloat(document.getElementById('from-amount').value);
+      if (!fromAmount || fromAmount <= 0) {
+        showToast('الرجاء إدخال مبلغ صحيح', 'error');
+        return;
+      }
+      
+      if (allData.length >= 999) {
+        showToast('تم الوصول للحد الأقصى من السجلات (999)', 'error');
+        return;
+      }
+      
+      const fromCurrency = document.getElementById('from-currency').value;
+      const toCurrency = document.getElementById('to-currency').value;
+      const rate = parseFloat(document.getElementById('exchange-rate').value) || 1460;
+      
+      let toAmount = 0;
+      if (fromCurrency === toCurrency) {
+        toAmount = fromAmount;
+      } else if (fromCurrency === 'USD' && toCurrency === 'IQD') {
+        toAmount = fromAmount * rate;
+      } else if (fromCurrency === 'IQD' && toCurrency === 'USD') {
+        toAmount = fromAmount / rate;
+      }
+      
+      const data = {
+        type: 'conversion',
+        fromCurrency,
+        toCurrency,
+        fromAmount,
+        toAmount: parseFloat(toAmount.toFixed(2)),
+        rate,
+        date: new Date().toISOString()
+      };
+      
+      isLoading = true;
+      const result = await window.dataSdk.create(data);
+      isLoading = false;
+      
+      if (result.isOk) {
+        showToast('تم حفظ التحويل بنجاح');
+        document.getElementById('from-amount').value = '';
+        document.getElementById('to-amount').value = '';
+      } else {
+        showToast('حدث خطأ أثناء الحفظ', 'error');
+      }
+    });
+    
+    // ==================== Ledger Filter ====================
+    document.getElementById('ledger-filter').addEventListener('change', renderLedger);
+    
+    // ==================== Profile ====================
+    document.getElementById('profile-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      currentUser.name = document.getElementById('edit-name').value;
+      currentUser.email = document.getElementById('edit-email').value;
+      currentUser.role = document.getElementById('edit-role').value;
+      
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+      updateUserDisplay();
+      showToast('تم حفظ التغييرات بنجاح');
+    });
+    
+    document.getElementById('password-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-new-password').value;
+      
+      if (newPassword !== confirmPassword) {
+        showToast('كلمات المرور غير متطابقة', 'error');
+        return;
+      }
+      
+      showToast('تم تغيير كلمة المرور بنجاح');
+      this.reset();
+    });
+    
+    // ==================== Element SDK ====================
+    async function onConfigChange(newConfig) {
+      config = { ...defaultConfig, ...newConfig };
+      
+      // Update titles
+      document.getElementById('login-title').textContent = config.app_title || defaultConfig.app_title;
+      document.getElementById('sidebar-title').textContent = config.app_title || defaultConfig.app_title;
+      document.getElementById('sidebar-company').textContent = config.company_name || defaultConfig.company_name;
+    }
+    
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+    
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['app_title', config.app_title || defaultConfig.app_title],
+        ['company_name', config.company_name || defaultConfig.company_name]
+      ]);
+    }
+    
+    // ==================== Initialization ====================
+    async function init() {
+      // Set default dates
+      document.getElementById('income-date').value = new Date().toISOString().split('T')[0];
+      document.getElementById('expense-date').value = new Date().toISOString().split('T')[0];
+      
+      // Check for existing user session
+      const savedUser = localStorage.getItem('currentUser');
+      if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        enterApp();
+      }
+      
+      // Initialize Element SDK
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities,
+          mapToEditPanelValues
+        });
+      }
+      
+      // Initialize Data SDK
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error('Failed to initialize Data SDK');
+        }
+      }
+    }
+    
+    init();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c6ca21a6578acc4',t:'MTc2OTg5ODQxMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
-`);
-});
-
-/* ===== START ===== */
-app.listen(3000, () =>
-  console.log("MS Accounting running on port 3000")
-);
