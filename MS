@@ -1,0 +1,144 @@
+const express = require("express");
+const fs = require("fs");
+const crypto = require("crypto");
+
+const app = express();
+app.use(express.json());
+
+const DB_FILE = "./db.json";
+
+/* ===== DATABASE ===== */
+if (!fs.existsSync(DB_FILE)) {
+  fs.writeFileSync(
+    DB_FILE,
+    JSON.stringify({ users: [], products: [], sales: [] }, null, 2)
+  );
+}
+
+const readDB = () => JSON.parse(fs.readFileSync(DB_FILE));
+const writeDB = (data) =>
+  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2));
+
+const hash = (t) =>
+  crypto.createHash("sha256").update(t).digest("hex");
+
+/* ===== AUTH ===== */
+app.post("/register", (req, res) => {
+  const db = readDB();
+  if (db.users.find((u) => u.username === req.body.username))
+    return res.send("User exists");
+
+  db.users.push({
+    id: Date.now(),
+    username: req.body.username,
+    password: hash(req.body.password),
+  });
+  writeDB(db);
+  res.send("Account created");
+});
+
+app.post("/login", (req, res) => {
+  const db = readDB();
+  const user = db.users.find(
+    (u) =>
+      u.username === req.body.username &&
+      u.password === hash(req.body.password)
+  );
+  if (!user) return res.send("Login failed");
+  res.send("OK");
+});
+
+/* ===== PRODUCTS ===== */
+app.post("/product", (req, res) => {
+  const db = readDB();
+  db.products.push({
+    id: Date.now(),
+    ...req.body,
+  });
+  writeDB(db);
+  res.send("Product added");
+});
+
+app.get("/products", (req, res) => {
+  res.json(readDB().products);
+});
+
+/* ===== SALES ===== */
+app.post("/sale", (req, res) => {
+  const db = readDB();
+  const p = db.products.find((x) => x.id == req.body.productId);
+  if (!p) return res.send("Product not found");
+
+  const profit =
+    (p.sellPrice - p.buyPrice) * req.body.quantity;
+
+  db.sales.push({
+    id: Date.now(),
+    product: p.name,
+    quantity: req.body.quantity,
+    total: p.sellPrice * req.body.quantity,
+    profit,
+    currency: p.currency,
+    date: new Date(),
+  });
+
+  writeDB(db);
+  res.send("Sale saved");
+});
+
+/* ===== FRONTEND ===== */
+app.get("/", (req, res) => {
+  res.send(`
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width">
+<title>MS Accounting</title>
+<style>
+body{font-family:sans-serif;background:#111;color:#fff;padding:20px}
+input,button{width:100%;padding:10px;margin:5px 0}
+button{background:#00c853;border:0;color:#000}
+</style>
+</head>
+<body>
+
+<h2>MS Accounting System</h2>
+
+<input id="u" placeholder="Username">
+<input id="p" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+<button onclick="register()">Register</button>
+
+<hr>
+
+<h3>Add Product</h3>
+<input id="pn" placeholder="Name">
+<input id="bp" placeholder="Buy Price">
+<input id="sp" placeholder="Sell Price">
+<input id="cu" placeholder="Currency IQD / USD">
+<button onclick="addProduct()">Add</button>
+
+<script>
+const api = (url,data)=>
+fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)}).then(r=>r.text()).then(alert)
+
+function login(){
+ api("/login",{username:u.value,password:p.value})
+}
+function register(){
+ api("/register",{username:u.value,password:p.value})
+}
+function addProduct(){
+ api("/product",{name:pn.value,buyPrice:+bp.value,sellPrice:+sp.value,currency:cu.value})
+}
+</script>
+
+</body>
+</html>
+`);
+});
+
+/* ===== START ===== */
+app.listen(3000, () =>
+  console.log("MS Accounting running on port 3000")
+);
