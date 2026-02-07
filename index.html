@@ -1,241 +1,157 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" class="h-full">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ازرع العراق - تبرع واحد = شجرة واحدة</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio | Graphic Designer</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Google Font (Arabic) -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        emerald: {50:'#ecfdf5',100:'#d1fae5',200:'#a7f3d0',300:'#6ee7b7',400:'#34d399',500:'#10b981',600:'#059669',700:'#047857',800:'#065f46',900:'#064e3b'},
-                        teal: {400:'#2dd4bf',500:'#14b8a6',600:'#0d9488'}
-                    },
-                    fontFamily: { cairo:['Cairo','sans-serif'], tajawal:['Tajawal','sans-serif'] }
-                }
-            }
-        }
-    </script>
-
-    <style>
-        html { scroll-behavior: smooth; }
-
-        body {
-            background: linear-gradient(180deg, #ffffff 0%, #e3f2e9 100%);
-            font-family: 'Tajawal', sans-serif;
-        }
-
-        .bg-grid {
-            background-image: linear-gradient(#05966910 1px, transparent 1px), linear-gradient(90deg, #05966910 1px, transparent 1px);
-            background-size: 40px 40px;
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            transition: all 0.3s ease-in-out;
-        }
-
-        .donation-option.selected {
-            border: 3px solid #059669;
-            background: white;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(5, 150, 105, 0.1);
-        }
-
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-up { animation: fadeInUp 0.8s ease-out forwards; }
-
-        @keyframes sway { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(3deg); } }
-        .animate-sway { animation: sway 4s ease-in-out infinite alternate; }
-
-        .btn-main {
-            background: linear-gradient(90deg, #059669 0%, #10b981 100%);
-            transition: all 0.3s ease;
-        }
-        .btn-main:hover { transform: scale(1.03); box-shadow: 0 15px 30px rgba(16, 185, 129, 0.3); }
-
-        .mobile-menu { max-height:0; overflow:hidden; transition:max-height 0.4s ease-out; }
-        .mobile-menu.open { max-height:400px; }
-    </style>
-</head>
-<body class="h-full bg-grid">
-
-<div id="app" class="h-full w-full overflow-auto">
-
-    <!-- Navbar -->
-    <nav class="fixed top-0 right-0 left-0 z-50 bg-white/80 backdrop-blur-lg border-b border-emerald-100">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex items-center justify-between h-20">
-                <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 bg-emerald-700 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200">
-                        <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C13.5 2 15 3 15 5C15 7 13 9 12 10C11 9 9 7 9 5C9 3 10.5 2 12 2ZM12 10C14 10 18 12 18 16C18 20 14 22 12 22C10 22 6 20 6 16C6 12 10 10 12 10ZM12 12C10 12 8 14 8 16C8 18 10 20 12 20C14 20 16 18 16 16C16 14 14 12 12 12Z"/></svg>
-                    </div>
-                    <span class="font-cairo font-black text-2xl text-emerald-900 tracking-tight">ازرع العراق</span>
-                </div>
-                <div class="hidden lg:flex items-center gap-10">
-                    <a href="#about" class="text-emerald-900 hover:text-emerald-600 font-bold">عن المبادرة</a>
-                    <a href="#impact" class="text-emerald-900 hover:text-emerald-600 font-bold">تأثيرنا</a>
-                    <a href="#donate" class="btn-main text-white px-8 py-3 rounded-full font-cairo font-bold shadow-md">تبرع الآن 🌱</a>
-                </div>
-                <button id="mobile-menu-btn" class="lg:hidden p-2 text-emerald-900">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-                </button>
-            </div>
-            <div id="mobile-menu" class="mobile-menu lg:hidden">
-                <div class="py-6 space-y-4 text-center">
-                    <a href="#about" class="block text-lg font-bold text-emerald-900">عن المبادرة</a>
-                    <a href="#impact" class="block text-lg font-bold text-emerald-900">تأثيرنا</a>
-                    <a href="#donate" class="block bg-emerald-600 text-white py-4 rounded-2xl font-bold">تبرع الآن 🌱</a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="min-h-screen pt-32 lg:pt-48 pb-20 relative px-6">
-        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
-            <div class="text-center lg:text-right animate-up">
-                <h1 class="font-cairo font-black text-5xl lg:text-7xl text-emerald-950 leading-[1.15] mb-8">
-                    ازرع شجرة اليوم، <br>
-                    <span class="text-emerald-600">احمِ مستقبل العراق 🌿</span>
-                </h1>
-                <p class="text-xl text-emerald-800/80 mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium">
-                    العراق يعاني من التصحر وفقدان الغطاء النباتي. كل شجرة تزرعها تساهم في تحسين جودة الهواء وتقليل العواصف الترابية.
-                </p>
-                <a href="#donate" class="btn-main text-white px-12 py-5 rounded-full font-cairo font-black text-xl inline-block shadow-2xl">
-                    تبرع وازرع شجرة الآن
-                </a>
-            </div>
-            <div class="flex justify-center items-center animate-up" style="animation-delay:0.2s">
-                <!-- شجرة متحركة -->
-                <svg viewBox="0 0 200 250" class="w-72 md:w-96 drop-shadow-2xl">
-                    <rect x="95" y="150" width="10" height="70" rx="4" fill="#7b4f2a"/>
-                    <ellipse cx="100" cy="120" rx="55" ry="50" fill="url(#leavesGradient)" class="animate-sway"/>
-                    <ellipse cx="80" cy="110" rx="40" ry="35" fill="url(#leavesGradient2)"/>
-                    <ellipse cx="120" cy="110" rx="40" ry="35" fill="url(#leavesGradient2)"/>
-                    <ellipse cx="100" cy="90" rx="50" ry="45" fill="url(#leavesGradient3)"/>
-                    <defs>
-                        <linearGradient id="leavesGradient" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stop-color="#10b981"/>
-                            <stop offset="100%" stop-color="#34d399"/>
-                        </linearGradient>
-                        <linearGradient id="leavesGradient2" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stop-color="#059669"/>
-                            <stop offset="100%" stop-color="#10b981"/>
-                        </linearGradient>
-                        <linearGradient id="leavesGradient3" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="0%" stop-color="#34d399"/>
-                            <stop offset="100%" stop-color="#6ee7b7"/>
-                        </linearGradient>
-                    </defs>
-                </svg>
-            </div>
-        </div>
-    </section>
-
-    <!-- Donation Section -->
-    <section id="donate" class="py-24 px-6 bg-emerald-50/50 relative">
-        <div class="max-w-5xl mx-auto text-center animate-up">
-            <h2 class="font-cairo font-black text-4xl text-emerald-950 mb-4">تبرع وازرع شجرة اليوم 🌳</h2>
-            <p class="text-emerald-800 text-lg mb-12 font-medium">اختر المبلغ الذي يناسبك، وسنرتب لك عملية التبرع عبر واتساب.</p>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                <button onclick="selectDonation(1,this)" class="donation-option glass-card rounded-[32px] p-8 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">🌱</div>
-                    <div class="font-black text-3xl text-emerald-900 mb-1">$1</div>
-                    <div class="text-emerald-700/60 font-bold text-sm">شجرة واحدة</div>
-                </button>
-                <button onclick="selectDonation(5,this)" class="donation-option glass-card rounded-[32px] p-8 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">🌳</div>
-                    <div class="font-black text-3xl text-emerald-900 mb-1">$5</div>
-                    <div class="text-emerald-700/60 font-bold text-sm">5 أشجار</div>
-                </button>
-                <button onclick="selectDonation(10,this)" class="donation-option selected rounded-[32px] p-8 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">🌴</div>
-                    <div class="font-black text-3xl text-emerald-900 mb-1">$10</div>
-                    <div class="text-emerald-700/60 font-bold text-sm">10 أشجار</div>
-                </button>
-                <button onclick="selectDonation(50,this)" class="donation-option glass-card rounded-[32px] p-8 text-center cursor-pointer">
-                    <div class="text-4xl mb-4">🌲</div>
-                    <div class="font-black text-3xl text-emerald-900 mb-1">$50</div>
-                    <div class="text-emerald-700/60 font-bold text-sm">50 شجرة</div>
-                </button>
-            </div>
-
-            <div class="max-w-xl mx-auto">
-                <a id="donate-link" href="https://wa.me/9647511672958?text=أرغب%20بتبرع%20لمبادرة%20ازرع%20العراق%20بقيمة%20$10" target="_blank"
-                class="btn-main w-full flex items-center justify-center gap-4 text-white py-6 rounded-[24px] font-black text-2xl shadow-xl">
-                    <span>تبرع عبر واتساب</span>
-                    <span id="donate-amount-display" class="bg-white/20 px-3 py-1 rounded-lg text-xl">$10</span>
-                </a>
-                <p class="mt-6 text-emerald-800/50 text-sm font-bold tracking-widest uppercase">Direct WhatsApp Donation System</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-20 px-6 max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center">
-        <div class="glass-card p-10 rounded-[40px] border-emerald-200">
-            <h2 class="font-cairo font-black text-3xl text-emerald-950 mb-6">لماذا نحن؟</h2>
-            <ul class="space-y-4">
-                <li class="flex items-start gap-3 font-bold text-emerald-800">
-                    <span class="text-emerald-500 text-xl">✓</span> تحسين جودة الهواء وتقليل الغبار.
-                </li>
-                <li class="flex items-start gap-3 font-bold text-emerald-800">
-                    <span class="text-emerald-500 text-xl">✓</span> دعم التنوع البيولوجي في العراق.
-                </li>
-                <li class="flex items-start gap-3 font-bold text-emerald-800">
-                    <span class="text-emerald-500 text-xl">✓</span> التخفيف من آثار التغير المناخي.
-                </li>
-            </ul>
-        </div>
-        <div class="text-right">
-            <h2 class="font-cairo font-black text-4xl text-emerald-950 mb-6">تأثير تبرعك</h2>
-            <p class="text-lg text-emerald-800 leading-relaxed font-medium">
-                كل دولار تضعه يذهب مباشرة لزراعة شجرة حقيقية في أرض العراق. مبادرة كرم بامرني تهدف لتحويل المناطق القاحلة إلى واحات خضراء تنبض بالحياة.
-            </p>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="py-12 text-center text-emerald-900/40 font-bold text-sm">
-        <p>© 2024 مبادرة ازرع العراق - كرم بامرني</p>
-    </footer>
-
-</div>
-
-<script>
-    let currentDonation = 10;
-
-    function selectDonation(amount, element){
-        currentDonation = amount;
-        document.querySelectorAll('.donation-option').forEach(opt => {
-            opt.classList.remove('selected');
-            opt.classList.add('glass-card');
-        });
-        element.classList.add('selected');
-        element.classList.remove('glass-card');
-        
-        document.getElementById('donate-amount-display').textContent = `$${amount}`;
-        const waLink = `https://wa.me/9647511672958?text=أرغب%20بتبرع%20لمبادرة%20ازرع%20العراق%20بقيمة%20$${amount}`;
-        document.getElementById('donate-link').href = waLink;
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
     }
+    .glow {
+      box-shadow: 0 0 25px rgba(34, 211, 238, 0.35);
+    }
+    .card-hover:hover {
+      transform: translateY(-6px);
+    }
+  </style>
+</head>
 
-    document.getElementById('mobile-menu-btn').addEventListener('click',()=>{
-        document.getElementById('mobile-menu').classList.toggle('open');
-    });
-</script>
+<body class="bg-black text-white">
+
+<!-- HEADER -->
+<header class="fixed top-0 w-full bg-black/80 backdrop-blur z-50">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <!-- ضع شعارك هنا -->
+      <div class="w-10 h-10 rounded-xl bg-cyan-400 glow"></div>
+      <span class="font-bold text-lg">23.iqk</span>
+    </div>
+
+    <nav class="hidden md:flex gap-8 text-gray-300">
+      <a href="#home" class="hover:text-cyan-400">الرئيسية</a>
+      <a href="#portfolio" class="hover:text-cyan-400">أعمالي</a>
+      <a href="#services" class="hover:text-cyan-400">خدماتي</a>
+      <a href="#about" class="hover:text-cyan-400">عني</a>
+      <a href="#contact" class="hover:text-cyan-400">تواصل</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section id="home" class="min-h-screen flex items-center justify-center pt-24">
+  <div class="text-center max-w-3xl px-6">
+    <h1 class="text-4xl md:text-6xl font-black mb-6">
+      مصمم جرافيك محترف
+    </h1>
+    <p class="text-gray-300 text-lg mb-8">
+      تصميم شعارات، إعلانات، وهوية بصرية بأسلوب عصري يلفت الانتباه
+    </p>
+    <div class="flex justify-center gap-4">
+      <a href="#portfolio" class="px-8 py-3 bg-cyan-400 text-black font-bold rounded-xl glow">
+        شاهد أعمالي
+      </a>
+      <a href="#contact" class="px-8 py-3 border border-cyan-400 rounded-xl hover:bg-cyan-400 hover:text-black transition">
+        تواصل معي
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio" class="py-24 bg-neutral-950">
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 class="text-3xl font-bold mb-12 text-center">أعمالي</h2>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="bg-neutral-900 rounded-2xl p-6 card-hover transition">
+        <div class="h-40 bg-gradient-to-br from-cyan-400/30 to-transparent rounded-xl mb-4"></div>
+        <h3 class="font-bold text-lg">تصاميم سوشيال ميديا</h3>
+      </div>
+
+      <div class="bg-neutral-900 rounded-2xl p-6 card-hover transition">
+        <div class="h-40 bg-gradient-to-br from-cyan-400/30 to-transparent rounded-xl mb-4"></div>
+        <h3 class="font-bold text-lg">تصميم شعارات</h3>
+      </div>
+
+      <div class="bg-neutral-900 rounded-2xl p-6 card-hover transition">
+        <div class="h-40 bg-gradient-to-br from-cyan-400/30 to-transparent rounded-xl mb-4"></div>
+        <h3 class="font-bold text-lg">إعلانات وتسويق</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="py-24">
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 class="text-3xl font-bold mb-12 text-center">خدماتي</h2>
+
+    <div class="grid md:grid-cols-4 gap-6">
+      <div class="bg-neutral-900 rounded-2xl p-6 text-center card-hover transition">
+        <h3 class="font-bold mb-2">تصميم شعارات</h3>
+        <p class="text-gray-400 text-sm">شعارات احترافية تعكس هوية قوية</p>
+      </div>
+
+      <div class="bg-neutral-900 rounded-2xl p-6 text-center card-hover transition">
+        <h3 class="font-bold mb-2">سوشيال ميديا</h3>
+        <p class="text-gray-400 text-sm">تصاميم جذابة لزيادة التفاعل</p>
+      </div>
+
+      <div class="bg-neutral-900 rounded-2xl p-6 text-center card-hover transition">
+        <h3 class="font-bold mb-2">إعلانات</h3>
+        <p class="text-gray-400 text-sm">إعلانات تلفت الانتباه وتبيع</p>
+      </div>
+
+      <div class="bg-neutral-900 rounded-2xl p-6 text-center card-hover transition">
+        <h3 class="font-bold mb-2">هوية بصرية</h3>
+        <p class="text-gray-400 text-sm">بناء علامة تجارية متكاملة</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="py-24 bg-neutral-950">
+  <div class="max-w-4xl mx-auto px-6 text-center">
+    <h2 class="text-3xl font-bold mb-6">عني</h2>
+    <p class="text-gray-300 leading-loose">
+      أنا مصمم جرافيك أركز على إنشاء تصاميم قوية، حديثة، وملفتة للانتباه.
+      هدفي مساعدة العلامات التجارية على الظهور بشكل احترافي وجذاب.
+    </p>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="py-24">
+  <div class="max-w-4xl mx-auto px-6 text-center">
+    <h2 class="text-3xl font-bold mb-6">تواصل معي</h2>
+    <p class="text-gray-400 mb-8">جاهز نشتغل سوا؟ راسلني الآن</p>
+
+    <div class="flex justify-center gap-6">
+      <a href="https://www.instagram.com/23.iqk" target="_blank"
+         class="px-6 py-3 border border-cyan-400 rounded-xl hover:bg-cyan-400 hover:text-black transition">
+        Instagram
+      </a>
+
+      <a href="https://www.facebook.com/share/16uLHtzkbe/?mibextid=wwXIfr" target="_blank"
+         class="px-6 py-3 border border-cyan-400 rounded-xl hover:bg-cyan-400 hover:text-black transition">
+        Facebook
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="py-6 text-center text-gray-500 text-sm">
+  © 2026 | Graphic Designer Portfolio
+</footer>
 
 </body>
 </html>
