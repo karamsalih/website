@@ -1,128 +1,186 @@
 <!doctype html>
 <html lang="ar" dir="rtl" class="h-full">
- <head>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ازرع العراق - تبرع واحد = شجرة واحدة</title>
+  
+  <!-- تحميل Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- خطوط عربية -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&amp;family=Tajawal:wght@400;500;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
   <script>
+    // إعداد ألوان وخطوط Tailwind المخصصة
     tailwind.config = {
       theme: {
         extend: {
           colors: {
             emerald: { 50: '#ecfdf5', 100: '#d1fae5', 200: '#a7f3d0', 300: '#6ee7b7', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857', 800: '#065f46', 900: '#064e3b' },
-            sand: { 50: '#fefcf3', 100: '#fdf8e1', 200: '#faf0c3', 300: '#f5e29a' },
-            teal: { 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488' }
+            teal: { 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488' },
+            sand: { 50: '#fefcf3', 100: '#fdf8e1', 200: '#faf0c3', 300: '#f5e29a' }
           },
           fontFamily: { cairo: ['Cairo', 'sans-serif'], tajawal: ['Tajawal', 'sans-serif'] }
         }
       }
     }
   </script>
+
   <style>
+    /* إعدادات عامة */
     body { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
+
+    /* الرسوميات والحركات */
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
     @keyframes floatSlow { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-10px) rotate(5deg); } }
     @keyframes pulse-soft { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 50% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); } }
+
+    /* أنيميشن كلاس */
     .animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
     .animate-fade-in-down { animation: fadeInDown 0.6s ease-out forwards; }
     .animate-float { animation: float 4s ease-in-out infinite; }
     .animate-float-slow { animation: floatSlow 6s ease-in-out infinite; }
     .animate-pulse-soft { animation: pulse-soft 3s ease-in-out infinite; }
+
+    /* التأثير على البطاقات والأزرار */
     .card-hover { transition: all 0.3s ease; }
-    .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); }
+    .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
     .btn-hover { transition: all 0.3s ease; }
-    .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); }
+    .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(16,185,129,0.4); }
+
+    /* تأثير النصوص */
     .gradient-text { background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #14b8a6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    /* الهيرو */
     .hero-gradient { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 30%, #fefcf3 70%, #fdf8e1 100%); }
     .tree-pattern { background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L35 20 L40 20 L30 35 L35 35 L25 50 L30 50 L30 55 L30 50 L35 50 L25 35 L30 35 L20 20 L25 20 Z' fill='%2310b98110' /%3E%3C/svg%3E"); }
+
+    /* خيارات التبرع */
     .donation-option.selected { border-color: #059669; background: linear-gradient(135deg, #d1fae5, #a7f3d0); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); }
+
+    /* القائمة على الموبايل */
     .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; }
     .mobile-menu.open { max-height: 400px; }
-    .leaf-decoration { position: absolute; opacity: 0.6; }
-  </style>
- </head>
- <body class="h-full font-tajawal text-gray-800 bg-white">
-  <div id="app" class="h-full w-full overflow-auto">
-   <nav id="navbar" class="fixed top-0 right-0 left-0 z-50 bg-white/95 backdrop-blur-md shadow-sm transition-all duration-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-     <div class="flex items-center justify-between h-16 lg:h-20">
-      <div class="flex items-center gap-3">
-       <div class="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg">
-        <svg class="w-6 h-6 lg:w-7 lg:h-7 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2C13.5 2 15 3 15 5C15 7 13 9 12 10C11 9 9 7 9 5C9 3 10.5 2 12 2ZM12 10C14 10 18 12 18 16C18 20 14 22 12 22C10 22 6 20 6 16C6 12 10 10 12 10ZM12 12C10 12 8 14 8 16C8 18 10 20 12 20C14 20 16 18 16 16C16 14 14 12 12 12Z" /></svg>
-       </div><span class="font-cairo font-bold text-lg lg:text-xl text-emerald-800">ازرع العراق</span>
-      </div>
-      <div class="hidden lg:flex items-center gap-8">
-       <a href="#about" class="text-gray-700 hover:text-emerald-600 font-medium">عن المبادرة</a>
-       <a href="#why-trees" class="text-gray-700 hover:text-emerald-600 font-medium">لماذا الأشجار؟</a>
-       <a href="#impact" class="text-gray-700 hover:text-emerald-600 font-medium">تأثيرنا</a>
-       <a href="#donate" class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-2.5 rounded-full font-cairo font-semibold btn-hover shadow-lg">تبرع الآن 🌱</a>
-      </div>
-      <button id="mobile-menu-btn" class="lg:hidden p-2 text-gray-700"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg></button>
-     </div>
-     <div id="mobile-menu" class="mobile-menu lg:hidden">
-      <div class="py-4 space-y-3 border-t border-gray-100">
-       <a href="#about" class="block py-2 text-gray-700">عن المبادرة</a>
-       <a href="#donate" class="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-full font-cairo font-semibold mt-4">تبرع الآن 🌱</a>
-      </div>
-     </div>
-    </div>
-   </nav>
 
-   <section class="hero-gradient min-h-screen pt-20 lg:pt-24 relative overflow-hidden">
-    <div class="absolute inset-0 tree-pattern opacity-30"></div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 relative z-10">
-     <div class="grid lg:grid-cols-2 gap-12 items-center">
-      <div class="text-center lg:text-right">
-       <h1 class="font-cairo font-black text-4xl sm:text-5xl lg:text-6xl text-emerald-900 leading-tight mb-6 animate-fade-in-up">ازرع شجرة اليوم، <span class="gradient-text block mt-2">احمِ مستقبل العراق غداً</span></h1>
-       <p class="text-lg text-gray-600 mb-8 max-w-xl mx-auto lg:mx-0 animate-fade-in-up delay-200">مبادرة بيئية شفافة لمكافحة التصحر والعواصف الترابية في العراق.</p>
-       <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-up delay-300">
-        <a href="#donate" class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-8 py-4 rounded-full font-cairo font-bold text-lg btn-hover shadow-xl animate-pulse-soft">تبرع وازرع شجرة 🌱</a>
-       </div>
+  </style>
+</head>
+<body class="h-full font-tajawal text-gray-800 bg-white">
+<div id="app" class="h-full w-full overflow-auto">
+
+  <!-- Navbar -->
+  <nav id="navbar" class="fixed top-0 right-0 left-0 z-50 bg-white/95 backdrop-blur-md shadow-sm transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 lg:h-20">
+        <!-- شعار واسم الموقع -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg">
+            <svg class="w-6 h-6 lg:w-7 lg:h-7 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2C13.5 2 15 3 15 5C15 7 13 9 12 10C11 9 9 7 9 5C9 3 10.5 2 12 2ZM12 10C14 10 18 12 18 16C18 20 14 22 12 22C10 22 6 20 6 16C6 12 10 10 12 10ZM12 12C10 12 8 14 8 16C8 18 10 20 12 20C14 20 16 18 16 16C16 14 14 12 12 12Z"/></svg>
+          </div>
+          <span class="font-cairo font-bold text-lg lg:text-xl text-emerald-800">ازرع العراق</span>
+        </div>
+        <!-- روابط القائمة -->
+        <div class="hidden lg:flex items-center gap-8">
+          <a href="#about" class="text-gray-700 hover:text-emerald-600 font-medium">عن المبادرة</a>
+          <a href="#why-trees" class="text-gray-700 hover:text-emerald-600 font-medium">لماذا الأشجار؟</a>
+          <a href="#impact" class="text-gray-700 hover:text-emerald-600 font-medium">تأثيرنا</a>
+          <a href="#donate" class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-2.5 rounded-full font-cairo font-semibold btn-hover shadow-lg">تبرع الآن 🌱</a>
+        </div>
+        <!-- زر القائمة على الموبايل -->
+        <button id="mobile-menu-btn" class="lg:hidden p-2 text-gray-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
       </div>
-      <div class="relative flex justify-center items-center animate-fade-in-up">
-        <div class="w-64 h-64 sm:w-80 lg:w-96 relative">
-          <svg viewbox="0 0 200 200" class="w-full h-full animate-float">
-            <ellipse cx="100" cy="185" rx="45" ry="10" fill="#065f46" opacity="0.2" />
-            <rect x="90" y="130" width="20" height="50" rx="3" fill="#92400e" />
-            <ellipse cx="100" cy="90" rx="55" ry="50" fill="#059669" />
-            <ellipse cx="85" cy="100" rx="35" ry="35" fill="#10b981" />
-          </svg>
+      <!-- القائمة على الموبايل -->
+      <div id="mobile-menu" class="mobile-menu lg:hidden">
+        <div class="py-4 space-y-3 border-t border-gray-100">
+          <a href="#about" class="block py-2 text-gray-700">عن المبادرة</a>
+          <a href="#donate" class="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-full font-cairo font-semibold mt-4">تبرع الآن 🌱</a>
         </div>
       </div>
-     </div>
     </div>
-   </section>
+  </nav>
 
-   <section id="donate" class="py-16 lg:py-24 bg-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-     <div class="text-center mb-12">
-      <h2 class="font-cairo font-bold text-3xl lg:text-4xl text-gray-900 mb-4">ازرع أشجارك <span class="gradient-text">اليوم</span></h2>
-     </div>
-     <div class="bg-gradient-to-br from-gray-50 to-emerald-50 rounded-3xl p-6 lg:p-10 shadow-xl border border-gray-100">
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-       <button onclick="selectDonation(1, this)" class="donation-option bg-white rounded-2xl p-6 border-2 border-gray-200 text-center cursor-pointer">
-        <div class="text-3xl mb-2">🌱</div><div class="font-cairo font-bold text-2xl text-emerald-600">$1</div><div class="text-gray-600 text-sm">شجرة واحدة</div>
-       </button>
-       <button onclick="selectDonation(10, this)" class="donation-option bg-white rounded-2xl p-6 border-2 border-emerald-500 text-center cursor-pointer selected">
-        <div class="text-3xl mb-2">🌳</div><div class="font-cairo font-bold text-2xl text-emerald-600">$10</div><div class="text-gray-600 text-sm">10 أشجار</div>
-       </button>
+  <!-- قسم الهيرو -->
+  <section class="hero-gradient min-h-screen pt-20 lg:pt-24 relative overflow-hidden">
+    <div class="absolute inset-0 tree-pattern opacity-30"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 relative z-10">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="text-center lg:text-right">
+          <!-- العنوان الرئيسي مع تأثير Gradient -->
+          <h1 class="font-cairo font-black text-4xl sm:text-5xl lg:text-6xl text-emerald-900 leading-tight mb-6 animate-fade-in-up">
+            ازرع شجرة اليوم، <span class="gradient-text block mt-2">احمِ مستقبل العراق غداً</span>
+          </h1>
+          <!-- النص الترويجي -->
+          <p class="text-lg text-gray-600 mb-8 max-w-xl mx-auto lg:mx-0 animate-fade-in-up delay-200">
+            مبادرة بيئية شفافة لمكافحة التصحر والعواصف الترابية في العراق. كل تبرع يزرع شجرة ويعيد الأمل للأراضي المدمرة.
+          </p>
+          <!-- زر التبرع البارز -->
+          <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-up delay-300">
+            <a href="#donate" class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-8 py-4 rounded-full font-cairo font-bold text-lg btn-hover shadow-xl animate-pulse-soft">
+              تبرع وازرع شجرة 🌱
+            </a>
+          </div>
+        </div>
+        <!-- الرسم التوضيحي لشجرة -->
+        <div class="relative flex justify-center items-center animate-fade-in-up">
+          <div class="w-64 h-64 sm:w-80 lg:w-96 relative">
+            <svg viewBox="0 0 200 200" class="w-full h-full animate-float">
+              <ellipse cx="100" cy="185" rx="45" ry="10" fill="#065f46" opacity="0.2" />
+              <rect x="90" y="130" width="20" height="50" rx="3" fill="#92400e" />
+              <ellipse cx="100" cy="90" rx="55" ry="50" fill="#059669" />
+              <ellipse cx="85" cy="100" rx="35" ry="35" fill="#10b981" />
+            </svg>
+          </div>
+        </div>
       </div>
-      <!-- زر التبرع عبر واتس آب -->
-      <a id="donate-link" href="https://wa.me/07511672958?text=أرغب%20بتبرع%20لمبادرة%20ازرع%20العراق%20بقيمة%20$10" target="_blank" class="w-full inline-flex bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-5 rounded-2xl font-cairo font-bold text-xl btn-hover items-center justify-center gap-3">
-        <span>تبرع الآن عبر واتس آب</span> <span id="donate-amount-display">($10)</span>
-      </a>
-     </div>
     </div>
-   </section>
+  </section>
 
-   <section id="contact" class="py-16 lg:py-24 bg-gray-50">
+  <!-- قسم التبرع -->
+  <section id="donate" class="py-16 lg:py-24 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="font-cairo font-bold text-3xl lg:text-4xl text-gray-900 mb-4">
+          ازرع أشجارك <span class="gradient-text">اليوم</span>
+        </h2>
+        <p class="text-gray-600 max-w-2xl mx-auto">
+          كل تبرع يساهم في إعادة الحياة للمناطق المتصحرة ودعم المجتمع المحلي في العراق. اختر المبلغ الذي يناسبك ثم تواصل معنا عبر واتس آب لإتمام التبرع.
+        </p>
+      </div>
+
+      <!-- خيارات المبلغ -->
+      <div class="bg-gradient-to-br from-gray-50 to-emerald-50 rounded-3xl p-6 lg:p-10 shadow-xl border border-gray-100">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <button onclick="selectDonation(1, this)" class="donation-option bg-white rounded-2xl p-6 border-2 border-gray-200 text-center cursor-pointer">
+            <div class="text-3xl mb-2">🌱</div>
+            <div class="font-cairo font-bold text-2xl text-emerald-600">$1</div>
+            <div class="text-gray-600 text-sm">شجرة واحدة</div>
+          </button>
+          <button onclick="selectDonation(10, this)" class="donation-option bg-white rounded-2xl p-6 border-2 border-emerald-500 text-center cursor-pointer selected">
+            <div class="text-3xl mb-2">🌳</div>
+            <div class="font-cairo font-bold text-2xl text-emerald-600">$10</div>
+            <div class="text-gray-600 text-sm">10 أشجار</div>
+          </button>
+        </div>
+
+        <!-- زر التبرع عبر واتس آب ديناميكي -->
+        <a id="donate-link" href="https://wa.me/07511672958?text=أرغب%20بتبرع%20لمبادرة%20ازرع%20العراق%20بقيمة%20$10" target="_blank"
+           class="w-full inline-flex bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-5 rounded-2xl font-cairo font-bold text-xl btn-hover items-center justify-center gap-3">
+          <span>تبرع الآن عبر واتس آب</span>
+          <span id="donate-amount-display">($10)</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- قسم التواصل -->
+  <section id="contact" class="py-16 lg:py-24 bg-gray-50">
     <div class="max-w-4xl mx-auto px-4">
       <div class="bg-white rounded-3xl p-8 shadow-xl">
         <h3 class="font-cairo font-bold text-2xl mb-6">أرسل رسالة</h3>
@@ -137,38 +195,41 @@
         <div id="form-success" class="hidden text-center p-6 bg-emerald-50 text-emerald-700 rounded-xl">تم الإرسال بنجاح!</div>
       </div>
     </div>
-   </section>
+  </section>
 
-  </div>
+</div>
 
-  <script>
-    let currentDonation = 10;
+<script>
+  // المبلغ الحالي للتبرع
+  let currentDonation = 10;
 
-    function selectDonation(amount, element) {
-      currentDonation = amount;
-      document.querySelectorAll('.donation-option').forEach(opt => opt.classList.remove('selected'));
-      element.classList.add('selected');
-      document.getElementById('donate-amount-display').textContent = `($${amount})`;
+  // تحديث رابط واتس آب ديناميكي عند اختيار مبلغ
+  function selectDonation(amount, element) {
+    currentDonation = amount;
+    document.querySelectorAll('.donation-option').forEach(opt => opt.classList.remove('selected'));
+    element.classList.add('selected');
+    document.getElementById('donate-amount-display').textContent = `($${amount})`;
 
-      // تحديث رابط واتس آب ديناميكي
-      const waLink = `https://wa.me/07511672958?text=أرغب%20بتبرع%20لمبادرة%20ازرع%20العراق%20بقيمة%20$${amount}`;
-      document.getElementById('donate-link').href = waLink;
-    }
+    const waLink = `https://wa.me/07511672958?text=أرغب%20بتبرع%20لمبادرة%20ازرع%20العراق%20بقيمة%20$${amount}`;
+    document.getElementById('donate-link').href = waLink;
+  }
 
-    async function handleContactSubmit(e) {
-      e.preventDefault();
-      const btn = e.target.querySelector('button');
-      btn.disabled = true;
-      alert('تم إرسال رسالتك بنجاح!'); // يمكنك ربطها بقاعدة بيانات إذا أحببت
-      btn.disabled = false;
-      e.target.reset();
-    }
+  // نموذج التواصل
+  async function handleContactSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.disabled = true;
+    alert('تم إرسال رسالتك بنجاح!');
+    btn.disabled = false;
+    e.target.reset();
+  }
 
-    // Mobile Menu
-    document.getElementById('mobile-menu-btn').addEventListener('click', () => {
-      const menu = document.getElementById('mobile-menu');
-      menu.classList.toggle('open');
-    });
-  </script>
- </body>
+  // قائمة الموبايل
+  document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+    const menu = document.getElementById('mobile-menu');
+    menu.classList.toggle('open');
+  });
+</script>
+
+</body>
 </html>
