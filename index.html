@@ -13,25 +13,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          emerald: {50:'#ecfdf5',100:'#d1fae5',200:'#a7f3d0',300:'#6ee7b7',400:'#34d399',500:'#10b981',600:'#059669',700:'#047857',800:'#065f46',900:'#064e3b'},
-          teal: {400:'#2dd4bf',500:'#14b8a6',600:'#0d9488'},
-          sand: {50:'#fefcf3',100:'#fdf8e1',200:'#faf0c3',300:'#f5e29a'}
-        },
-        fontFamily: { cairo:['Cairo','sans-serif'], tajawal:['Tajawal','sans-serif'] }
-      }
-    }
-  }
-</script>
-
 <style>
 html{scroll-behavior:smooth;}
-body{box-sizing:border-box;}
+body{box-sizing:border-box;font-family:'Tajawal', sans-serif;}
 
+/* Animations */
 @keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
 @keyframes pulse-soft{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(16,185,129,0.4);}50%{transform:scale(1.02);box-shadow:0 0 0 15px rgba(16,185,129,0);}}
 @keyframes sway {0%,100%{transform:rotate(0deg);}50%{transform:rotate(3deg);}}
@@ -42,20 +28,27 @@ body{box-sizing:border-box;}
 .animate-sway{animation:sway 4s ease-in-out infinite alternate;}
 .animate-sway-slow{animation:sway-slow 6s ease-in-out infinite alternate;}
 
+/* Buttons & Cards */
 .card-hover{transition:all 0.3s ease;}
 .card-hover:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(0,0,0,0.1);}
 .btn-hover{transition:all 0.3s ease;}
 .btn-hover:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(16,185,129,0.4);}
 
+/* Gradient Text */
 .gradient-text{background:linear-gradient(135deg,#059669 0%,#0d9488 50%,#14b8a6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* Hero Background */
 .hero-gradient{background:linear-gradient(135deg,#ecfdf5 0%,#d1fae5 30%,#fefcf3 70%,#fdf8e1 100%);}
 .tree-pattern{background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L35 20 L40 20 L30 35 L35 35 L25 50 L30 50 L30 55 L30 50 L35 50 L25 35 L30 35 L20 20 L25 20 Z' fill='%2310b98110' /%3E%3C/svg%3E");}
+
+/* Donation */
 .donation-option.selected{border-color:#059669;background:linear-gradient(135deg,#d1fae5,#a7f3d0);box-shadow:0 0 0 3px rgba(16,185,129,0.2);}
 .mobile-menu{max-height:0;overflow:hidden;transition:max-height 0.4s ease-out;}
 .mobile-menu.open{max-height:400px;}
 </style>
 </head>
-<body class="h-full font-tajawal text-gray-800 bg-white">
+<body class="h-full bg-white text-gray-800">
+
 <div id="app" class="h-full w-full overflow-auto">
 
 <!-- Navbar -->
@@ -82,6 +75,7 @@ body{box-sizing:border-box;}
 <div id="mobile-menu" class="mobile-menu lg:hidden">
   <div class="py-4 space-y-3 border-t border-gray-100">
     <a href="#about" class="block py-2 text-gray-700">عن المبادرة</a>
+    <a href="#impact" class="block py-2 text-gray-700">تأثيرنا</a>
     <a href="#donate" class="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-full font-cairo font-semibold mt-4">تبرع الآن 🌱</a>
   </div>
 </div>
@@ -93,14 +87,14 @@ body{box-sizing:border-box;}
 <div class="absolute inset-0 tree-pattern opacity-20"></div>
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 relative z-10">
 <div class="grid lg:grid-cols-2 gap-12 items-center">
-  <div class="text-center lg:text-right">
-    <h1 class="font-cairo font-black text-4xl sm:text-5xl lg:text-6xl text-emerald-900 leading-tight mb-6 animate-fade-in-up">
+  <div class="text-center lg:text-right animate-fade-in-up">
+    <h1 class="font-cairo font-black text-4xl sm:text-5xl lg:text-6xl text-emerald-900 leading-tight mb-6">
       ازرع شجرة اليوم، <span class="gradient-text block mt-2">احمِ مستقبل العراق 🌿</span>
     </h1>
-    <p class="text-lg text-gray-600 mb-8 max-w-xl mx-auto lg:mx-0 animate-fade-in-up delay-200">
+    <p class="text-lg text-gray-600 mb-8 max-w-xl mx-auto lg:mx-0">
       العراق يعاني من التصحر وفقدان الغطاء النباتي. كل شجرة تزرعها تساهم في تحسين جودة الهواء، تقليل العواصف الترابية، ودعم الحياة البرية المحلية.
     </p>
-    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-up delay-300">
+    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
       <a href="#donate" class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-8 py-4 rounded-full font-cairo font-bold text-lg btn-hover shadow-xl animate-pulse-soft">
         تبرع وازرع شجرة 🌱
       </a>
@@ -122,8 +116,8 @@ body{box-sizing:border-box;}
 </section>
 
 <!-- About Section -->
-<section id="about" class="py-16 lg:py-24 bg-white">
-<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+<section id="about" class="py-16 lg:py-24 bg-white text-center">
+<div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in-up">
 <h2 class="font-cairo font-bold text-3xl lg:text-4xl text-gray-900 mb-6">لماذا التبرع وزراعة الأشجار مهم؟</h2>
 <p class="text-gray-700 mb-6">العراق يواجه تحديات بيئية كبيرة، منها التصحر ونقص الغطاء النباتي. زراعة الأشجار تساعد على:</p>
 <ul class="text-gray-600 list-disc list-inside space-y-2 text-lg">
@@ -136,8 +130,8 @@ body{box-sizing:border-box;}
 </section>
 
 <!-- Impact Section -->
-<section id="impact" class="py-16 lg:py-24 bg-gray-50">
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+<section id="impact" class="py-16 lg:py-24 bg-gray-50 text-center">
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in-up">
 <h2 class="font-cairo font-bold text-3xl lg:text-4xl text-gray-900 mb-6">تأثير تبرعك</h2>
 <p class="text-gray-700 mb-8 max-w-3xl mx-auto">كل دولار = شجرة واحدة 🌳. تبرعك يساهم في خلق مساحات خضراء، تقليل التلوث، ودعم المجتمعات المحلية. معًا يمكننا استعادة خضرة العراق وحماية أجياله القادمة.</p>
 <div class="grid lg:grid-cols-3 gap-8 text-left">
@@ -158,8 +152,8 @@ body{box-sizing:border-box;}
 </section>
 
 <!-- Donate Section -->
-<section id="donate" class="py-16 lg:py-24 bg-white">
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+<section id="donate" class="py-16 lg:py-24 bg-white text-center">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in-up">
 <h2 class="font-cairo font-bold text-3xl lg:text-4xl text-gray-900 mb-4">تبرع وازرع شجرة اليوم 🌳</h2>
 <p class="text-gray-600 mb-8 text-lg">اختر المبلغ الذي يناسبك، وسنرتب لك عملية التبرع مباشرة عبر واتس آب.</p>
 
@@ -191,6 +185,7 @@ class="w-full inline-flex bg-gradient-to-r from-emerald-500 to-emerald-600 text-
 <span>تبرع الآن عبر واتس آب</span>
 <span id="donate-amount-display">($10)</span>
 </a>
+
 </div>
 </section>
 
