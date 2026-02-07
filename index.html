@@ -31,25 +31,25 @@
   <style>
     body{box-sizing:border-box;}
     html{scroll-behavior:smooth;}
-    
+
     /* Animations */
     @keyframes fadeInUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
     @keyframes fadeInDown{from{opacity:0;transform:translateY(-20px);}to{opacity:1;transform:translateY(0);}}
     @keyframes pulse-soft{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(16,185,129,0.4);}50%{transform:scale(1.02);box-shadow:0 0 0 15px rgba(16,185,129,0);}}
     @keyframes sway {0%,100%{transform:rotate(0deg);}50%{transform:rotate(3deg);}}
     @keyframes sway-slow {0%,100%{transform:rotate(0deg);}50%{transform:rotate(2deg);}}
-    
+
     .animate-fade-in-up{animation:fadeInUp 0.8s ease-out forwards;}
     .animate-fade-in-down{animation:fadeInDown 0.6s ease-out forwards;}
     .animate-pulse-soft{animation:pulse-soft 3s ease-in-out infinite;}
     .animate-sway{animation:sway 4s ease-in-out infinite alternate;}
     .animate-sway-slow{animation:sway-slow 6s ease-in-out infinite alternate;}
-    
+
     .card-hover{transition:all 0.3s ease;}
     .card-hover:hover{transform:translateY(-8px);box-shadow:0 20px 40px rgba(0,0,0,0.1);}
     .btn-hover{transition:all 0.3s ease;}
     .btn-hover:hover{transform:translateY(-2px);box-shadow:0 10px 25px rgba(16,185,129,0.4);}
-    
+
     .gradient-text{background:linear-gradient(135deg,#059669 0%,#0d9488 50%,#14b8a6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
     .hero-gradient{background:linear-gradient(135deg,#ecfdf5 0%,#d1fae5 30%,#fefcf3 70%,#fdf8e1 100%);}
     .tree-pattern{background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L35 20 L40 20 L30 35 L35 35 L25 50 L30 50 L30 55 L30 50 L35 50 L25 35 L30 35 L20 20 L25 20 Z' fill='%2310b98110' /%3E%3C/svg%3E");}
@@ -67,7 +67,7 @@
       <div class="flex items-center justify-between h-16 lg:h-20">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg">
-            <svg class="w-6 h-6 lg:w-7 lg:h-7 text-white" fill="currentColor" viewbox="0 0 24 24">
+            <svg class="w-6 h-6 lg:w-7 lg:h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2C13.5 2 15 3 15 5C15 7 13 9 12 10C11 9 9 7 9 5C9 3 10.5 2 12 2ZM12 10C14 10 18 12 18 16C18 20 14 22 12 22C10 22 6 20 6 16C6 12 10 10 12 10ZM12 12C10 12 8 14 8 16C8 18 10 20 12 20C14 20 16 18 16 16C16 14 14 12 12 12Z"/>
             </svg>
           </div>
@@ -79,7 +79,7 @@
           <a href="#donate" class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-2.5 rounded-full font-cairo font-semibold btn-hover shadow-lg">تبرع الآن 🌱</a>
         </div>
         <button id="mobile-menu-btn" class="lg:hidden p-2 text-gray-700">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
       </div>
       <div id="mobile-menu" class="mobile-menu lg:hidden">
@@ -114,44 +114,88 @@
         <!-- أيقونة شجرة SVG متحركة -->
         <div class="relative flex justify-center items-center animate-fade-in-up">
           <svg viewBox="0 0 200 200" class="w-64 sm:w-80 lg:w-96">
-            <!-- جذع الشجرة -->
             <rect x="95" y="120" width="10" height="50" rx="3" fill="#92400e">
-              <animateTransform attributeName="transform" type="translate" values="0 0; 0 -2; 0 0" dur="3s" repeatCount="indefinite" />
+              <animateTransform attributeName="transform" type="translate" values="0 0;0 -2;0 0" dur="3s" repeatCount="indefinite"/>
             </rect>
-            <!-- أوراق كبيرة -->
             <ellipse cx="100" cy="90" rx="55" ry="50" fill="#059669" class="animate-sway-slow"/>
-            <!-- أوراق صغيرة -->
             <ellipse cx="85" cy="100" rx="35" ry="35" fill="#10b981" class="animate-sway"/>
             <ellipse cx="115" cy="100" rx="30" ry="30" fill="#34d399" class="animate-sway-slow"/>
-            <!-- ظل الأرض -->
-            <ellipse cx="100" cy="185" rx="45" ry="10" fill="#065f46" opacity="0.2" />
+            <ellipse cx="100" cy="185" rx="45" ry="10" fill="#065f46" opacity="0.2"/>
           </svg>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- باقي الموقع (عن المبادرة، تأثير، تبرع) يبقى كما هو مع زر التبرع -->
+  <!-- About Section -->
+  <section id="about" class="py-16 lg:py-24 bg-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="font-cairo font-bold text-3xl lg:text-4xl text-gray-900 mb-6">لماذا التبرع وزراعة الأشجار مهم؟</h2>
+      <p class="text-gray-700 mb-6">
+        العراق يواجه تحديات بيئية كبيرة، منها التصحر ونقص الغطاء النباتي. زراعة الأشجار تساعد على:
+      </p>
+      <ul class="text-gray-600 list-disc list-inside space-y-2 text-lg">
+        <li>🌱 إعادة التوازن البيئي وحماية التربة من التآكل.</li>
+        <li>🌬 تحسين جودة الهواء وتقليل الغبار والعواصف الترابية.</li>
+        <li>🦜 دعم التنوع البيولوجي وإعادة الحياة للنباتات والحيوانات.</li>
+        <li>☀️ التخفيف من آثار التغير المناخي وتحسين مناخ العراق.</li>
+      </ul>
+    </div>
+  </section>
 
-<script>
-  // Mobile menu toggle
-  document.getElementById('mobile-menu-btn').addEventListener('click',()=>{
-    const menu=document.getElementById('mobile-menu');
-    menu.classList.toggle('open');
-  });
+  <!-- Impact Section -->
+  <section id="impact" class="py-16 lg:py-24 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="font-cairo font-bold text-3xl lg:text-4xl text-gray-900 mb-6">تأثير تبرعك</h2>
+      <p class="text-gray-700 mb-8 max-w-3xl mx-auto">
+        كل دولار = شجرة واحدة 🌳. تبرعك يساهم في خلق مساحات خضراء، تقليل التلوث، ودعم المجتمعات المحلية. 
+        معًا يمكننا استعادة خضرة العراق وحماية أجياله القادمة.
+      </p>
+      <div class="grid lg:grid-cols-3 gap-8 text-left">
+        <div class="bg-white rounded-2xl p-6 shadow-lg card-hover">
+          <h3 class="font-bold text-xl mb-2">📈 تحسين البيئة</h3>
+          <p class="text-gray-600">الأشجار تمنع التصحر، تحمي التربة وتساعد على استعادة الأراضي الزراعية.</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 shadow-lg card-hover">
+          <h3 class="font-bold text-xl mb-2">🌬 تقليل الغبار</h3>
+          <p class="text-gray-600">غاباتنا تمتص الغبار وتقلل العواصف الترابية، محسنًا الهواء لكل العراقيين.</p>
+        </div>
+        <div class="bg-white rounded-2xl p-6 shadow-lg card-hover">
+          <h3 class="font-bold text-xl mb-2">🌱 دعم المجتمع</h3>
+          <p class="text-gray-600">المبادرة توفر فرص عمل، تعليم بيئي، ودعم الأهالي في المناطق المتضررة.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  // Donation logic
-  let currentDonation = 10;
-  function selectDonation(amount, element){
-    currentDonation = amount;
-    document.querySelectorAll('.donation-option').forEach(opt=>opt.classList.remove('selected'));
-    element.classList.add('selected');
-    document.getElementById('donate-amount-display').textContent = `($${amount})`;
-    const waLink = `https://wa.me/07511672958?text=أرغب%20بتبرع%20لمبادرة%20ازرع%20العراق%20بقيمة%20$${amount}`;
-    document.getElementById('donate-link').href = waLink;
-  }
-</script>
+  <!-- Donate Section -->
+  <section id="donate" class="py-16 lg:py-24 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="font-cairo font-bold text-3xl lg:text-4xl text-gray-900 mb-4">تبرع وازرع شجرة اليوم 🌳</h2>
+      <p class="text-gray-600 mb-8 text-lg">اختر المبلغ الذي يناسبك، وسنرتب لك عملية التبرع مباشرة عبر واتس آب.</p>
+      
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <button onclick="selectDonation(1, this)" class="donation-option bg-white rounded-2xl p-6 border-2 border-gray-200 text-center cursor-pointer">
+          <div class="text-3xl mb-2">🌱</div>
+          <div class="font-cairo font-bold text-2xl text-emerald-600">$1</div>
+          <div class="text-gray-600 text-sm">شجرة واحدة</div>
+        </button>
+        <button onclick="selectDonation(5, this)" class="donation-option bg-white rounded-2xl p-6 border-2 border-gray-200 text-center cursor-pointer">
+          <div class="text-3xl mb-2">🌳</div>
+          <div class="font-cairo font-bold text-2xl text-emerald-600">$5</div>
+          <div class="text-gray-600 text-sm">5 أشجار</div>
+        </button>
+        <button onclick="selectDonation(10, this)" class="donation-option bg-white rounded-2xl p-6 border-2 border-emerald-500 text-center cursor-pointer selected">
+          <div class="text-3xl mb-2">🌴</div>
+          <div class="font-cairo font-bold text-2xl text-emerald-600">$10</div>
+          <div class="text-gray-600 text-sm">10 أشجار</div>
+        </button>
+        <button onclick="selectDonation(50, this)" class="donation-option bg-white rounded-2xl p-6 border-2 border-gray-200 text-center cursor-pointer">
+          <div class="text-3xl mb-2">🌳🌳🌳</div>
+          <div class="font-cairo font-bold text-2xl text-emerald-600">$50</div>
+          <div class="text-gray-600 text-sm">50 شجرة</div>
+        </button>
+      </div>
 
-</div>
-</body>
-</html>
+      <a id="donate-link" href="https://wa.me/07511672958?text=أرغب%20بتبرع%20لمبادرة%20ازرع%20العراق%20بقيمة%20$10" target="_blank"
+         class="w-full inline-flex bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-5
