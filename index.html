@@ -8,19 +8,13 @@
   <!-- Tailwind CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Google Font (Arabic) -->
+  <!-- Arabic Font -->
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      font-family: 'Cairo', sans-serif;
-    }
-    .glow {
-      box-shadow: 0 0 25px rgba(34, 211, 238, 0.35);
-    }
-    .card-hover:hover {
-      transform: translateY(-6px);
-    }
+    body { font-family: 'Cairo', sans-serif; }
+    .glow { box-shadow: 0 0 25px rgba(34, 211, 238, 0.35); }
+    .card-hover:hover { transform: translateY(-6px); }
   </style>
 </head>
 
@@ -28,9 +22,8 @@
 
 <!-- HEADER -->
 <header class="fixed top-0 w-full bg-black/80 backdrop-blur z-50">
-  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
     <div class="flex items-center gap-3">
-      <!-- ضع شعارك هنا -->
       <div class="w-10 h-10 rounded-xl bg-cyan-400 glow"></div>
       <span class="font-bold text-lg">23.iqk</span>
     </div>
@@ -48,9 +41,7 @@
 <!-- HERO -->
 <section id="home" class="min-h-screen flex items-center justify-center pt-24">
   <div class="text-center max-w-3xl px-6">
-    <h1 class="text-4xl md:text-6xl font-black mb-6">
-      مصمم جرافيك محترف
-    </h1>
+    <h1 class="text-4xl md:text-6xl font-black mb-6">مصمم جرافيك محترف</h1>
     <p class="text-gray-300 text-lg mb-8">
       تصميم شعارات، إعلانات، وهوية بصرية بأسلوب عصري يلفت الانتباه
     </p>
@@ -65,87 +56,90 @@
   </div>
 </section>
 
-<!-- PORTFOLIO -->
+<!-- PORTFOLIO (ICONS) -->
 <section id="portfolio" class="py-24 bg-neutral-950">
-  <div class="max-w-7xl mx-auto px-6">
+  <div class="max-w-6xl mx-auto px-6">
     <h2 class="text-3xl font-bold mb-12 text-center">أعمالي</h2>
 
-    <div class="grid md:grid-cols-3 gap-8">
-      <div class="bg-neutral-900 rounded-2xl p-6 card-hover transition">
-        <div class="h-40 bg-gradient-to-br from-cyan-400/30 to-transparent rounded-xl mb-4"></div>
+    <div class="grid md:grid-cols-3 gap-8 text-center">
+      
+      <!-- Social Media -->
+      <div class="bg-neutral-900 p-8 rounded-2xl card-hover transition">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-xl bg-cyan-400/20 flex items-center justify-center">
+          <svg class="w-8 h-8 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M7 2h10a2 2 0 012 2v16l-7-3-7 3V4a2 2 0 012-2z"/>
+          </svg>
+        </div>
         <h3 class="font-bold text-lg">تصاميم سوشيال ميديا</h3>
       </div>
 
-      <div class="bg-neutral-900 rounded-2xl p-6 card-hover transition">
-        <div class="h-40 bg-gradient-to-br from-cyan-400/30 to-transparent rounded-xl mb-4"></div>
+      <!-- Logos -->
+      <div class="bg-neutral-900 p-8 rounded-2xl card-hover transition">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-xl bg-cyan-400/20 flex items-center justify-center">
+          <svg class="w-8 h-8 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2l9 4.9v10.2L12 22 3 17.1V6.9L12 2z"/>
+          </svg>
+        </div>
         <h3 class="font-bold text-lg">تصميم شعارات</h3>
       </div>
 
-      <div class="bg-neutral-900 rounded-2xl p-6 card-hover transition">
-        <div class="h-40 bg-gradient-to-br from-cyan-400/30 to-transparent rounded-xl mb-4"></div>
+      <!-- Ads -->
+      <div class="bg-neutral-900 p-8 rounded-2xl card-hover transition">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-xl bg-cyan-400/20 flex items-center justify-center">
+          <svg class="w-8 h-8 text-cyan-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M4 4h16v4H4zm0 6h16v10H4z"/>
+          </svg>
+        </div>
         <h3 class="font-bold text-lg">إعلانات وتسويق</h3>
       </div>
+
     </div>
   </div>
 </section>
 
 <!-- SERVICES -->
 <section id="services" class="py-24">
-  <div class="max-w-7xl mx-auto px-6">
-    <h2 class="text-3xl font-bold mb-12 text-center">خدماتي</h2>
+  <div class="max-w-7xl mx-auto px-6 text-center">
+    <h2 class="text-3xl font-bold mb-12">خدماتي</h2>
 
     <div class="grid md:grid-cols-4 gap-6">
-      <div class="bg-neutral-900 rounded-2xl p-6 text-center card-hover transition">
-        <h3 class="font-bold mb-2">تصميم شعارات</h3>
-        <p class="text-gray-400 text-sm">شعارات احترافية تعكس هوية قوية</p>
-      </div>
-
-      <div class="bg-neutral-900 rounded-2xl p-6 text-center card-hover transition">
-        <h3 class="font-bold mb-2">سوشيال ميديا</h3>
-        <p class="text-gray-400 text-sm">تصاميم جذابة لزيادة التفاعل</p>
-      </div>
-
-      <div class="bg-neutral-900 rounded-2xl p-6 text-center card-hover transition">
-        <h3 class="font-bold mb-2">إعلانات</h3>
-        <p class="text-gray-400 text-sm">إعلانات تلفت الانتباه وتبيع</p>
-      </div>
-
-      <div class="bg-neutral-900 rounded-2xl p-6 text-center card-hover transition">
-        <h3 class="font-bold mb-2">هوية بصرية</h3>
-        <p class="text-gray-400 text-sm">بناء علامة تجارية متكاملة</p>
-      </div>
+      <div class="bg-neutral-900 p-6 rounded-2xl">تصميم شعارات</div>
+      <div class="bg-neutral-900 p-6 rounded-2xl">سوشيال ميديا</div>
+      <div class="bg-neutral-900 p-6 rounded-2xl">إعلانات</div>
+      <div class="bg-neutral-900 p-6 rounded-2xl">هوية بصرية</div>
     </div>
   </div>
 </section>
 
 <!-- ABOUT -->
-<section id="about" class="py-24 bg-neutral-950">
-  <div class="max-w-4xl mx-auto px-6 text-center">
-    <h2 class="text-3xl font-bold mb-6">عني</h2>
-    <p class="text-gray-300 leading-loose">
-      أنا مصمم جرافيك أركز على إنشاء تصاميم قوية، حديثة، وملفتة للانتباه.
-      هدفي مساعدة العلامات التجارية على الظهور بشكل احترافي وجذاب.
-    </p>
-  </div>
+<section id="about" class="py-24 bg-neutral-950 text-center px-6">
+  <h2 class="text-3xl font-bold mb-6">عني</h2>
+  <p class="text-gray-300 max-w-3xl mx-auto">
+    مصمم جرافيك أعمل على إنشاء تصاميم حديثة وقوية تساعد العلامات التجارية
+    على الظهور بشكل احترافي وجذاب.
+  </p>
 </section>
 
 <!-- CONTACT -->
-<section id="contact" class="py-24">
-  <div class="max-w-4xl mx-auto px-6 text-center">
-    <h2 class="text-3xl font-bold mb-6">تواصل معي</h2>
-    <p class="text-gray-400 mb-8">جاهز نشتغل سوا؟ راسلني الآن</p>
+<section id="contact" class="py-24 text-center px-6">
+  <h2 class="text-3xl font-bold mb-6">تواصل معي</h2>
+  <p class="text-gray-400 mb-8">جاهز نشتغل سوا؟ راسلني مباشرة</p>
 
-    <div class="flex justify-center gap-6">
-      <a href="https://www.instagram.com/23.iqk" target="_blank"
-         class="px-6 py-3 border border-cyan-400 rounded-xl hover:bg-cyan-400 hover:text-black transition">
-        Instagram
-      </a>
+  <div class="flex justify-center gap-4 flex-wrap">
+    <a href="https://wa.me/9647511672958" target="_blank"
+       class="px-6 py-3 bg-green-500 text-black font-bold rounded-xl glow">
+       WhatsApp
+    </a>
 
-      <a href="https://www.facebook.com/share/16uLHtzkbe/?mibextid=wwXIfr" target="_blank"
-         class="px-6 py-3 border border-cyan-400 rounded-xl hover:bg-cyan-400 hover:text-black transition">
-        Facebook
-      </a>
-    </div>
+    <a href="https://www.instagram.com/23.iqk" target="_blank"
+       class="px-6 py-3 border border-cyan-400 rounded-xl hover:bg-cyan-400 hover:text-black transition">
+       Instagram
+    </a>
+
+    <a href="https://www.facebook.com/share/16uLHtzkbe/?mibextid=wwXIfr" target="_blank"
+       class="px-6 py-3 border border-cyan-400 rounded-xl hover:bg-cyan-400 hover:text-black transition">
+       Facebook
+    </a>
   </div>
 </section>
 
