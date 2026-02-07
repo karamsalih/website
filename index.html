@@ -186,7 +186,7 @@ body{box-sizing:border-box;}
 </button>
 </div>
 
-<a id="donate-link" href="https://wa.me/07511672958?text=أرغب%20بتبرع%20لمبادرة%20ازرع%20العراق%20بقيمة%20$10" target="_blank"
+<a id="donate-link" href="https://wa.me/9647511672958?text=أرغب%20بتبرع%20لمبادرة%20ازرع%20العراق%20بقيمة%20$10" target="_blank"
 class="w-full inline-flex bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-5 rounded-2xl font-cairo font-bold text-xl btn-hover items-center justify-center gap-3">
 <span>تبرع الآن عبر واتس آب</span>
 <span id="donate-amount-display">($10)</span>
@@ -204,7 +204,7 @@ function selectDonation(amount, element){
   document.querySelectorAll('.donation-option').forEach(opt=>opt.classList.remove('selected'));
   element.classList.add('selected');
   document.getElementById('donate-amount-display').textContent = `($${amount})`;
-  const waLink = `https://wa.me/07511672958?text=أرغب%20بتبرع%20لمبادرة%20ازرع%20العراق%20بقيمة%20$${amount}`;
+  const waLink = `https://wa.me/9647511672958?text=أرغب%20بتبرع%20لمبادرة%20ازرع%20العراق%20بقيمة%20$${amount}`;
   document.getElementById('donate-link').href = waLink;
 }
 
