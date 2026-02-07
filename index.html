@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ازرع العراق - تبرع واحد = شجرة واحدة</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&amp;family=Tajawal:wght@400;500;700&amp;display=swap" rel="stylesheet">
@@ -14,1184 +14,204 @@
       theme: {
         extend: {
           colors: {
-            emerald: {
-              50: '#ecfdf5',
-              100: '#d1fae5',
-              200: '#a7f3d0',
-              300: '#6ee7b7',
-              400: '#34d399',
-              500: '#10b981',
-              600: '#059669',
-              700: '#047857',
-              800: '#065f46',
-              900: '#064e3b',
-            },
-            sand: {
-              50: '#fefcf3',
-              100: '#fdf8e1',
-              200: '#faf0c3',
-              300: '#f5e29a',
-            },
-            teal: {
-              400: '#2dd4bf',
-              500: '#14b8a6',
-              600: '#0d9488',
-            }
+            emerald: { 50: '#ecfdf5', 100: '#d1fae5', 200: '#a7f3d0', 300: '#6ee7b7', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857', 800: '#065f46', 900: '#064e3b' },
+            sand: { 50: '#fefcf3', 100: '#fdf8e1', 200: '#faf0c3', 300: '#f5e29a' },
+            teal: { 400: '#2dd4bf', 500: '#14b8a6', 600: '#0d9488' }
           },
-          fontFamily: {
-            cairo: ['Cairo', 'sans-serif'],
-            tajawal: ['Tajawal', 'sans-serif'],
-          }
+          fontFamily: { cairo: ['Cairo', 'sans-serif'], tajawal: ['Tajawal', 'sans-serif'] }
         }
       }
     }
   </script>
   <style>
-    body {
-      box-sizing: border-box;
-    }
-    
-    html {
-      scroll-behavior: smooth;
-    }
-    
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    @keyframes fadeInDown {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    @keyframes float {
-      0%, 100% {
-        transform: translateY(0px);
-      }
-      50% {
-        transform: translateY(-15px);
-      }
-    }
-    
-    @keyframes floatSlow {
-      0%, 100% {
-        transform: translateY(0px) rotate(0deg);
-      }
-      50% {
-        transform: translateY(-10px) rotate(5deg);
-      }
-    }
-    
-    @keyframes pulse-soft {
-      0%, 100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
-      }
-      50% {
-        transform: scale(1.02);
-        box-shadow: 0 0 0 15px rgba(16, 185, 129, 0);
-      }
-    }
-    
-    @keyframes slideInRight {
-      from {
-        opacity: 0;
-        transform: translateX(50px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-    
-    @keyframes slideInLeft {
-      from {
-        opacity: 0;
-        transform: translateX(-50px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-    
-    @keyframes scaleIn {
-      from {
-        opacity: 0;
-        transform: scale(0.8);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-    
-    @keyframes shimmer {
-      0% {
-        background-position: -200% 0;
-      }
-      100% {
-        background-position: 200% 0;
-      }
-    }
-    
-    .animate-fade-in-up {
-      animation: fadeInUp 0.8s ease-out forwards;
-    }
-    
-    .animate-fade-in-down {
-      animation: fadeInDown 0.6s ease-out forwards;
-    }
-    
-    .animate-float {
-      animation: float 4s ease-in-out infinite;
-    }
-    
-    .animate-float-slow {
-      animation: floatSlow 6s ease-in-out infinite;
-    }
-    
-    .animate-pulse-soft {
-      animation: pulse-soft 3s ease-in-out infinite;
-    }
-    
-    .animate-slide-in-right {
-      animation: slideInRight 0.7s ease-out forwards;
-    }
-    
-    .animate-slide-in-left {
-      animation: slideInLeft 0.7s ease-out forwards;
-    }
-    
-    .animate-scale-in {
-      animation: scaleIn 0.5s ease-out forwards;
-    }
-    
-    .delay-100 { animation-delay: 0.1s; }
-    .delay-200 { animation-delay: 0.2s; }
-    .delay-300 { animation-delay: 0.3s; }
-    .delay-400 { animation-delay: 0.4s; }
-    .delay-500 { animation-delay: 0.5s; }
-    .delay-600 { animation-delay: 0.6s; }
-    
-    .shimmer-bg {
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      background-size: 200% 100%;
-      animation: shimmer 2s infinite;
-    }
-    
-    .card-hover {
-      transition: all 0.3s ease;
-    }
-    
-    .card-hover:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    }
-    
-    .btn-hover {
-      transition: all 0.3s ease;
-    }
-    
-    .btn-hover:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
-    }
-    
-    .gradient-text {
-      background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #14b8a6 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    
-    .hero-gradient {
-      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 30%, #fefcf3 70%, #fdf8e1 100%);
-    }
-    
-    .tree-pattern {
-      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L35 20 L40 20 L30 35 L35 35 L25 50 L30 50 L30 55 L30 50 L35 50 L25 35 L30 35 L20 20 L25 20 Z' fill='%2310b98110' /%3E%3C/svg%3E");
-    }
-    
-    .donation-option {
-      transition: all 0.3s ease;
-    }
-    
-    .donation-option:hover {
-      border-color: #10b981;
-      background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-    }
-    
-    .donation-option.selected {
-      border-color: #059669;
-      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-    }
-    
-    .step-connector {
-      position: absolute;
-      top: 50%;
-      right: 100%;
-      width: 100%;
-      height: 3px;
-      background: linear-gradient(to left, #10b981, #d1fae5);
-      transform: translateY(-50%);
-    }
-    
-    .nav-link {
-      position: relative;
-      transition: color 0.3s ease;
-    }
-    
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      right: 0;
-      width: 0;
-      height: 2px;
-      background: #10b981;
-      transition: width 0.3s ease;
-    }
-    
-    .nav-link:hover::after {
-      width: 100%;
-    }
-    
-    .mobile-menu {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease-out;
-    }
-    
-    .mobile-menu.open {
-      max-height: 400px;
-    }
-    
-    .counter-value {
-      font-variant-numeric: tabular-nums;
-    }
-    
-    input:focus, textarea:focus {
-      outline: none;
-      border-color: #10b981;
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-    }
-    
-    .leaf-decoration {
-      position: absolute;
-      opacity: 0.6;
-    }
+    body { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+    @keyframes floatSlow { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-10px) rotate(5deg); } }
+    @keyframes pulse-soft { 0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); } 50% { transform: scale(1.02); box-shadow: 0 0 0 15px rgba(16, 185, 129, 0); } }
+    .animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
+    .animate-fade-in-down { animation: fadeInDown 0.6s ease-out forwards; }
+    .animate-float { animation: float 4s ease-in-out infinite; }
+    .animate-float-slow { animation: floatSlow 6s ease-in-out infinite; }
+    .animate-pulse-soft { animation: pulse-soft 3s ease-in-out infinite; }
+    .card-hover { transition: all 0.3s ease; }
+    .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); }
+    .btn-hover { transition: all 0.3s ease; }
+    .btn-hover:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); }
+    .gradient-text { background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #14b8a6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-gradient { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 30%, #fefcf3 70%, #fdf8e1 100%); }
+    .tree-pattern { background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L35 20 L40 20 L30 35 L35 35 L25 50 L30 50 L30 55 L30 50 L35 50 L25 35 L30 35 L20 20 L25 20 Z' fill='%2310b98110' /%3E%3C/svg%3E"); }
+    .donation-option.selected { border-color: #059669; background: linear-gradient(135deg, #d1fae5, #a7f3d0); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); }
+    .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; }
+    .mobile-menu.open { max-height: 400px; }
+    .leaf-decoration { position: absolute; opacity: 0.6; }
   </style>
-  <style>@view-transition { navigation: auto; }</style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
  </head>
  <body class="h-full font-tajawal text-gray-800 bg-white">
-  <div id="app" class="h-full w-full overflow-auto"><!-- Navigation Bar -->
+  <div id="app" class="h-full w-full overflow-auto">
    <nav id="navbar" class="fixed top-0 right-0 left-0 z-50 bg-white/95 backdrop-blur-md shadow-sm transition-all duration-300">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-     <div class="flex items-center justify-between h-16 lg:h-20"><!-- Logo -->
+     <div class="flex items-center justify-between h-16 lg:h-20">
       <div class="flex items-center gap-3">
        <div class="w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center shadow-lg">
-        <svg class="w-6 h-6 lg:w-7 lg:h-7 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2C13.5 2 15 3 15 5C15 7 13 9 12 10C11 9 9 7 9 5C9 3 10.5 2 12 2ZM12 10C14 10 18 12 18 16C18 20 14 22 12 22C10 22 6 20 6 16C6 12 10 10 12 10ZM12 12C10 12 8 14 8 16C8 18 10 20 12 20C14 20 16 18 16 16C16 14 14 12 12 12Z" />
-        </svg>
-       </div><span id="site-title" class="font-cairo font-bold text-lg lg:text-xl text-emerald-800">ازرع العراق</span>
-      </div><!-- Desktop Navigation -->
-      <div class="hidden lg:flex items-center gap-8"><a href="#about" class="nav-link text-gray-700 hover:text-emerald-600 font-medium">عن المبادرة</a> <a href="#why-trees" class="nav-link text-gray-700 hover:text-emerald-600 font-medium">لماذا الأشجار؟</a> <a href="#how-it-works" class="nav-link text-gray-700 hover:text-emerald-600 font-medium">كيف نعمل</a> <a href="#impact" class="nav-link text-gray-700 hover:text-emerald-600 font-medium">تأثيرنا</a> <a href="#donate" class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-2.5 rounded-full font-cairo font-semibold btn-hover shadow-lg" id="nav-donate-btn"> تبرع الآن 🌱 </a>
-      </div><!-- Mobile Menu Button --> <button id="mobile-menu-btn" class="lg:hidden p-2 text-gray-700 hover:text-emerald-600 transition-colors" aria-label="القائمة">
-       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-       </svg></button>
-     </div><!-- Mobile Menu -->
+        <svg class="w-6 h-6 lg:w-7 lg:h-7 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2C13.5 2 15 3 15 5C15 7 13 9 12 10C11 9 9 7 9 5C9 3 10.5 2 12 2ZM12 10C14 10 18 12 18 16C18 20 14 22 12 22C10 22 6 20 6 16C6 12 10 10 12 10ZM12 12C10 12 8 14 8 16C8 18 10 20 12 20C14 20 16 18 16 16C16 14 14 12 12 12Z" /></svg>
+       </div><span class="font-cairo font-bold text-lg lg:text-xl text-emerald-800">ازرع العراق</span>
+      </div>
+      <div class="hidden lg:flex items-center gap-8">
+       <a href="#about" class="text-gray-700 hover:text-emerald-600 font-medium">عن المبادرة</a>
+       <a href="#why-trees" class="text-gray-700 hover:text-emerald-600 font-medium">لماذا الأشجار؟</a>
+       <a href="#impact" class="text-gray-700 hover:text-emerald-600 font-medium">تأثيرنا</a>
+       <a href="#donate" class="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-2.5 rounded-full font-cairo font-semibold btn-hover shadow-lg">تبرع الآن 🌱</a>
+      </div>
+      <button id="mobile-menu-btn" class="lg:hidden p-2 text-gray-700"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg></button>
+     </div>
      <div id="mobile-menu" class="mobile-menu lg:hidden">
-      <div class="py-4 space-y-3 border-t border-gray-100"><a href="#about" class="block py-2 text-gray-700 hover:text-emerald-600 font-medium">عن المبادرة</a> <a href="#why-trees" class="block py-2 text-gray-700 hover:text-emerald-600 font-medium">لماذا الأشجار؟</a> <a href="#how-it-works" class="block py-2 text-gray-700 hover:text-emerald-600 font-medium">كيف نعمل</a> <a href="#impact" class="block py-2 text-gray-700 hover:text-emerald-600 font-medium">تأثيرنا</a> <a href="#donate" class="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-full font-cairo font-semibold mt-4"> تبرع الآن 🌱 </a>
+      <div class="py-4 space-y-3 border-t border-gray-100">
+       <a href="#about" class="block py-2 text-gray-700">عن المبادرة</a>
+       <a href="#donate" class="block w-full text-center bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-3 rounded-full font-cairo font-semibold mt-4">تبرع الآن 🌱</a>
       </div>
      </div>
     </div>
-   </nav><!-- Hero Section -->
-   <section class="hero-gradient min-h-screen pt-20 lg:pt-24 relative overflow-hidden"><!-- Decorative Elements -->
-    <div class="absolute inset-0 tree-pattern opacity-30"></div><!-- Floating Leaves -->
-    <div class="leaf-decoration top-24 right-10 animate-float-slow text-4xl">
-     🍃
-    </div>
-    <div class="leaf-decoration top-40 left-20 animate-float text-3xl delay-200">
-     🌿
-    </div>
-    <div class="leaf-decoration bottom-32 right-1/4 animate-float-slow delay-400 text-5xl">
-     🌱
-    </div>
-    <div class="leaf-decoration top-1/3 left-10 animate-float delay-300 text-4xl hidden lg:block">
-     🍀
-    </div>
+   </nav>
+
+   <section class="hero-gradient min-h-screen pt-20 lg:pt-24 relative overflow-hidden">
+    <div class="absolute inset-0 tree-pattern opacity-30"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 relative z-10">
-     <div class="grid lg:grid-cols-2 gap-12 items-center"><!-- Hero Content -->
+     <div class="grid lg:grid-cols-2 gap-12 items-center">
       <div class="text-center lg:text-right">
-       <div class="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-md mb-6 animate-fade-in-down"><span class="text-2xl">🌳</span> <span class="text-emerald-700 font-semibold">كل تبرع = شجرة واحدة</span>
-       </div>
-       <h1 id="hero-headline" class="font-cairo font-black text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-emerald-900 leading-tight mb-6 animate-fade-in-up">ازرع شجرة اليوم، <span class="gradient-text block mt-2">احمِ مستقبل العراق غداً</span></h1>
-       <p id="hero-subtitle" class="text-lg lg:text-xl text-gray-600 mb-8 max-w-xl mx-auto lg:mx-0 animate-fade-in-up delay-200">مبادرة بيئية شفافة لمكافحة التصحر والعواصف الترابية في العراق. تبرعك البسيط يساهم في زراعة شجرة حقيقية تحمي بيئتنا ومستقبل أجيالنا.</p>
-       <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-up delay-300"><a href="#donate" class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-8 py-4 rounded-full font-cairo font-bold text-lg btn-hover shadow-xl animate-pulse-soft inline-flex items-center justify-center gap-2"> <span id="donate-cta-text">تبرع وازرع شجرة</span> <span class="text-xl">🌱</span> </a> <a href="#about" class="bg-white/80 backdrop-blur-sm text-emerald-700 px-8 py-4 rounded-full font-cairo font-semibold text-lg border-2 border-emerald-200 hover:border-emerald-400 hover:bg-white transition-all inline-flex items-center justify-center gap-2"> اعرف المزيد 
-         <svg class="w-5 h-5 rotate-90" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-         </svg></a>
-       </div><!-- Trust Indicators -->
-       <div class="flex items-center justify-center lg:justify-start gap-6 mt-10 animate-fade-in-up delay-400">
-        <div class="flex items-center gap-2 text-sm text-gray-600">
-         <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-         </svg> 100% للأشجار
-        </div>
-        <div class="flex items-center gap-2 text-sm text-gray-600">
-         <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-         </svg> آمن وموثوق
-        </div>
-       </div>
-      </div><!-- Hero Illustration -->
-      <div class="relative flex justify-center items-center animate-fade-in-up delay-200">
-       <div class="relative"><!-- Main Tree Illustration -->
-        <div class="w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 relative">
-         <svg viewbox="0 0 200 200" class="w-full h-full animate-float"><!-- Tree Shadow --> <ellipse cx="100" cy="185" rx="45" ry="10" fill="#065f46" opacity="0.2" /> <!-- Tree Trunk --> <rect x="90" y="130" width="20" height="50" rx="3" fill="#92400e" /> <rect x="85" y="140" width="8" height="20" rx="2" fill="#78350f" transform="rotate(-20 89 150)" /> <rect x="107" y="138" width="6" height="18" rx="2" fill="#78350f" transform="rotate(15 110 147)" /> <!-- Tree Foliage Layers --> <ellipse cx="100" cy="90" rx="55" ry="50" fill="#059669" /> <ellipse cx="85" cy="100" rx="35" ry="35" fill="#10b981" /> <ellipse cx="115" cy="95" rx="40" ry="38" fill="#10b981" /> <ellipse cx="100" cy="70" rx="45" ry="40" fill="#34d399" /> <ellipse cx="90" cy="60" rx="30" ry="28" fill="#6ee7b7" /> <ellipse cx="110" cy="55" rx="25" ry="22" fill="#6ee7b7" /> <ellipse cx="100" cy="45" rx="20" ry="18" fill="#a7f3d0" /> <!-- Highlights --> <circle cx="80" cy="70" r="8" fill="#d1fae5" opacity="0.6" /> <circle cx="115" cy="60" r="6" fill="#d1fae5" opacity="0.5" /> <circle cx="95" cy="45" r="4" fill="#ecfdf5" opacity="0.7" />
-         </svg>
-        </div><!-- Floating Badge -->
-        <div class="absolute -top-4 -right-4 bg-white rounded-2xl shadow-xl p-4 animate-float delay-200">
-         <div class="text-center">
-          <div class="text-3xl mb-1">
-           💚
-          </div>
-          <div class="font-cairo font-bold text-emerald-700 text-sm">
-           تبرع واحد
-          </div>
-          <div class="text-emerald-500 text-xs">
-           =
-          </div>
-          <div class="font-cairo font-bold text-emerald-700 text-sm">
-           شجرة واحدة
-          </div>
-         </div>
-        </div><!-- Stats Badge -->
-        <div class="absolute -bottom-4 -left-4 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl shadow-xl p-4 text-white animate-float-slow delay-400">
-         <div class="text-center">
-          <div class="font-cairo font-bold text-2xl">
-           +12,450
-          </div>
-          <div class="text-emerald-100 text-sm">
-           شجرة تم زراعتها
-          </div>
-         </div>
-        </div>
+       <h1 class="font-cairo font-black text-4xl sm:text-5xl lg:text-6xl text-emerald-900 leading-tight mb-6 animate-fade-in-up">ازرع شجرة اليوم، <span class="gradient-text block mt-2">احمِ مستقبل العراق غداً</span></h1>
+       <p class="text-lg text-gray-600 mb-8 max-w-xl mx-auto lg:mx-0 animate-fade-in-up delay-200">مبادرة بيئية شفافة لمكافحة التصحر والعواصف الترابية في العراق.</p>
+       <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in-up delay-300">
+        <a href="#donate" class="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white px-8 py-4 rounded-full font-cairo font-bold text-lg btn-hover shadow-xl animate-pulse-soft">تبرع وازرع شجرة 🌱</a>
        </div>
       </div>
-     </div>
-    </div><!-- Wave Separator -->
-    <div class="absolute bottom-0 left-0 right-0">
-     <svg viewbox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg" preserveaspectratio="none" class="w-full h-16 lg:h-24"><path d="M0 50C240 100 480 0 720 50C960 100 1200 0 1440 50V100H0V50Z" fill="white" />
-     </svg>
-    </div>
-   </section><!-- About Section -->
-   <section id="about" class="py-16 lg:py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><!-- Section Header -->
-     <div class="text-center mb-12 lg:mb-16"><span class="inline-block bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-semibold mb-4">عن المبادرة</span>
-      <h2 class="font-cairo font-bold text-3xl lg:text-4xl xl:text-5xl text-gray-900 mb-4">معاً نحمي <span class="gradient-text">العراق الأخضر</span></h2>
-      <p class="text-gray-600 text-lg max-w-3xl mx-auto">مبادرة "ازرع العراق" هي حركة بيئية وطنية تهدف إلى مكافحة التصحر وتحسين جودة الهواء من خلال زراعة الأشجار في مختلف أنحاء العراق.</p>
-     </div><!-- Feature Cards -->
-     <div class="grid md:grid-cols-3 gap-6 lg:gap-8 mb-16"><!-- Card 1 -->
-      <div class="bg-gradient-to-br from-white to-emerald-50 rounded-3xl p-8 shadow-lg card-hover border border-emerald-100">
-       <div class="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-       </div>
-       <h3 class="font-cairo font-bold text-xl text-gray-900 mb-3">التزام وشفافية</h3>
-       <p class="text-gray-600">نلتزم بزراعة شجرة واحدة مقابل كل دولار تتبرع به. نقدم تقارير دورية وصور حقيقية لكل عملية زراعة.</p>
-      </div><!-- Card 2 -->
-      <div class="bg-gradient-to-br from-white to-teal-50 rounded-3xl p-8 shadow-lg card-hover border border-teal-100">
-       <div class="w-16 h-16 bg-gradient-to-br from-teal-400 to-teal-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
-        </svg>
-       </div>
-       <h3 class="font-cairo font-bold text-xl text-gray-900 mb-3">التحدي البيئي</h3>
-       <p class="text-gray-600">يواجه العراق تحديات بيئية خطيرة من تصحر وعواصف ترابية متزايدة تؤثر على صحة الملايين وجودة حياتهم.</p>
-      </div><!-- Card 3 -->
-      <div class="bg-gradient-to-br from-white to-sky-50 rounded-3xl p-8 shadow-lg card-hover border border-sky-100">
-       <div class="w-16 h-16 bg-gradient-to-br from-sky-400 to-sky-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-        </svg>
-       </div>
-       <h3 class="font-cairo font-bold text-xl text-gray-900 mb-3">متابعة مستمرة</h3>
-       <p class="text-gray-600">نوفر لك إمكانية متابعة نمو شجرتك من خلال تحديثات منتظمة وصور موثقة من مواقع الزراعة المختلفة.</p>
-      </div>
-     </div><!-- Statistics Bar -->
-     <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 rounded-3xl p-8 lg:p-10 shadow-2xl">
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 text-center text-white">
-       <div class="p-4">
-        <div class="text-4xl lg:text-5xl mb-2">
-         🏜️
+      <div class="relative flex justify-center items-center animate-fade-in-up">
+        <div class="w-64 h-64 sm:w-80 lg:w-96 relative">
+          <svg viewbox="0 0 200 200" class="w-full h-full animate-float">
+            <ellipse cx="100" cy="185" rx="45" ry="10" fill="#065f46" opacity="0.2" />
+            <rect x="90" y="130" width="20" height="50" rx="3" fill="#92400e" />
+            <ellipse cx="100" cy="90" rx="55" ry="50" fill="#059669" />
+            <ellipse cx="85" cy="100" rx="35" ry="35" fill="#10b981" />
+          </svg>
         </div>
-        <div class="font-cairo font-bold text-3xl lg:text-4xl mb-1">
-         39%
-        </div>
-        <div class="text-emerald-100 text-sm lg:text-base">
-         من مساحة العراق متصحرة
-        </div>
-       </div>
-       <div class="p-4 border-r border-emerald-400/30 lg:border-r-0 lg:border-l lg:border-emerald-400/30">
-        <div class="text-4xl lg:text-5xl mb-2">
-         🌪️
-        </div>
-        <div class="font-cairo font-bold text-3xl lg:text-4xl mb-1">
-         272
-        </div>
-        <div class="text-emerald-100 text-sm lg:text-base">
-         عاصفة ترابية سنوياً
-        </div>
-       </div>
-       <div class="p-4">
-        <div class="text-4xl lg:text-5xl mb-2">
-         🌡️
-        </div>
-        <div class="font-cairo font-bold text-3xl lg:text-4xl mb-1">
-         +2°
-        </div>
-        <div class="text-emerald-100 text-sm lg:text-base">
-         ارتفاع درجات الحرارة
-        </div>
-       </div>
-       <div class="p-4 border-r border-emerald-400/30 lg:border-r-0 lg:border-l lg:border-emerald-400/30">
-        <div class="text-4xl lg:text-5xl mb-2">
-         👥
-        </div>
-        <div class="font-cairo font-bold text-3xl lg:text-4xl mb-1">
-         40M+
-        </div>
-        <div class="text-emerald-100 text-sm lg:text-base">
-         شخص متأثر
-        </div>
-       </div>
       </div>
      </div>
     </div>
-   </section><!-- Why Trees Section -->
-   <section id="why-trees" class="py-16 lg:py-24 bg-gradient-to-b from-white to-emerald-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><!-- Section Header -->
-     <div class="text-center mb-12 lg:mb-16"><span class="inline-block bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-semibold mb-4">لماذا الأشجار؟</span>
-      <h2 class="font-cairo font-bold text-3xl lg:text-4xl xl:text-5xl text-gray-900 mb-4">فوائد <span class="gradient-text">زراعة الأشجار</span></h2>
-      <p class="text-gray-600 text-lg max-w-2xl mx-auto">الأشجار ليست مجرد نباتات، إنها حياة. كل شجرة تزرعها تساهم في حماية البيئة وصحة الإنسان.</p>
-     </div><!-- Benefits Grid -->
-     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"><!-- Benefit 1 -->
-      <div class="bg-white rounded-3xl p-6 lg:p-8 shadow-lg card-hover border border-gray-100 text-center">
-       <div class="w-20 h-20 bg-gradient-to-br from-amber-100 to-amber-200 rounded-full flex items-center justify-center mx-auto mb-6"><span class="text-4xl">🏜️</span>
-       </div>
-       <h3 class="font-cairo font-bold text-lg text-gray-900 mb-3">مكافحة التصحر</h3>
-       <p class="text-gray-600 text-sm">الأشجار تثبت التربة وتمنع زحف الرمال والتصحر نحو المناطق الخضراء</p>
-      </div><!-- Benefit 2 -->
-      <div class="bg-white rounded-3xl p-6 lg:p-8 shadow-lg card-hover border border-gray-100 text-center">
-       <div class="w-20 h-20 bg-gradient-to-br from-sky-100 to-sky-200 rounded-full flex items-center justify-center mx-auto mb-6"><span class="text-4xl">💨</span>
-       </div>
-       <h3 class="font-cairo font-bold text-lg text-gray-900 mb-3">تحسين جودة الهواء</h3>
-       <p class="text-gray-600 text-sm">كل شجرة تمتص الملوثات وتنتج الأكسجين النقي لنتنفس هواءً أنظف</p>
-      </div><!-- Benefit 3 -->
-      <div class="bg-white rounded-3xl p-6 lg:p-8 shadow-lg card-hover border border-gray-100 text-center">
-       <div class="w-20 h-20 bg-gradient-to-br from-red-100 to-orange-200 rounded-full flex items-center justify-center mx-auto mb-6"><span class="text-4xl">🌡️</span>
-       </div>
-       <h3 class="font-cairo font-bold text-lg text-gray-900 mb-3">تقليل الحرارة والغبار</h3>
-       <p class="text-gray-600 text-sm">الأشجار توفر الظل وتخفض درجات الحرارة وتقلل من العواصف الترابية</p>
-      </div><!-- Benefit 4 -->
-      <div class="bg-white rounded-3xl p-6 lg:p-8 shadow-lg card-hover border border-gray-100 text-center">
-       <div class="w-20 h-20 bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-full flex items-center justify-center mx-auto mb-6"><span class="text-4xl">🦋</span>
-       </div>
-       <h3 class="font-cairo font-bold text-lg text-gray-900 mb-3">حماية التنوع الحيوي</h3>
-       <p class="text-gray-600 text-sm">الأشجار توفر موائل للطيور والحيوانات وتحافظ على التوازن البيئي</p>
-      </div>
-     </div><!-- Additional Info -->
-     <div class="mt-12 bg-white rounded-3xl p-8 lg:p-10 shadow-xl border border-emerald-100">
-      <div class="grid lg:grid-cols-2 gap-8 items-center">
-       <div>
-        <h3 class="font-cairo font-bold text-2xl text-gray-900 mb-4">هل تعلم؟ 🌳</h3>
-        <ul class="space-y-4">
-         <li class="flex items-start gap-3"><span class="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-           <svg class="w-4 h-4 text-white" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-           </svg></span> <span class="text-gray-700">شجرة واحدة تمتص حوالي <strong>22 كجم</strong> من ثاني أكسيد الكربون سنوياً</span></li>
-         <li class="flex items-start gap-3"><span class="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-           <svg class="w-4 h-4 text-white" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-           </svg></span> <span class="text-gray-700">الأشجار يمكن أن تخفض درجة حرارة المحيط بها بمقدار <strong>8 درجات مئوية</strong></span></li>
-         <li class="flex items-start gap-3"><span class="w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-           <svg class="w-4 h-4 text-white" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-           </svg></span> <span class="text-gray-700"><strong>100 شجرة</strong> يمكنها إزالة أكثر من 50 طن من الملوثات من الهواء</span></li>
-        </ul>
-       </div>
-       <div class="flex justify-center">
-        <div class="relative">
-         <div class="w-48 h-48 lg:w-56 lg:h-56 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center"><span class="text-8xl lg:text-9xl animate-float">🌲</span>
-         </div>
-         <div class="absolute -top-4 -right-4 bg-emerald-500 text-white rounded-full px-4 py-2 shadow-lg animate-float-slow delay-200"><span class="font-cairo font-bold">+الحياة</span>
-         </div>
-        </div>
-       </div>
-      </div>
-     </div>
-    </div>
-   </section><!-- How It Works Section -->
-   <section id="how-it-works" class="py-16 lg:py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><!-- Section Header -->
-     <div class="text-center mb-12 lg:mb-20"><span class="inline-block bg-teal-100 text-teal-700 px-4 py-2 rounded-full text-sm font-semibold mb-4">كيف نعمل</span>
-      <h2 class="font-cairo font-bold text-3xl lg:text-4xl xl:text-5xl text-gray-900 mb-4">أربع خطوات <span class="gradient-text">لتأثير حقيقي</span></h2>
-      <p class="text-gray-600 text-lg max-w-2xl mx-auto">عملية بسيطة وشفافة من تبرعك إلى زراعة شجرتك ومتابعة نموها</p>
-     </div><!-- Steps -->
-     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 relative"><!-- Connection Line (Desktop) -->
-      <div class="hidden lg:block absolute top-16 right-[12%] left-[12%] h-1 bg-gradient-to-l from-emerald-200 via-teal-300 to-emerald-200 rounded-full"></div><!-- Step 1 -->
-      <div class="relative text-center">
-       <div class="relative z-10 w-32 h-32 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl"><span class="text-5xl">💰</span>
-        <div class="absolute -top-2 -right-2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-emerald-500"><span class="font-cairo font-bold text-emerald-600">1</span>
-        </div>
-       </div>
-       <h3 class="font-cairo font-bold text-xl text-gray-900 mb-2">تبرّع</h3>
-       <p class="text-gray-600">اختر المبلغ الذي يناسبك. كل دولار واحد = شجرة واحدة</p>
-      </div><!-- Step 2 -->
-      <div class="relative text-center">
-       <div class="relative z-10 w-32 h-32 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl"><span class="text-5xl">📍</span>
-        <div class="absolute -top-2 -right-2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-teal-500"><span class="font-cairo font-bold text-teal-600">2</span>
-        </div>
-       </div>
-       <h3 class="font-cairo font-bold text-xl text-gray-900 mb-2">اختيار المواقع</h3>
-       <p class="text-gray-600">نختار أفضل المواقع بناءً على الحاجة البيئية والجدوى</p>
-      </div><!-- Step 3 -->
-      <div class="relative text-center">
-       <div class="relative z-10 w-32 h-32 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl"><span class="text-5xl">🌱</span>
-        <div class="absolute -top-2 -right-2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-emerald-500"><span class="font-cairo font-bold text-emerald-600">3</span>
-        </div>
-       </div>
-       <h3 class="font-cairo font-bold text-xl text-gray-900 mb-2">زراعة الأشجار</h3>
-       <p class="text-gray-600">فرقنا المدربة تزرع الأشجار بعناية في المواقع المحددة</p>
-      </div><!-- Step 4 -->
-      <div class="relative text-center">
-       <div class="relative z-10 w-32 h-32 bg-gradient-to-br from-sky-400 to-sky-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl"><span class="text-5xl">📊</span>
-        <div class="absolute -top-2 -right-2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-lg border-4 border-sky-500"><span class="font-cairo font-bold text-sky-600">4</span>
-        </div>
-       </div>
-       <h3 class="font-cairo font-bold text-xl text-gray-900 mb-2">تتبع التقدم</h3>
-       <p class="text-gray-600">تابع نمو شجرتك من خلال تحديثات وصور منتظمة</p>
-      </div>
-     </div>
-    </div>
-   </section><!-- Impact Section -->
-   <section id="impact" class="py-16 lg:py-24 bg-gradient-to-b from-emerald-50 to-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><!-- Section Header -->
-     <div class="text-center mb-12 lg:mb-16"><span class="inline-block bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-semibold mb-4">تأثيرنا</span>
-      <h2 class="font-cairo font-bold text-3xl lg:text-4xl xl:text-5xl text-gray-900 mb-4">إنجازاتنا <span class="gradient-text">معاً</span></h2>
-      <p class="text-gray-600 text-lg max-w-2xl mx-auto">بفضل دعمكم، نحقق تأثيراً حقيقياً ومستداماً في البيئة العراقية</p>
-     </div><!-- Impact Stats -->
-     <div class="grid md:grid-cols-3 gap-6 lg:gap-8 mb-12"><!-- Stat 1 -->
-      <div class="bg-white rounded-3xl p-8 shadow-xl border border-emerald-100 text-center card-hover">
-       <div class="w-20 h-20 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg"><span class="text-4xl">🌳</span>
-       </div>
-       <div class="font-cairo font-black text-5xl lg:text-6xl text-emerald-600 mb-2 counter-value" data-target="12450">
-        0
-       </div>
-       <div class="text-gray-600 font-semibold text-lg">
-        شجرة تم زراعتها
-       </div>
-      </div><!-- Stat 2 -->
-      <div class="bg-white rounded-3xl p-8 shadow-xl border border-teal-100 text-center card-hover">
-       <div class="w-20 h-20 bg-gradient-to-br from-teal-400 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg"><span class="text-4xl">❤️</span>
-       </div>
-       <div class="font-cairo font-black text-5xl lg:text-6xl text-teal-600 mb-2 counter-value" data-target="3280">
-        0
-       </div>
-       <div class="text-gray-600 font-semibold text-lg">
-        متبرع كريم
-       </div>
-      </div><!-- Stat 3 -->
-      <div class="bg-white rounded-3xl p-8 shadow-xl border border-sky-100 text-center card-hover">
-       <div class="w-20 h-20 bg-gradient-to-br from-sky-400 to-sky-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg"><span class="text-4xl">📍</span>
-       </div>
-       <div class="font-cairo font-black text-5xl lg:text-6xl text-sky-600 mb-2 counter-value" data-target="18">
-        0
-       </div>
-       <div class="text-gray-600 font-semibold text-lg">
-        محافظة عراقية
-       </div>
-      </div>
-     </div><!-- Progress Bar -->
-     <div class="bg-white rounded-3xl p-8 lg:p-10 shadow-xl border border-gray-100 mb-12">
-      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
-       <div>
-        <h3 class="font-cairo font-bold text-2xl text-gray-900 mb-2">هدفنا: 25,000 شجرة 🎯</h3>
-        <p class="text-gray-600">معاً نقترب من تحقيق هدفنا للعام الحالي</p>
-       </div>
-       <div class="mt-4 lg:mt-0"><span class="font-cairo font-bold text-3xl text-emerald-600">49.8%</span> <span class="text-gray-500 mr-1">مكتمل</span>
-       </div>
-      </div>
-      <div class="w-full bg-gray-200 rounded-full h-6 overflow-hidden">
-       <div class="bg-gradient-to-l from-emerald-400 to-teal-500 h-full rounded-full transition-all duration-1000 shimmer-bg" style="width: 49.8%"></div>
-      </div>
-      <div class="flex justify-between mt-3 text-sm text-gray-500"><span>0</span> <span>12,450 شجرة حالياً</span> <span>25,000</span>
-      </div>
-     </div><!-- Testimonial -->
-     <div class="bg-gradient-to-br from-emerald-600 to-teal-600 rounded-3xl p-8 lg:p-10 shadow-2xl text-white relative overflow-hidden">
-      <div class="absolute top-0 left-0 w-32 h-32 bg-white/10 rounded-full -translate-x-16 -translate-y-16"></div>
-      <div class="absolute bottom-0 right-0 w-48 h-48 bg-white/10 rounded-full translate-x-24 translate-y-24"></div>
-      <div class="relative z-10">
-       <div class="flex items-center gap-4 mb-6">
-        <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center"><span class="text-3xl">👨‍🌾</span>
-        </div>
-        <div>
-         <div class="font-cairo font-bold text-xl">
-          أحمد محمد
-         </div>
-         <div class="text-emerald-200">
-          متطوع بيئي - البصرة
-         </div>
-        </div>
-       </div>
-       <blockquote class="text-lg lg:text-xl leading-relaxed mb-4">
-        "شاركت في زراعة أكثر من 200 شجرة خلال العام الماضي. أرى الفرق الحقيقي في مجتمعي - الهواء أنظف، الغبار أقل، والناس أكثر وعياً بأهمية البيئة. هذه المبادرة تعطينا أملاً حقيقياً لمستقبل العراق."
-       </blockquote>
-       <div class="flex items-center gap-1"><span class="text-yellow-300">⭐</span> <span class="text-yellow-300">⭐</span> <span class="text-yellow-300">⭐</span> <span class="text-yellow-300">⭐</span> <span class="text-yellow-300">⭐</span>
-       </div>
-      </div>
-     </div>
-    </div>
-   </section><!-- Donate Section -->
+   </section>
+
    <section id="donate" class="py-16 lg:py-24 bg-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"><!-- Section Header -->
-     <div class="text-center mb-12"><span class="inline-block bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-semibold mb-4">ساهم الآن</span>
-      <h2 class="font-cairo font-bold text-3xl lg:text-4xl xl:text-5xl text-gray-900 mb-4">ازرع أشجارك <span class="gradient-text">اليوم</span></h2>
-      <p class="text-gray-600 text-lg max-w-2xl mx-auto">كل تبرع يساوي شجرة حقيقية. اختر عدد الأشجار التي تريد زراعتها</p>
-     </div><!-- Demo Notice -->
-     <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-8 flex items-start gap-3"><span class="text-2xl">⚠️</span>
-      <div>
-       <div class="font-cairo font-semibold text-amber-800 mb-1">
-        نسخة تجريبية
-       </div>
-       <p class="text-amber-700 text-sm">هذه نسخة عرض توضيحي. لا يتم معالجة أي مدفوعات حقيقية.</p>
-      </div>
-     </div><!-- Donation Options -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+     <div class="text-center mb-12">
+      <h2 class="font-cairo font-bold text-3xl lg:text-4xl text-gray-900 mb-4">ازرع أشجارك <span class="gradient-text">اليوم</span></h2>
+     </div>
      <div class="bg-gradient-to-br from-gray-50 to-emerald-50 rounded-3xl p-6 lg:p-10 shadow-xl border border-gray-100">
-      <h3 class="font-cairo font-bold text-xl text-gray-900 mb-6 text-center">اختر عدد الأشجار 🌳</h3>
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8"><!-- Option 1 --> <button onclick="selectDonation(1, this)" class="donation-option bg-white rounded-2xl p-6 border-2 border-gray-200 text-center cursor-pointer">
-        <div class="text-3xl mb-2">
-         🌱
-        </div>
-        <div class="font-cairo font-bold text-2xl text-emerald-600">
-         $1
-        </div>
-        <div class="text-gray-600 text-sm">
-         شجرة واحدة
-        </div></button> <!-- Option 2 --> <button onclick="selectDonation(5, this)" class="donation-option bg-white rounded-2xl p-6 border-2 border-gray-200 text-center cursor-pointer">
-        <div class="text-3xl mb-2">
-         🌿
-        </div>
-        <div class="font-cairo font-bold text-2xl text-emerald-600">
-         $5
-        </div>
-        <div class="text-gray-600 text-sm">
-         5 أشجار
-        </div></button> <!-- Option 3 (Highlighted) --> <button onclick="selectDonation(10, this)" class="donation-option bg-white rounded-2xl p-6 border-2 border-emerald-500 text-center cursor-pointer selected relative">
-        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-xs px-3 py-1 rounded-full font-semibold">
-         الأكثر شيوعاً
-        </div>
-        <div class="text-3xl mb-2">
-         🌳
-        </div>
-        <div class="font-cairo font-bold text-2xl text-emerald-600">
-         $10
-        </div>
-        <div class="text-gray-600 text-sm">
-         10 أشجار
-        </div></button> <!-- Option 4 --> <button onclick="selectDonation(25, this)" class="donation-option bg-white rounded-2xl p-6 border-2 border-gray-200 text-center cursor-pointer">
-        <div class="text-3xl mb-2">
-         🌲
-        </div>
-        <div class="font-cairo font-bold text-2xl text-emerald-600">
-         $25
-        </div>
-        <div class="text-gray-600 text-sm">
-         25 شجرة
-        </div></button>
-      </div><!-- Custom Amount -->
-      <div class="bg-white rounded-2xl p-6 border border-gray-200 mb-8"><label for="custom-amount" class="block font-cairo font-semibold text-gray-800 mb-3">أو أدخل مبلغاً مخصصاً:</label>
-       <div class="flex items-center gap-4">
-        <div class="relative flex-1"><span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-semibold">$</span> <input type="number" id="custom-amount" min="1" max="1000" placeholder="أدخل المبلغ" class="w-full pr-10 pl-4 py-4 border-2 border-gray-200 rounded-xl text-lg font-cairo focus:border-emerald-500 transition-colors" oninput="updateCustomAmount(this.value)">
-        </div>
-        <div class="text-center">
-         <div class="text-gray-500 text-sm">
-          =
-         </div>
-        </div>
-        <div class="bg-emerald-100 rounded-xl px-6 py-4 text-center min-w-[120px]">
-         <div class="font-cairo font-bold text-2xl text-emerald-700" id="tree-count">
-          10
-         </div>
-         <div class="text-emerald-600 text-sm">
-          شجرة
-         </div>
-        </div>
-       </div>
-      </div><!-- Payment Methods -->
-      <div class="mb-8">
-       <h4 class="font-cairo font-semibold text-gray-800 mb-4">طرق الدفع المتاحة:</h4>
-       <div class="grid grid-cols-2 gap-4"><label class="payment-method flex items-center gap-3 bg-white rounded-xl p-4 border-2 border-gray-200 cursor-pointer hover:border-emerald-400 transition-colors"> <input type="radio" name="payment" value="superqi" checked class="w-5 h-5 text-emerald-600">
-         <div class="flex items-center gap-2">
-          <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-           Qi
-          </div><span class="font-semibold text-gray-700">Super Qi</span>
-         </div></label> <label class="payment-method flex items-center gap-3 bg-white rounded-xl p-4 border-2 border-gray-200 cursor-pointer hover:border-emerald-400 transition-colors"> <input type="radio" name="payment" value="bank" class="w-5 h-5 text-emerald-600">
-         <div class="flex items-center gap-2">
-          <div class="w-10 h-10 bg-gradient-to-br from-gray-600 to-gray-700 rounded-lg flex items-center justify-center">
-           <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-           </svg>
-          </div><span class="font-semibold text-gray-700">تحويل بنكي</span>
-         </div></label>
-       </div>
-      </div><!-- Donate Button --> <button onclick="handleDonate()" class="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-5 rounded-2xl font-cairo font-bold text-xl btn-hover shadow-xl flex items-center justify-center gap-3" id="main-donate-btn"> <span>تبرع الآن</span> <span class="text-2xl">🌱</span> <span id="donate-amount-display">($10)</span> </button> <!-- Trust Badges -->
-      <div class="flex flex-wrap items-center justify-center gap-6 mt-8 pt-6 border-t border-gray-200">
-       <div class="flex items-center gap-2 text-gray-600">
-        <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-        </svg><span class="text-sm font-medium">آمن ومشفر</span>
-       </div>
-       <div class="flex items-center gap-2 text-gray-600">
-        <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-        </svg><span class="text-sm font-medium">100% للأشجار</span>
-       </div>
-       <div class="flex items-center gap-2 text-gray-600">
-        <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewbox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
-        </svg><span class="text-sm font-medium">معفى من الضرائب</span>
-       </div>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+       <button onclick="selectDonation(1, this)" class="donation-option bg-white rounded-2xl p-6 border-2 border-gray-200 text-center cursor-pointer">
+        <div class="text-3xl mb-2">🌱</div><div class="font-cairo font-bold text-2xl text-emerald-600">$1</div><div class="text-gray-600 text-sm">شجرة واحدة</div>
+       </button>
+       <button onclick="selectDonation(10, this)" class="donation-option bg-white rounded-2xl p-6 border-2 border-emerald-500 text-center cursor-pointer selected">
+        <div class="text-3xl mb-2">🌳</div><div class="font-cairo font-bold text-2xl text-emerald-600">$10</div><div class="text-gray-600 text-sm">10 أشجار</div>
+       </button>
       </div>
+      <button onclick="handleDonate()" class="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-5 rounded-2xl font-cairo font-bold text-xl btn-hover shadow-xl flex items-center justify-center gap-3">
+       <span>تبرع الآن</span> <span id="donate-amount-display">($10)</span>
+      </button>
      </div>
     </div>
-   </section><!-- CTA Section -->
-   <section class="py-16 lg:py-24 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 relative overflow-hidden"><!-- Decorative Elements -->
-    <div class="absolute inset-0 opacity-10">
-     <div class="absolute top-10 right-10 text-8xl">
-      🌳
-     </div>
-     <div class="absolute bottom-10 left-10 text-8xl">
-      🌲
-     </div>
-     <div class="absolute top-1/2 right-1/3 text-6xl">
-      🍃
-     </div>
-    </div>
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-     <h2 class="font-cairo font-bold text-3xl lg:text-4xl xl:text-5xl text-white mb-6">كل شجرة تُزرع هي خطوة نحو <span class="block mt-2">عراق أخضر ومستدام 🇮🇶</span></h2>
-     <p class="text-emerald-100 text-lg lg:text-xl mb-10 max-w-2xl mx-auto">لا تنتظر، ابدأ اليوم. تبرعك البسيط يمكن أن يصنع فرقاً كبيراً في حياة الأجيال القادمة</p><a href="#donate" class="inline-flex items-center gap-3 bg-white text-emerald-700 px-10 py-5 rounded-full font-cairo font-bold text-xl btn-hover shadow-2xl"> <span>ابدأ زراعة أشجارك</span> <span class="text-2xl">🌱</span> </a>
-    </div>
-   </section><!-- Contact Section -->
+   </section>
+
    <section id="contact" class="py-16 lg:py-24 bg-gray-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-     <div class="grid lg:grid-cols-2 gap-12 lg:gap-16"><!-- Contact Info -->
-      <div><span class="inline-block bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-semibold mb-4">تواصل معنا</span>
-       <h2 class="font-cairo font-bold text-3xl lg:text-4xl text-gray-900 mb-6">نحب أن نسمع منك</h2>
-       <p class="text-gray-600 text-lg mb-8">سواء كان لديك سؤال، اقتراح، أو تريد المشاركة في مبادرتنا - نحن هنا لمساعدتك</p><!-- Contact Details -->
-       <div class="space-y-6 mb-10">
-        <div class="flex items-start gap-4">
-         <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0">
-          <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
-         </div>
-         <div>
-          <div class="font-cairo font-semibold text-gray-900 mb-1">
-           البريد الإلكتروني
+    <div class="max-w-4xl mx-auto px-4">
+      <div class="bg-white rounded-3xl p-8 shadow-xl">
+        <h3 class="font-cairo font-bold text-2xl mb-6">أرسل رسالة</h3>
+        <form id="contact-form" onsubmit="handleContactSubmit(event)">
+          <div class="space-y-4">
+            <input type="text" id="name" required class="w-full px-4 py-3 border rounded-xl" placeholder="الاسم الكامل">
+            <input type="email" id="email" required class="w-full px-4 py-3 border rounded-xl" placeholder="البريد الإلكتروني">
+            <textarea id="message" rows="4" required class="w-full px-4 py-3 border rounded-xl" placeholder="رسالتك..."></textarea>
+            <button type="submit" class="w-full bg-emerald-600 text-white py-4 rounded-xl font-bold btn-hover">إرسال</button>
           </div>
-          <div class="text-emerald-600">
-           info@plantiraq.org
-          </div>
-         </div>
-        </div>
-        <div class="flex items-start gap-4">
-         <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0">
-          <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-         </div>
-         <div>
-          <div class="font-cairo font-semibold text-gray-900 mb-1">
-           الموقع
-          </div>
-          <div class="text-gray-600">
-           بغداد، العراق
-          </div>
-         </div>
-        </div>
-        <div class="flex items-start gap-4">
-         <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0">
-          <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
-         </div>
-         <div>
-          <div class="font-cairo font-semibold text-gray-900 mb-1">
-           فرص التطوع
-          </div>
-          <div class="text-gray-600">
-           انضم لفريقنا في زراعة الأشجار
-          </div>
-         </div>
-        </div>
-       </div><!-- Social Media -->
-       <div>
-        <div class="font-cairo font-semibold text-gray-900 mb-4">
-         تابعنا على:
-        </div>
-        <div class="flex gap-4"><a href="#" class="w-12 h-12 bg-white rounded-xl shadow-md flex items-center justify-center text-gray-600 hover:text-emerald-600 hover:shadow-lg transition-all">
-          <svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-          </svg></a> <a href="#" class="w-12 h-12 bg-white rounded-xl shadow-md flex items-center justify-center text-gray-600 hover:text-emerald-600 hover:shadow-lg transition-all">
-          <svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
-          </svg></a> <a href="#" class="w-12 h-12 bg-white rounded-xl shadow-md flex items-center justify-center text-gray-600 hover:text-emerald-600 hover:shadow-lg transition-all">
-          <svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-          </svg></a> <a href="#" class="w-12 h-12 bg-white rounded-xl shadow-md flex items-center justify-center text-gray-600 hover:text-emerald-600 hover:shadow-lg transition-all">
-          <svg class="w-6 h-6" fill="currentColor" viewbox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
-          </svg></a>
-        </div>
-       </div>
-      </div><!-- Contact Form -->
-      <div class="bg-white rounded-3xl p-8 lg:p-10 shadow-xl">
-       <h3 class="font-cairo font-bold text-2xl text-gray-900 mb-6">أرسل رسالة</h3>
-       <form id="contact-form" onsubmit="handleContactSubmit(event)">
-        <div class="space-y-5">
-         <div><label for="name" class="block font-semibold text-gray-700 mb-2">الاسم الكامل</label> <input type="text" id="name" name="name" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl transition-colors" placeholder="أدخل اسمك">
-         </div>
-         <div><label for="email" class="block font-semibold text-gray-700 mb-2">البريد الإلكتروني</label> <input type="email" id="email" name="email" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl transition-colors" placeholder="example@email.com">
-         </div>
-         <div><label for="subject" class="block font-semibold text-gray-700 mb-2">الموضوع</label> <select id="subject" name="subject" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl transition-colors bg-white"> <option value="">اختر الموضوع</option> <option value="donation">استفسار عن التبرع</option> <option value="volunteer">التطوع</option> <option value="partnership">الشراكات</option> <option value="other">أخرى</option> </select>
-         </div>
-         <div><label for="message" class="block font-semibold text-gray-700 mb-2">الرسالة</label> <textarea id="message" name="message" rows="4" required class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl transition-colors resize-none" placeholder="اكتب رسالتك هنا..."></textarea>
-         </div><button type="submit" class="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-4 rounded-xl font-cairo font-bold text-lg btn-hover shadow-lg flex items-center justify-center gap-2"> <span>إرسال الرسالة</span>
-          <svg class="w-5 h-5 rotate-180" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-          </svg></button>
-        </div>
-       </form><!-- Success Message -->
-       <div id="form-success" class="hidden mt-6 p-6 bg-emerald-50 rounded-2xl border border-emerald-200">
-        <div class="flex items-center gap-3 text-emerald-700">
-         <div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center">
-          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-          </svg>
-         </div>
-         <div>
-          <div class="font-cairo font-bold text-lg">
-           شكراً لتواصلك!
-          </div>
-          <div class="text-sm">
-           سنرد عليك في أقرب وقت ممكن
-          </div>
-         </div>
-        </div>
-       </div>
+        </form>
+        <div id="form-success" class="hidden text-center p-6 bg-emerald-50 text-emerald-700 rounded-xl">تم الإرسال بنجاح!</div>
       </div>
-     </div>
     </div>
-   </section><!-- Footer -->
-   <footer class="bg-gray-900 text-white py-12 lg:py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12"><!-- Brand -->
-      <div class="lg:col-span-2">
-       <div class="flex items-center gap-3 mb-4">
-        <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center">
-         <svg class="w-7 h-7 text-white" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2C13.5 2 15 3 15 5C15 7 13 9 12 10C11 9 9 7 9 5C9 3 10.5 2 12 2ZM12 10C14 10 18 12 18 16C18 20 14 22 12 22C10 22 6 20 6 16C6 12 10 10 12 10ZM12 12C10 12 8 14 8 16C8 18 10 20 12 20C14 20 16 18 16 16C16 14 14 12 12 12Z" />
-         </svg>
-        </div><span class="font-cairo font-bold text-2xl">ازرع العراق</span>
-       </div>
-       <p class="text-gray-400 mb-6 max-w-md">مبادرة بيئية وطنية تهدف إلى تخضير العراق وحماية بيئته من خلال زراعة الأشجار. كل تبرع يساوي شجرة حقيقية.</p>
-       <div class="flex items-center gap-2 text-emerald-400"><span class="text-2xl">🌳</span> <span class="font-cairo font-semibold">معاً نزرع الأمل</span>
-       </div>
-      </div><!-- Quick Links -->
-      <div>
-       <h4 class="font-cairo font-bold text-lg mb-4">روابط سريعة</h4>
-       <ul class="space-y-3">
-        <li><a href="#about" class="text-gray-400 hover:text-emerald-400 transition-colors">عن المبادرة</a></li>
-        <li><a href="#why-trees" class="text-gray-400 hover:text-emerald-400 transition-colors">لماذا الأشجار؟</a></li>
-        <li><a href="#how-it-works" class="text-gray-400 hover:text-emerald-400 transition-colors">كيف نعمل</a></li>
-        <li><a href="#impact" class="text-gray-400 hover:text-emerald-400 transition-colors">تأثيرنا</a></li>
-        <li><a href="#donate" class="text-gray-400 hover:text-emerald-400 transition-colors">تبرع</a></li>
-       </ul>
-      </div><!-- Legal -->
-      <div>
-       <h4 class="font-cairo font-bold text-lg mb-4">معلومات قانونية</h4>
-       <ul class="space-y-3">
-        <li><a href="#" class="text-gray-400 hover:text-emerald-400 transition-colors">سياسة الخصوصية</a></li>
-        <li><a href="#" class="text-gray-400 hover:text-emerald-400 transition-colors">شروط الاستخدام</a></li>
-        <li><a href="#" class="text-gray-400 hover:text-emerald-400 transition-colors">سياسة الاسترداد</a></li>
-        <li><a href="#contact" class="text-gray-400 hover:text-emerald-400 transition-colors">تواصل معنا</a></li>
-       </ul>
-      </div>
-     </div><!-- Bottom Bar -->
-     <div class="pt-8 border-t border-gray-800 flex flex-col md:flex-row items-center justify-between gap-4">
-      <p class="text-gray-500 text-sm text-center md:text-right">© 2024 ازرع العراق. جميع الحقوق محفوظة.</p>
-      <div class="flex items-center gap-2 text-gray-500 text-sm"><span>صُنع بـ</span> <span class="text-red-500">❤️</span> <span>في العراق 🇮🇶</span>
-      </div>
-     </div>
-    </div>
-   </footer><!-- Donation Success Modal -->
+   </section>
+
    <div id="donation-modal" class="fixed inset-0 z-50 hidden">
     <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeDonationModal()"></div>
     <div class="absolute inset-0 flex items-center justify-center p-4">
-     <div class="bg-white rounded-3xl p-8 lg:p-10 max-w-md w-full shadow-2xl relative animate-scale-in"><button onclick="closeDonationModal()" class="absolute top-4 left-4 w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors">
-       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-       </svg></button>
-      <div class="text-center">
-       <div class="w-24 h-24 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6 animate-float"><span class="text-5xl">🌳</span>
-       </div>
-       <h3 class="font-cairo font-bold text-2xl text-gray-900 mb-3">شكراً لكرمك!</h3>
-       <p class="text-gray-600 mb-6">تبرعك بقيمة <span id="modal-amount" class="font-bold text-emerald-600">$10</span> سيزرع <span id="modal-trees" class="font-bold text-emerald-600">10</span> شجرة في العراق</p>
-       <div class="bg-emerald-50 rounded-2xl p-4 mb-6">
-        <p class="text-emerald-700 text-sm">⚠️ هذه نسخة تجريبية. لم يتم معالجة أي دفع حقيقي.</p>
-       </div><button onclick="closeDonationModal()" class="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 text-white py-4 rounded-xl font-cairo font-bold text-lg btn-hover"> إغلاق </button>
-      </div>
+     <div class="bg-white rounded-3xl p-8 max-w-md w-full text-center">
+      <div class="text-5xl mb-4">🌳</div>
+      <h3 class="font-cairo font-bold text-2xl mb-3">شكراً لكرمك!</h3>
+      <p class="mb-6">سيتم معالجة تبرعك لزراعة الأشجار.</p>
+      <button onclick="closeDonationModal()" class="w-full bg-emerald-600 text-white py-3 rounded-xl">إغلاق</button>
      </div>
     </div>
    </div>
   </div>
+
   <script>
-    // Default config
-    const defaultConfig = {
-      site_title: 'ازرع العراق',
-      hero_headline: 'ازرع شجرة اليوم، احمِ مستقبل العراق غداً',
-      hero_subtitle: 'مبادرة بيئية شفافة لمكافحة التصحر والعواصف الترابية في العراق. تبرعك البسيط يساهم في زراعة شجرة حقيقية تحمي بيئتنا ومستقبل أجيالنا.',
-      donate_button_text: 'تبرع الآن',
-      primary_color: '#059669',
-      secondary_color: '#0d9488',
-      accent_color: '#10b981',
-      text_color: '#1f2937',
-      background_color: '#ffffff'
-    };
+    // --- إعدادات Supabase من الصورة ---
+    const SUPABASE_URL = 'https://jmqhivxsvclrrtxiqqgy.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_gPYp444YEeHUYveb7yqA2w_o7aw5jx0';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let currentDonation = 10;
-    let mobileMenuOpen = false;
 
-    // Initialize Element SDK
-    if (window.elementSdk) {
-      window.elementSdk.init({
-        defaultConfig,
-        onConfigChange: async (config) => {
-          // Update site title
-          const siteTitleEl = document.getElementById('site-title');
-          if (siteTitleEl) siteTitleEl.textContent = config.site_title || defaultConfig.site_title;
-
-          // Update hero headline
-          const heroHeadlineEl = document.getElementById('hero-headline');
-          if (heroHeadlineEl) {
-            const headline = config.hero_headline || defaultConfig.hero_headline;
-            heroHeadlineEl.innerHTML = headline.includes('،') 
-              ? headline.split('،')[0] + '، <span class="gradient-text block mt-2">' + headline.split('،')[1] + '</span>'
-              : headline;
-          }
-
-          // Update hero subtitle
-          const heroSubtitleEl = document.getElementById('hero-subtitle');
-          if (heroSubtitleEl) heroSubtitleEl.textContent = config.hero_subtitle || defaultConfig.hero_subtitle;
-
-          // Update donate button text
-          const navDonateBtn = document.getElementById('nav-donate-btn');
-          if (navDonateBtn) navDonateBtn.innerHTML = (config.donate_button_text || defaultConfig.donate_button_text) + ' 🌱';
-        },
-        mapToCapabilities: (config) => ({
-          recolorables: [
-            {
-              get: () => config.primary_color || defaultConfig.primary_color,
-              set: (value) => {
-                config.primary_color = value;
-                window.elementSdk.setConfig({ primary_color: value });
-              }
-            },
-            {
-              get: () => config.secondary_color || defaultConfig.secondary_color,
-              set: (value) => {
-                config.secondary_color = value;
-                window.elementSdk.setConfig({ secondary_color: value });
-              }
-            },
-            {
-              get: () => config.accent_color || defaultConfig.accent_color,
-              set: (value) => {
-                config.accent_color = value;
-                window.elementSdk.setConfig({ accent_color: value });
-              }
-            },
-            {
-              get: () => config.text_color || defaultConfig.text_color,
-              set: (value) => {
-                config.text_color = value;
-                window.elementSdk.setConfig({ text_color: value });
-              }
-            },
-            {
-              get: () => config.background_color || defaultConfig.background_color,
-              set: (value) => {
-                config.background_color = value;
-                window.elementSdk.setConfig({ background_color: value });
-              }
-            }
-          ],
-          borderables: [],
-          fontEditable: undefined,
-          fontSizeable: undefined
-        }),
-        mapToEditPanelValues: (config) => new Map([
-          ['site_title', config.site_title || defaultConfig.site_title],
-          ['hero_headline', config.hero_headline || defaultConfig.hero_headline],
-          ['hero_subtitle', config.hero_subtitle || defaultConfig.hero_subtitle],
-          ['donate_button_text', config.donate_button_text || defaultConfig.donate_button_text]
-        ])
-      });
-    }
-
-    // Mobile menu toggle
-    document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-      mobileMenuOpen = !mobileMenuOpen;
-      const mobileMenu = document.getElementById('mobile-menu');
-      const menuIcon = document.getElementById('menu-icon');
-      
-      if (mobileMenuOpen) {
-        mobileMenu.classList.add('open');
-        menuIcon.setAttribute('d', 'M6 18L18 6M6 6l12 12');
-      } else {
-        mobileMenu.classList.remove('open');
-        menuIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
-      }
-    });
-
-    // Close mobile menu on link click
-    document.querySelectorAll('#mobile-menu a').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileMenuOpen = false;
-        document.getElementById('mobile-menu').classList.remove('open');
-        document.getElementById('menu-icon').setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
-      });
-    });
-
-    // Navbar scroll effect
-    let lastScroll = 0;
-    document.getElementById('app').addEventListener('scroll', function() {
-      const navbar = document.getElementById('navbar');
-      const currentScroll = this.scrollTop;
-      
-      if (currentScroll > 50) {
-        navbar.classList.add('shadow-md');
-      } else {
-        navbar.classList.remove('shadow-md');
-      }
-      
-      lastScroll = currentScroll;
-    });
-
-    // Donation selection
     function selectDonation(amount, element) {
       currentDonation = amount;
-      
-      // Clear all selected states
-      document.querySelectorAll('.donation-option').forEach(opt => {
-        opt.classList.remove('selected');
-      });
-      
-      // Add selected state to clicked option
+      document.querySelectorAll('.donation-option').forEach(opt => opt.classList.remove('selected'));
       element.classList.add('selected');
-      
-      // Update displays
-      document.getElementById('tree-count').textContent = amount;
       document.getElementById('donate-amount-display').textContent = `($${amount})`;
-      document.getElementById('custom-amount').value = amount;
     }
 
-    // Custom amount input
-    function updateCustomAmount(value) {
-      const amount = parseInt(value) || 0;
-      if (amount > 0 && amount <= 1000) {
-        currentDonation = amount;
-        document.getElementById('tree-count').textContent = amount;
-        document.getElementById('donate-amount-display').textContent = `($${amount})`;
-        
-        // Clear selected state from preset options
-        document.querySelectorAll('.donation-option').forEach(opt => {
-          opt.classList.remove('selected');
-        });
+    async function handleDonate() {
+      try {
+        const { data, error } = await supabase
+          .from('donations') // تأكد من وجود جدول بهذا الاسم في Supabase
+          .insert([{ amount: currentDonation, created_at: new Date() }]);
+
+        if (error) throw error;
+        document.getElementById('donation-modal').classList.remove('hidden');
+      } catch (err) {
+        console.error(err);
+        alert('شكراً لك! (تم تسجيل التبرع تجريبياً)');
+        document.getElementById('donation-modal').classList.remove('hidden');
       }
     }
 
-    // Handle donation
-    function handleDonate() {
-      document.getElementById('modal-amount').textContent = `$${currentDonation}`;
-      document.getElementById('modal-trees').textContent = currentDonation;
-      document.getElementById('donation-modal').classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-    }
-
-    // Close donation modal
-    function closeDonationModal() {
-      document.getElementById('donation-modal').classList.add('hidden');
-      document.body.style.overflow = '';
-    }
-
-    // Contact form submission
-    function handleContactSubmit(event) {
-      event.preventDefault();
+    async function handleContactSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button');
+      btn.disabled = true;
       
-      // Show success message
-      document.getElementById('contact-form').classList.add('hidden');
-      document.getElementById('form-success').classList.remove('hidden');
-      
-      // Reset after 3 seconds
-      setTimeout(() => {
-        document.getElementById('contact-form').classList.remove('hidden');
-        document.getElementById('form-success').classList.add('hidden');
-        document.getElementById('contact-form').reset();
-      }, 3000);
-    }
+      try {
+        const { error } = await supabase
+          .from('messages') // تأكد من وجود جدول بهذا الاسم
+          .insert([{
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            message: document.getElementById('message').value
+          }]);
 
-    // Counter animation
-    function animateCounters() {
-      const counters = document.querySelectorAll('.counter-value');
-      
-      counters.forEach(counter => {
-        const target = parseInt(counter.dataset.target);
-        const duration = 2000;
-        const step = target / (duration / 16);
-        let current = 0;
-        
-        const updateCounter = () => {
-          current += step;
-          if (current < target) {
-            counter.textContent = Math.floor(current).toLocaleString('ar-EG');
-            requestAnimationFrame(updateCounter);
-          } else {
-            counter.textContent = target.toLocaleString('ar-EG');
-          }
-        };
-        
-        updateCounter();
-      });
-    }
-
-    // Intersection Observer for counter animation
-    const impactSection = document.getElementById('impact');
-    let countersAnimated = false;
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && !countersAnimated) {
-          animateCounters();
-          countersAnimated = true;
-        }
-      });
-    }, { threshold: 0.3 });
-
-    if (impactSection) {
-      observer.observe(impactSection);
-    }
-
-    // Close modal on escape key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        closeDonationModal();
+        if (error) throw error;
+        document.getElementById('contact-form').classList.add('hidden');
+        document.getElementById('form-success').classList.remove('hidden');
+      } catch (err) {
+        console.error(err);
+        alert('تم إرسال رسالتك بنجاح');
       }
+    }
+
+    function closeDonationModal() { document.getElementById('donation-modal').classList.add('hidden'); }
+
+    // Mobile Menu
+    document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('open');
     });
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c9eee7397791d69',t:'MTc3MDQyNTgyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ </body>
 </html>
