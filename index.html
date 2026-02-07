@@ -5,37 +5,65 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>iqk.23 | Graphic Designer</title>
 
-<!-- Tailwind -->
+<!-- Tailwind CDN (GitHub Pages compatible) -->
 <script src="https://cdn.tailwindcss.com"></script>
 
 <!-- Font -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 
 <style>
-body{font-family:'Cairo',sans-serif}
-.glow{box-shadow:0 0 30px rgba(34,211,238,.35)}
-.card{transition:.35s}
-.card:hover{transform:translateY(-10px);box-shadow:0 20px 50px rgba(34,211,238,.25)}
+body{
+  font-family:'Cairo',sans-serif;
+  background:#020617;
+  color:#e5e7eb;
+}
+
+/* كروت زرق */
+.card{
+  background:linear-gradient(145deg,#0b1f3a,#0f2f5a);
+  border:1px solid rgba(56,189,248,.25);
+  border-radius:1rem;
+  transition:.35s ease;
+}
+.card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 0 35px rgba(56,189,248,.45);
+  border-color:rgba(56,189,248,.8);
+}
+
+/* أزرار */
+.btn{
+  background:linear-gradient(135deg,#38bdf8,#0ea5e9);
+  color:#020617;
+  font-weight:800;
+  border-radius:.75rem;
+  padding:.75rem 2rem;
+  box-shadow:0 0 30px rgba(56,189,248,.5);
+  transition:.3s;
+}
+.btn:hover{
+  box-shadow:0 0 45px rgba(56,189,248,.8);
+}
+
+/* عنوان */
+.section-title{
+  color:#7dd3fc;
+}
 </style>
 </head>
 
-<body class="bg-black text-white scroll-smooth">
+<body class="scroll-smooth">
 
 <!-- HEADER -->
-<header class="fixed top-0 w-full bg-black/80 backdrop-blur z-50">
+<header class="fixed top-0 w-full bg-black/70 backdrop-blur z-50 border-b border-sky-900">
   <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 bg-cyan-400 rounded-xl flex items-center justify-center glow">
-        <span class="font-black text-black text-xl">@</span>
-      </div>
-      <span class="font-bold">iqk.23</span>
-    </div>
+    <span class="font-black text-xl text-sky-400">iqk.23</span>
     <nav class="hidden md:flex gap-8 text-gray-300">
-      <a href="#home" class="hover:text-cyan-400">الرئيسية</a>
-      <a href="#profile" class="hover:text-cyan-400">ملفي</a>
-      <a href="#portfolio" class="hover:text-cyan-400">أعمالي</a>
-      <a href="#services" class="hover:text-cyan-400">خدماتي</a>
-      <a href="#contact" class="hover:text-cyan-400">تواصل</a>
+      <a href="#home" class="hover:text-sky-400">الرئيسية</a>
+      <a href="#about" class="hover:text-sky-400">عني</a>
+      <a href="#portfolio" class="hover:text-sky-400">أعمالي</a>
+      <a href="#services" class="hover:text-sky-400">خدماتي</a>
+      <a href="#contact" class="hover:text-sky-400">تواصل</a>
     </nav>
   </div>
 </header>
@@ -43,37 +71,41 @@ body{font-family:'Cairo',sans-serif}
 <!-- HERO -->
 <section id="home" class="min-h-screen flex items-center justify-center pt-24">
   <div class="text-center max-w-3xl px-6">
-    <h1 class="text-5xl font-black mb-6">مصمم جرافيك محترف</h1>
+    <h1 class="text-5xl md:text-6xl font-black mb-6 text-white">
+      Graphic Designer
+    </h1>
     <p class="text-gray-300 mb-10">
-      شعارات · سوشيال ميديا · هوية بصرية بأسلوب عصري وجذاب
+      شعارات • سوشيال ميديا • هوية بصرية بأسلوب احترافي عصري
     </p>
-    <div class="flex justify-center gap-4">
-      <a href="#portfolio" class="px-8 py-3 bg-cyan-400 text-black rounded-xl font-bold glow">أعمالي</a>
-      <a href="#contact" class="px-8 py-3 border border-cyan-400 rounded-xl hover:bg-cyan-400 hover:text-black transition">تواصل معي</a>
+    <div class="flex justify-center gap-4 flex-wrap">
+      <a href="#portfolio" class="btn">أعمالي</a>
+      <a href="#contact" class="border border-sky-400 px-8 py-3 rounded-xl hover:bg-sky-400 hover:text-black transition">
+        تواصل معي
+      </a>
     </div>
   </div>
 </section>
 
-<!-- PROFILE -->
-<section id="profile" class="py-24 bg-neutral-950">
+<!-- ABOUT -->
+<section id="about" class="py-24 bg-[#020617]">
   <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
     <div class="text-center">
-      <img src="https://via.placeholder.com/300"
-           class="w-64 h-64 mx-auto rounded-3xl border-4 border-cyan-400 glow"
-           alt="iqk.23">
+      <div class="w-60 h-60 mx-auto rounded-3xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-5xl font-black text-black">
+        @
+      </div>
     </div>
     <div>
-      <h2 class="text-4xl font-black mb-4">iqk.23</h2>
-      <p class="text-cyan-400 font-semibold mb-6">Graphic Designer</p>
+      <h2 class="text-4xl font-black mb-4 section-title">عني</h2>
       <p class="text-gray-300 leading-relaxed mb-6">
-        مصمم جرافيك أعمل على إنشاء تصاميم احترافية تترك أثر
-        وتساعد العلامات التجارية على الظهور بقوة.
+        مصمم جرافيك متخصص في إنشاء تصاميم قوية
+        تساعد العلامات التجارية على الظهور بشكل أنيق
+        وجذاب.
       </p>
       <div class="grid grid-cols-2 gap-4 text-sm">
-        <div class="bg-neutral-900 p-4 rounded-xl">🎨 خبرة عملية</div>
-        <div class="bg-neutral-900 p-4 rounded-xl">⚡ سرعة تنفيذ</div>
-        <div class="bg-neutral-900 p-4 rounded-xl">⭐ جودة عالية</div>
-        <div class="bg-neutral-900 p-4 rounded-xl">📍 العراق</div>
+        <div class="card p-4">🎨 خبرة عملية</div>
+        <div class="card p-4">⚡ سرعة تنفيذ</div>
+        <div class="card p-4">⭐ جودة عالية</div>
+        <div class="card p-4">📍 العراق</div>
       </div>
     </div>
   </div>
@@ -82,33 +114,24 @@ body{font-family:'Cairo',sans-serif}
 <!-- PORTFOLIO -->
 <section id="portfolio" class="py-24">
   <div class="max-w-7xl mx-auto px-6">
-    <h2 class="text-4xl font-black text-center mb-16">أعمالي</h2>
+    <h2 class="text-4xl font-black text-center mb-16 section-title">أعمالي</h2>
     <div class="grid md:grid-cols-3 gap-8">
-      <div class="card bg-neutral-900 rounded-2xl overflow-hidden">
-        <img src="https://via.placeholder.com/600x400">
-        <div class="p-6 font-bold text-center">تصميم شعار</div>
-      </div>
-      <div class="card bg-neutral-900 rounded-2xl overflow-hidden">
-        <img src="https://via.placeholder.com/600x400">
-        <div class="p-6 font-bold text-center">سوشيال ميديا</div>
-      </div>
-      <div class="card bg-neutral-900 rounded-2xl overflow-hidden">
-        <img src="https://via.placeholder.com/600x400">
-        <div class="p-6 font-bold text-center">إعلان تجاري</div>
-      </div>
+      <div class="card p-8 text-center font-bold">تصميم شعار</div>
+      <div class="card p-8 text-center font-bold">سوشيال ميديا</div>
+      <div class="card p-8 text-center font-bold">إعلان تجاري</div>
     </div>
   </div>
 </section>
 
 <!-- SERVICES -->
-<section id="services" class="py-24 bg-neutral-950">
+<section id="services" class="py-24 bg-[#020617]">
   <div class="max-w-7xl mx-auto px-6 text-center">
-    <h2 class="text-4xl font-black mb-16">خدماتي</h2>
+    <h2 class="text-4xl font-black mb-16 section-title">خدماتي</h2>
     <div class="grid md:grid-cols-4 gap-6">
-      <div class="card bg-neutral-900 p-8 rounded-2xl">تصميم شعارات</div>
-      <div class="card bg-neutral-900 p-8 rounded-2xl">سوشيال ميديا</div>
-      <div class="card bg-neutral-900 p-8 rounded-2xl">إعلانات رقمية</div>
-      <div class="card bg-neutral-900 p-8 rounded-2xl">هوية بصرية</div>
+      <div class="card p-6">تصميم شعارات</div>
+      <div class="card p-6">سوشيال ميديا</div>
+      <div class="card p-6">إعلانات رقمية</div>
+      <div class="card p-6">هوية بصرية</div>
     </div>
   </div>
 </section>
@@ -116,22 +139,25 @@ body{font-family:'Cairo',sans-serif}
 <!-- CONTACT -->
 <section id="contact" class="py-24">
   <div class="max-w-4xl mx-auto px-6 text-center">
-    <h2 class="text-4xl font-black mb-6">تواصل معي</h2>
+    <h2 class="text-4xl font-black mb-6 section-title">تواصل معي</h2>
     <p class="text-gray-400 mb-10">جاهز نشتغل سوا؟</p>
     <div class="flex justify-center gap-6 flex-wrap">
-      <a href="https://wa.me/9647511672958" target="_blank"
-         class="card bg-neutral-900 p-8 rounded-2xl min-w-[200px]">WhatsApp</a>
-      <a href="https://instagram.com/23.iqk" target="_blank"
-         class="card bg-neutral-900 p-8 rounded-2xl min-w-[200px]">Instagram</a>
-      <a href="https://facebook.com" target="_blank"
-         class="card bg-neutral-900 p-8 rounded-2xl min-w-[200px]">Facebook</a>
+      <a href="https://wa.me/9647511672958" target="_blank" class="card p-6 min-w-[200px]">
+        WhatsApp
+      </a>
+      <a href="https://instagram.com/23.iqk" target="_blank" class="card p-6 min-w-[200px]">
+        Instagram
+      </a>
+      <a href="https://facebook.com" target="_blank" class="card p-6 min-w-[200px]">
+        Facebook
+      </a>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
-<footer class="bg-neutral-950 py-8 text-center text-gray-500 text-sm">
-  © 2026 iqk.23 — Graphic Designer
+<footer class="border-t border-sky-900 py-8 text-center text-gray-500 text-sm">
+  © 2026 iqk.23 — Graphic Designer Portfolio
 </footer>
 
 </body>
