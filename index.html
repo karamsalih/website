@@ -11,8 +11,24 @@
 <style>
 body{
   font-family:'Cairo',sans-serif;
-  background:#00030a;
+  background:#000814;
   color:#e5e7eb;
+  overflow-x:hidden;
+}
+
+/* خلفية نجوم */
+.stars{
+  position:fixed;
+  width:100%;
+  height:100%;
+  z-index:-1;
+  background:transparent url('https://www.transparenttextures.com/patterns/stardust.png');
+  animation:moveStars 200s linear infinite;
+  opacity:.25;
+}
+@keyframes moveStars{
+  from{background-position:0 0;}
+  to{background-position:10000px 5000px;}
 }
 
 /* كروت */
@@ -23,8 +39,8 @@ body{
   transition:.4s ease;
 }
 .card:hover{
-  transform:translateY(-10px);
-  box-shadow:0 0 50px rgba(59,130,246,.5);
+  transform:translateY(-12px) scale(1.03);
+  box-shadow:0 0 60px rgba(59,130,246,.6);
   border-color:rgba(59,130,246,.9);
 }
 
@@ -33,49 +49,82 @@ body{
   background:linear-gradient(135deg,#3b82f6,#60a5fa);
   color:#020617;
   font-weight:900;
-  padding:.8rem 2.2rem;
+  padding:.9rem 2.4rem;
   border-radius:.9rem;
-  box-shadow:0 0 35px rgba(59,130,246,.6);
+  box-shadow:0 0 40px rgba(59,130,246,.6);
+  transition:.4s;
 }
 .btn:hover{
-  box-shadow:0 0 60px rgba(59,130,246,.9);
+  transform:scale(1.07);
+  box-shadow:0 0 80px rgba(59,130,246,1);
 }
 
 /* عناوين */
 .section-title{
   color:#93c5fd;
+  position:relative;
+}
+.section-title::after{
+  content:'';
+  display:block;
+  width:80px;
+  height:4px;
+  background:#3b82f6;
+  margin:15px auto 0;
+  border-radius:5px;
+  box-shadow:0 0 20px #3b82f6;
+}
+
+/* تأثير كتابة */
+.typing{
+  border-left:3px solid #3b82f6;
+  white-space:nowrap;
+  overflow:hidden;
+  width:0;
+  animation:typing 4s steps(30,end) forwards, blink .7s infinite;
+}
+@keyframes typing{
+  from{width:0}
+  to{width:100%}
+}
+@keyframes blink{
+  50%{border-color:transparent}
+}
+
+/* Parallax */
+.parallax{
+  background:linear-gradient(120deg,#0a2550,#081a33);
+  background-attachment:fixed;
 }
 </style>
 </head>
 
 <body class="scroll-smooth">
 
-<!-- HEADER -->
-<header class="fixed top-0 w-full bg-black/80 backdrop-blur border-b border-blue-900 z-50">
+<div class="stars"></div>
+
+<header class="fixed top-0 w-full bg-black/70 backdrop-blur border-b border-blue-900 z-50">
   <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-    <span class="text-blue-400 font-black text-xl">@23.iqk</span>
+    <span class="text-blue-400 font-black text-xl tracking-widest">@23.iqk</span>
     <nav class="hidden md:flex gap-8 text-gray-300">
-      <a href="#home" class="hover:text-blue-400">الرئيسية</a>
-      <a href="#about" class="hover:text-blue-400">عني</a>
-      <a href="#portfolio" class="hover:text-blue-400">أعمالي</a>
-      <a href="#services" class="hover:text-blue-400">خدماتي</a>
-      <a href="#contact" class="hover:text-blue-400">تواصل</a>
+      <a href="#home" class="hover:text-blue-400 transition">الرئيسية</a>
+      <a href="#about" class="hover:text-blue-400 transition">عني</a>
+      <a href="#portfolio" class="hover:text-blue-400 transition">أعمالي</a>
+      <a href="#services" class="hover:text-blue-400 transition">خدماتي</a>
+      <a href="#contact" class="hover:text-blue-400 transition">تواصل</a>
     </nav>
   </div>
 </header>
 
-<!-- HERO -->
-<section id="home" class="min-h-screen flex items-center justify-center pt-28">
-  <div class="text-center max-w-4xl px-6">
+<section id="home" class="min-h-screen flex items-center justify-center pt-28 text-center">
+  <div class="max-w-4xl px-6">
     <h1 class="text-5xl md:text-6xl font-black text-white mb-6">
       كرم – مصمم جرافيك
     </h1>
-    <p class="text-gray-300 mb-10 leading-relaxed">
-      أبتكر تصاميم بهوية واضحة،
-      تخدم البراند وتبقى بالذاكرة،
-      مو مجرد شكل حلو.
+    <p class="typing text-gray-300 mb-10 text-lg">
+      أبتكر تصاميم بهوية واضحة تخدم البراند وتبقى بالذاكرة
     </p>
-    <div class="flex justify-center gap-4 flex-wrap">
+    <div class="flex justify-center gap-6 flex-wrap mt-10">
       <a href="#portfolio" class="btn">شوف أعمالي</a>
       <a href="#contact"
          class="border border-blue-400 px-8 py-3 rounded-xl hover:bg-blue-400 hover:text-black transition">
@@ -85,23 +134,20 @@ body{
   </div>
 </section>
 
-<!-- ABOUT -->
-<section id="about" class="py-28">
+<section id="about" class="py-28 parallax">
   <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-14 items-center">
     <div class="text-center">
       <div class="w-64 h-64 mx-auto rounded-3xl
         bg-gradient-to-br from-blue-400 to-blue-600
         flex items-center justify-center
-        text-6xl font-black text-black">
+        text-6xl font-black text-black shadow-2xl shadow-blue-500/40">
         K
       </div>
     </div>
     <div>
       <h2 class="text-4xl font-black mb-5 section-title">منو كرم؟</h2>
       <p class="text-gray-300 leading-relaxed mb-8">
-        مصمم جرافيك أشتغل على تحويل الأفكار
-        إلى تصاميم قوية تخدم المشروع على المدى البعيد،
-        وأفكر دايمًا بعين البراند مو بس بعين المصمم.
+        مصمم جرافيك أشتغل على تحويل الأفكار إلى تصاميم قوية تخدم المشروع على المدى البعيد.
       </p>
       <div class="grid grid-cols-2 gap-4 text-sm">
         <div class="card p-4">🎨 تصميم مخصص</div>
@@ -113,103 +159,49 @@ body{
   </div>
 </section>
 
-<!-- WHY ME -->
-<section class="py-28 bg-black">
-  <div class="max-w-5xl mx-auto px-6 text-center">
-    <h2 class="text-4xl font-black section-title mb-14">ليش تختارني؟</h2>
-    <div class="grid md:grid-cols-3 gap-6">
-      <div class="card p-6">ما أستخدم قوالب</div>
-      <div class="card p-6">كل تصميم إله فكرة</div>
-      <div class="card p-6">أهتم بالنتيجة مو بس الشكل</div>
-    </div>
-  </div>
-</section>
-
-<!-- PORTFOLIO -->
 <section id="portfolio" class="py-28">
-  <div class="max-w-7xl mx-auto px-6">
-    <h2 class="text-4xl font-black text-center section-title mb-16">
-      نماذج من أعمالي
-    </h2>
+  <div class="max-w-7xl mx-auto px-6 text-center">
+    <h2 class="text-4xl font-black section-title mb-16">نماذج من أعمالي</h2>
     <div class="grid md:grid-cols-3 gap-8">
       <div class="card p-6">
-        <span class="text-blue-400 text-sm">Brand Identity</span>
-        <h3 class="text-xl font-black mt-2">هوية مقهى عصري</h3>
-        <p class="text-gray-300 text-sm mt-3">
-          هوية بصرية كاملة بأسلوب Minimal
-          تناسب جمهور الشباب.
-        </p>
+        <h3 class="text-xl font-black text-blue-400">هوية مقهى عصري</h3>
+        <p class="text-gray-300 text-sm mt-3">هوية Minimal تناسب جمهور الشباب.</p>
       </div>
       <div class="card p-6">
-        <span class="text-blue-400 text-sm">Social Media</span>
-        <h3 class="text-xl font-black mt-2">محتوى إنستغرام</h3>
-        <p class="text-gray-300 text-sm mt-3">
-          تصاميم متناسقة تزيد التفاعل
-          وتعكس شخصية البراند.
-        </p>
+        <h3 class="text-xl font-black text-blue-400">محتوى إنستغرام</h3>
+        <p class="text-gray-300 text-sm mt-3">تصاميم تزيد التفاعل وتعكس شخصية البراند.</p>
       </div>
       <div class="card p-6">
-        <span class="text-blue-400 text-sm">Logo Design</span>
-        <h3 class="text-xl font-black mt-2">شعار متجر إلكتروني</h3>
-        <p class="text-gray-300 text-sm mt-3">
-          شعار بسيط، قوي،
-          وسهل التذكر.
-        </p>
+        <h3 class="text-xl font-black text-blue-400">شعار متجر إلكتروني</h3>
+        <p class="text-gray-300 text-sm mt-3">شعار بسيط، قوي، وسهل التذكر.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SERVICES -->
 <section id="services" class="py-28 bg-black">
   <div class="max-w-7xl mx-auto px-6 text-center">
     <h2 class="text-4xl font-black section-title mb-16">خدماتي</h2>
     <div class="grid md:grid-cols-4 gap-6">
-      <div class="card p-6">
-        <h3 class="font-black text-blue-400">تصميم شعارات</h3>
-        <p class="text-sm mt-3 text-gray-300">
-          شعار يعكس شخصية البراند ويعيش.
-        </p>
-      </div>
-      <div class="card p-6">
-        <h3 class="font-black text-blue-400">هوية بصرية</h3>
-        <p class="text-sm mt-3 text-gray-300">
-          نظام بصري متكامل لكل المنصات.
-        </p>
-      </div>
-      <div class="card p-6">
-        <h3 class="font-black text-blue-400">سوشيال ميديا</h3>
-        <p class="text-sm mt-3 text-gray-300">
-          تصاميم تشد وتزيد التفاعل.
-        </p>
-      </div>
-      <div class="card p-6">
-        <h3 class="font-black text-blue-400">إعلانات</h3>
-        <p class="text-sm mt-3 text-gray-300">
-          تصاميم تبيع الفكرة بذكاء.
-        </p>
-      </div>
+      <div class="card p-6">تصميم شعارات</div>
+      <div class="card p-6">هوية بصرية</div>
+      <div class="card p-6">سوشيال ميديا</div>
+      <div class="card p-6">إعلانات</div>
     </div>
   </div>
 </section>
 
-<!-- CONTACT -->
-<section id="contact" class="py-28">
-  <div class="max-w-4xl mx-auto px-6 text-center">
-    <h2 class="text-4xl font-black section-title mb-6">نشتغل سوا؟</h2>
-    <p class="text-gray-400 mb-10">
-      عندك فكرة؟ خلّينا نطلعها بتصميم يليق بيها.
-    </p>
-    <div class="flex justify-center gap-6 flex-wrap">
-      <a href="https://wa.me/9647511672958" target="_blank"
-         class="card p-6 min-w-[200px]">WhatsApp</a>
-      <a href="https://instagram.com/23.iqk" target="_blank"
-         class="card p-6 min-w-[200px]">Instagram</a>
-    </div>
+<section id="contact" class="py-28 text-center">
+  <h2 class="text-4xl font-black section-title mb-6">نشتغل سوا؟</h2>
+  <p class="text-gray-400 mb-10">عندك فكرة؟ خلّينا نطلعها بتصميم يليق بيها.</p>
+  <div class="flex justify-center gap-6 flex-wrap">
+    <a href="https://wa.me/9647511672958" target="_blank"
+       class="card p-6 min-w-[200px] hover:scale-105 transition">WhatsApp</a>
+    <a href="https://instagram.com/23.iqk" target="_blank"
+       class="card p-6 min-w-[200px] hover:scale-105 transition">Instagram</a>
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer class="border-t border-blue-900 py-8 text-center text-gray-500 text-sm">
   © 2026 كرم — مصمم جرافيك
 </footer>
