@@ -1,238 +1,806 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>كرم | مصمم جرافيك 2040</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-
-<style>
-:root {
-  --bg-dark: #0b0c17;
-  --bg-light: #fefefe;
-  --text-dark: #e5e7eb;
-  --text-light: #0b0c17;
-  --accent: #3b82f6;
-  --card-dark: rgba(255,255,255,0.05);
-  --card-light: rgba(0,0,0,0.05);
-}
-
-body {
-  margin:0;
-  font-family:'Cairo',sans-serif;
-  background: var(--bg-dark);
-  color: var(--text-dark);
-  transition: background 0.5s, color 0.5s;
-  overflow-x:hidden;
-}
-
-#bg { position: fixed; inset:0; z-index:-2; }
-
-/* Glass cards */
-.glass {
-  background: var(--card-dark);
-  backdrop-filter: blur(25px);
-  border-radius:1.5rem;
-  border:1px solid rgba(255,255,255,0.08);
-  transition: background 0.5s;
-}
-
-/* Buttons */
-.btn {
-  padding: 1rem 3rem;
-  border-radius: 1rem;
-  font-weight:900;
-  background: linear-gradient(120deg,#3b82f6,#8b5cf6);
-  color:white;
-  cursor:pointer;
-  transition: transform 0.3s;
-}
-.btn:hover { transform: scale(1.05); }
-
-/* Portfolio hover */
-.portfolio-card { transition: transform 0.3s, box-shadow 0.3s; }
-.portfolio-card:hover { transform: translateY(-10px) scale(1.05); box-shadow:0 15px 35px rgba(59,130,246,0.5); }
-
-/* Theme toggle button fixed */
-#themeToggle {
-  position: fixed;
-  top: 20px; right: 20px;
-  z-index: 100;
-  padding:0.6rem 1.2rem;
-  background: var(--accent);
-  color:white;
-  border-radius:0.8rem;
-  font-weight:700;
-  cursor:pointer;
-  box-shadow:0 0 15px var(--accent);
-  transition: all 0.3s;
-}
-#themeToggle:hover { transform: scale(1.1); }
-</style>
-</head>
-
-<body>
-
-<canvas id="bg"></canvas>
-
-<!-- Theme Toggle -->
-<div id="themeToggle">🌞 / 🌙</div>
-
-<header class="fixed top-0 w-full p-6 z-50">
-  <div class="max-w-7xl mx-auto flex justify-between items-center glass p-4">
-    <span class="font-black text-xl">@23.iqk</span>
-    <nav class="hidden md:flex gap-8">
-      <a href="#home" class="navlink hover:text-blue-400">الرئيسية</a>
-      <a href="#about" class="navlink hover:text-blue-400">عني</a>
-      <a href="#services" class="navlink hover:text-blue-400">خدماتي</a>
-      <a href="#work" class="navlink hover:text-blue-400">أعمالي</a>
-      <a href="#why" class="navlink hover:text-blue-400">لماذا التعامل معي</a>
-      <a href="#contact" class="navlink hover:text-blue-400">تواصل</a>
-    </nav>
-  </div>
-</header>
-
-<section id="home" class="min-h-screen flex items-center justify-center text-center px-6">
-  <div>
-    <h1 class="text-7xl font-black">كرم</h1>
-    <p class="text-gray-400 mt-6 text-xl">بوابة التصميم من المستقبل</p>
-    <div class="mt-12">
-      <a href="#work" class="btn">ادخل البوابة</a>
-    </div>
-  </div>
-</section>
-
-<section id="about" class="py-40 px-6">
-  <div class="max-w-6xl mx-auto glass p-16 text-center">
-    <h2 class="text-5xl font-black mb-10">مصمم 2040</h2>
-    <p class="text-gray-300 leading-relaxed text-lg">
-      أبني تجارب رقمية حية تتفاعل مع الزائر وتخلق بعد جديد للهوية البصرية.
-      أدمج الإبداع والتقنية في كل مشروع لأجعل التصميم ينبض بالحياة.
-    </p>
-  </div>
-</section>
-
-<section id="services" class="py-40 px-6">
-  <div class="max-w-7xl mx-auto text-center mb-16">
-    <h2 class="text-5xl font-black mb-10">خدماتي</h2>
-    <div class="grid md:grid-cols-3 gap-10">
-      <div class="glass p-8 portfolio-card">
-        <h3 class="font-black text-xl mb-4">تصميم هوية بصرية</h3>
-        <p class="text-gray-300 text-sm">تحويل أفكارك إلى هوية جذابة ومتناسقة بصرياً.</p>
-      </div>
-      <div class="glass p-8 portfolio-card">
-        <h3 class="font-black text-xl mb-4">تجارب تفاعلية</h3>
-        <p class="text-gray-300 text-sm">تصميم واجهات تفاعلية تترك أثر بصري على الزائر.</p>
-      </div>
-      <div class="glass p-8 portfolio-card">
-        <h3 class="font-black text-xl mb-4">تصميم براند مستقبلي</h3>
-        <p class="text-gray-300 text-sm">خلق هوية مبتكرة للعلامات التجارية تتخطى التقليدي.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="work" class="py-40 px-6">
-  <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-10">
-    <div class="glass p-6 portfolio-card">
-      <img src="https://via.placeholder.com/400x300.png?text=هوية+طاقة" class="rounded-lg mb-4">
-      <h3 class="font-black text-xl">هوية طاقية</h3>
-      <p class="text-gray-300 mt-2 text-sm">تجربة تصميمية مبتكرة للعلامات التجارية.</p>
-    </div>
-    <div class="glass p-6 portfolio-card">
-      <img src="https://via.placeholder.com/400x300.png?text=AI+تجربة" class="rounded-lg mb-4">
-      <h3 class="font-black text-xl">تجربة AI بصرية</h3>
-      <p class="text-gray-300 mt-2 text-sm">تصميم تفاعلي قائم على الذكاء الاصطناعي.</p>
-    </div>
-    <div class="glass p-6 portfolio-card">
-      <img src="https://via.placeholder.com/400x300.png?text=براند+مستقبلي" class="rounded-lg mb-4">
-      <h3 class="font-black text-xl">براند من بعد آخر</h3>
-      <p class="text-gray-300 mt-2 text-sm">تحويل الهوية التقليدية إلى عالم رقمي مستقبلي.</p>
-    </div>
-  </div>
-</section>
-
-<section id="why" class="py-40 px-6">
-  <div class="max-w-6xl mx-auto text-center glass p-16">
-    <h2 class="text-5xl font-black mb-10">لماذا التعامل معي؟</h2>
-    <p class="text-gray-300 leading-relaxed text-lg mb-6">
-      لأنني أدمج الإبداع مع التقنية لأقدم تصاميم تتفاعل مع المستخدم وتترك أثر بصري لا يُنسى.
-    </p>
-    <p class="text-gray-300 leading-relaxed text-lg">
-      أسعى دائماً لفهم علامتك التجارية وتحويلها إلى تجربة رقمية متكاملة وجذابة.
-    </p>
-  </div>
-</section>
-
-<section id="contact" class="py-40 text-center px-6">
-  <h2 class="text-5xl font-black mb-10">تواصل معي</h2>
-  <div class="flex justify-center gap-8">
-    <a href="https://wa.me/9647511672958" target="_blank" class="glass p-6 portfolio-card btn">WhatsApp</a>
-    <a href="https://instagram.com/23.iqk" target="_blank" class="glass p-6 portfolio-card btn">Instagram</a>
-  </div>
-</section>
-
-<footer class="py-10 text-center text-gray-500 border-t border-gray-800">
-  © 2040 — KARAM PORTAL LAB
-</footer>
-
-<script>
-/* ---------- Theme Switcher ---------- */
-const themeToggle = document.getElementById('themeToggle');
-let dark = true;
-
-themeToggle.addEventListener('click', () => {
-  dark = !dark;
-  if(dark){
-    document.body.style.background = 'var(--bg-dark)';
-    document.body.style.color = 'var(--text-dark)';
-    document.querySelectorAll('.glass').forEach(c=>c.style.background='var(--card-dark)');
-  } else {
-    document.body.style.background = 'var(--bg-light)';
-    document.body.style.color = 'var(--text-light)';
-    document.querySelectorAll('.glass').forEach(c=>c.style.background='var(--card-light)');
-  }
-});
-
-/* ---------- WebGL Particles ---------- */
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ canvas: bg, alpha:true });
-renderer.setSize(innerWidth, innerHeight);
-camera.position.z = 2;
-
-const particlesGeometry = new THREE.BufferGeometry();
-const particlesCount = 1200;
-const posArray = new Float32Array(particlesCount*3);
-for(let i=0;i<particlesCount*3;i++) posArray[i]=(Math.random()-0.5)*12;
-particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray,3));
-const particlesMaterial = new THREE.PointsMaterial({ color:0x3b82f6, size:0.05, transparent:true });
-const particles = new THREE.Points(particlesGeometry, particlesMaterial);
-scene.add(particles);
-
-let mouseX=0, mouseY=0;
-document.addEventListener('mousemove', e => {
-  mouseX = (e.clientX / innerWidth) * 2 -1;
-  mouseY = -(e.clientY / innerHeight) * 2 +1;
-});
-
-function animate(){
-  requestAnimationFrame(animate);
-  particles.rotation.y += 0.001 + mouseX*0.05;
-  particles.rotation.x += 0.001 + mouseY*0.05;
-  renderer.render(scene,camera);
-}
-animate();
-
-window.addEventListener('resize', ()=>{
-  renderer.setSize(innerWidth, innerHeight);
-  camera.aspect = innerWidth/innerHeight;
-  camera.updateProjectionMatrix();
-});
-</script>
-
-</body>
-</html>
++   1 <!DOCTYPE html>
++   2 <html lang="ar" dir="rtl">
++   3 <head>
++   4 <meta charset="UTF-8" />
++   5 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
++   6 <title>كرم | مصمم جرافيك 2040</title>
++   7 
++   8 <script src="https://cdn.tailwindcss.com"></script>
++   9 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
++  10 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
++  11 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
++  12 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
++  13 
++  14 <style>
++  15 * { margin:0; padding:0; box-sizing:border-box; }
++  16 
++  17 :root {
++  18   --bg: #06070e;
++  19   --bg-secondary: #0d0f1a;
++  20   --text: #e5e7eb;
++  21   --text-muted: #9ca3af;
++  22   --accent: #3b82f6;
++  23   --accent-secondary: #8b5cf6;
++  24   --card-bg: rgba(255,255,255,0.03);
++  25   --card-border: rgba(255,255,255,0.06);
++  26   --glow: rgba(59,130,246,0.15);
++  27 }
++  28 
++  29 html { scroll-behavior: smooth; }
++  30 
++  31 body {
++  32   font-family:'Cairo','Tajawal',sans-serif;
++  33   background: var(--bg);
++  34   color: var(--text);
++  35   overflow-x:hidden;
++  36   line-height: 1.8;
++  37 }
++  38 
++  39 #bg { position: fixed; inset:0; z-index:-2; pointer-events:none; }
++  40 
++  41 /* Scrollbar */
++  42 ::-webkit-scrollbar { width: 6px; }
++  43 ::-webkit-scrollbar-track { background: var(--bg); }
++  44 ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
++  45 
++  46 /* Glass cards */
++  47 .glass {
++  48   background: var(--card-bg);
++  49   backdrop-filter: blur(30px);
++  50   -webkit-backdrop-filter: blur(30px);
++  51   border-radius: 1.5rem;
++  52   border: 1px solid var(--card-border);
++  53 }
++  54 
++  55 /* Glow effect behind sections */
++  56 .glow-blob {
++  57   position: absolute;
++  58   width: 400px;
++  59   height: 400px;
++  60   border-radius: 50%;
++  61   filter: blur(120px);
++  62   opacity: 0.12;
++  63   pointer-events: none;
++  64   z-index: -1;
++  65 }
++  66 
++  67 /* Animated gradient text */
++  68 .gradient-text {
++  69   background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6);
++  70   background-size: 300% 300%;
++  71   -webkit-background-clip: text;
++  72   -webkit-text-fill-color: transparent;
++  73   background-clip: text;
++  74   animation: gradientShift 6s ease infinite;
++  75 }
++  76 
++  77 @keyframes gradientShift {
++  78   0%,100% { background-position: 0% 50%; }
++  79   50% { background-position: 100% 50%; }
++  80 }
++  81 
++  82 /* Buttons */
++  83 .btn-primary {
++  84   display: inline-flex;
++  85   align-items: center;
++  86   gap: 0.75rem;
++  87   padding: 1rem 2.5rem;
++  88   border-radius: 1rem;
++  89   font-weight: 700;
++  90   font-size: 1.05rem;
++  91   background: linear-gradient(135deg, #3b82f6, #8b5cf6);
++  92   color: white;
++  93   cursor: pointer;
++  94   text-decoration: none;
++  95   border: none;
++  96   position: relative;
++  97   overflow: hidden;
++  98   transition: transform 0.3s, box-shadow 0.3s;
++  99 }
++ 100 .btn-primary::before {
++ 101   content:'';
++ 102   position:absolute;
++ 103   inset:0;
++ 104   background: linear-gradient(135deg, #8b5cf6, #ec4899);
++ 105   opacity:0;
++ 106   transition: opacity 0.4s;
++ 107 }
++ 108 .btn-primary:hover {
++ 109   transform: translateY(-3px);
++ 110   box-shadow: 0 10px 40px rgba(59,130,246,0.3);
++ 111 }
++ 112 .btn-primary:hover::before { opacity:1; }
++ 113 .btn-primary span { position:relative; z-index:1; }
++ 114 .btn-primary i { position:relative; z-index:1; }
++ 115 
++ 116 .btn-outline {
++ 117   display: inline-flex;
++ 118   align-items: center;
++ 119   gap: 0.75rem;
++ 120   padding: 1rem 2.5rem;
++ 121   border-radius: 1rem;
++ 122   font-weight: 700;
++ 123   font-size: 1.05rem;
++ 124   background: transparent;
++ 125   color: var(--accent);
++ 126   cursor: pointer;
++ 127   text-decoration: none;
++ 128   border: 2px solid rgba(59,130,246,0.3);
++ 129   transition: all 0.3s;
++ 130 }
++ 131 .btn-outline:hover {
++ 132   background: rgba(59,130,246,0.1);
++ 133   border-color: var(--accent);
++ 134   transform: translateY(-3px);
++ 135 }
++ 136 
++ 137 /* Portfolio cards */
++ 138 .portfolio-card {
++ 139   transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.4s;
++ 140   overflow: hidden;
++ 141 }
++ 142 .portfolio-card:hover {
++ 143   transform: translateY(-8px);
++ 144   box-shadow: 0 20px 50px rgba(59,130,246,0.15);
++ 145   border-color: rgba(59,130,246,0.2);
++ 146 }
++ 147 .portfolio-card img {
++ 148   transition: transform 0.5s;
++ 149 }
++ 150 .portfolio-card:hover img {
++ 151   transform: scale(1.05);
++ 152 }
++ 153 
++ 154 /* Service icon */
++ 155 .service-icon {
++ 156   width: 70px;
++ 157   height: 70px;
++ 158   border-radius: 1rem;
++ 159   display: flex;
++ 160   align-items: center;
++ 161   justify-content: center;
++ 162   font-size: 1.6rem;
++ 163   margin: 0 auto 1.5rem;
++ 164   background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(139,92,246,0.15));
++ 165   color: var(--accent);
++ 166   border: 1px solid rgba(59,130,246,0.1);
++ 167 }
++ 168 
++ 169 /* Stats */
++ 170 .stat-number {
++ 171   font-size: 3rem;
++ 172   font-weight: 900;
++ 173   background: linear-gradient(135deg, #3b82f6, #8b5cf6);
++ 174   -webkit-background-clip: text;
++ 175   -webkit-text-fill-color: transparent;
++ 176   background-clip: text;
++ 177 }
++ 178 
++ 179 /* Nav */
++ 180 .nav-glass {
++ 181   background: rgba(6,7,14,0.75);
++ 182   backdrop-filter: blur(20px);
++ 183   -webkit-backdrop-filter: blur(20px);
++ 184   border: 1px solid rgba(255,255,255,0.05);
++ 185   border-radius: 1rem;
++ 186   transition: all 0.3s;
++ 187 }
++ 188 
++ 189 .navlink {
++ 190   position: relative;
++ 191   color: var(--text-muted);
++ 192   text-decoration: none;
++ 193   font-weight: 600;
++ 194   font-size: 0.95rem;
++ 195   transition: color 0.3s;
++ 196   padding: 0.25rem 0;
++ 197 }
++ 198 .navlink::after {
++ 199   content:'';
++ 200   position:absolute;
++ 201   bottom:-2px;
++ 202   right:0;
++ 203   width:0;
++ 204   height:2px;
++ 205   background: var(--accent);
++ 206   transition: width 0.3s;
++ 207 }
++ 208 .navlink:hover { color: white; }
++ 209 .navlink:hover::after { width:100%; }
++ 210 
++ 211 /* Section title */
++ 212 .section-title {
++ 213   font-size: 2.8rem;
++ 214   font-weight: 900;
++ 215   margin-bottom: 1rem;
++ 216 }
++ 217 .section-subtitle {
++ 218   color: var(--text-muted);
++ 219   font-size: 1.1rem;
++ 220   max-width: 600px;
++ 221   margin: 0 auto 4rem;
++ 222 }
++ 223 .section-tag {
++ 224   display: inline-block;
++ 225   padding: 0.4rem 1.2rem;
++ 226   border-radius: 2rem;
++ 227   font-size: 0.85rem;
++ 228   font-weight: 700;
++ 229   background: rgba(59,130,246,0.1);
++ 230   color: var(--accent);
++ 231   border: 1px solid rgba(59,130,246,0.15);
++ 232   margin-bottom: 1.5rem;
++ 233   letter-spacing: 0.05em;
++ 234 }
++ 235 
++ 236 /* Why card icon */
++ 237 .why-icon {
++ 238   width: 56px;
++ 239   height: 56px;
++ 240   border-radius: 0.9rem;
++ 241   display: flex;
++ 242   align-items: center;
++ 243   justify-content: center;
++ 244   font-size: 1.3rem;
++ 245   flex-shrink: 0;
++ 246 }
++ 247 
++ 248 /* Divider line */
++ 249 .divider {
++ 250   width: 60px;
++ 251   height: 3px;
++ 252   background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
++ 253   border-radius: 2px;
++ 254   margin: 0 auto;
++ 255 }
++ 256 
++ 257 /* Floating shapes */
++ 258 .floating-shape {
++ 259   position: absolute;
++ 260   border-radius: 50%;
++ 261   pointer-events: none;
++ 262   animation: floatShape 8s ease-in-out infinite;
++ 263 }
++ 264 @keyframes floatShape {
++ 265   0%,100% { transform: translateY(0) rotate(0deg); }
++ 266   50% { transform: translateY(-30px) rotate(180deg); }
++ 267 }
++ 268 
++ 269 /* Fade-in on scroll */
++ 270 .reveal {
++ 271   opacity: 0;
++ 272   transform: translateY(40px);
++ 273   transition: opacity 0.8s ease, transform 0.8s ease;
++ 274 }
++ 275 .reveal.visible {
++ 276   opacity: 1;
++ 277   transform: translateY(0);
++ 278 }
++ 279 
++ 280 /* Mobile menu */
++ 281 #mobileMenu {
++ 282   display: none;
++ 283   position: fixed;
++ 284   inset: 0;
++ 285   z-index: 200;
++ 286   background: rgba(6,7,14,0.95);
++ 287   backdrop-filter: blur(30px);
++ 288   flex-direction: column;
++ 289   align-items: center;
++ 290   justify-content: center;
++ 291   gap: 2rem;
++ 292 }
++ 293 #mobileMenu.active { display: flex; }
++ 294 #mobileMenu a {
++ 295   color: white;
++ 296   text-decoration: none;
++ 297   font-size: 1.5rem;
++ 298   font-weight: 700;
++ 299   transition: color 0.3s;
++ 300 }
++ 301 #mobileMenu a:hover { color: var(--accent); }
++ 302 #mobileMenuClose {
++ 303   position: absolute;
++ 304   top: 1.5rem;
++ 305   left: 1.5rem;
++ 306   font-size: 2rem;
++ 307   color: white;
++ 308   cursor: pointer;
++ 309   background: none;
++ 310   border: none;
++ 311 }
++ 312 
++ 313 /* Hamburger */
++ 314 #hamburger {
++ 315   display: none;
++ 316   flex-direction: column;
++ 317   gap: 5px;
++ 318   cursor: pointer;
++ 319   background: none;
++ 320   border: none;
++ 321   padding: 0.5rem;
++ 322 }
++ 323 #hamburger span {
++ 324   width: 24px;
++ 325   height: 2px;
++ 326   background: white;
++ 327   border-radius: 2px;
++ 328   transition: all 0.3s;
++ 329 }
++ 330 
++ 331 @media (max-width: 768px) {
++ 332   #hamburger { display: flex; }
++ 333   .section-title { font-size: 2rem; }
++ 334   .hero-title { font-size: 3.5rem !important; }
++ 335 }
++ 336 
++ 337 /* Contact card */
++ 338 .contact-card {
++ 339   display: flex;
++ 340   align-items: center;
++ 341   gap: 1.2rem;
++ 342   padding: 1.5rem 2rem;
++ 343   text-decoration: none;
++ 344   color: var(--text);
++ 345   transition: all 0.3s;
++ 346 }
++ 347 .contact-card:hover {
++ 348   transform: translateY(-4px);
++ 349   border-color: rgba(59,130,246,0.25);
++ 350   box-shadow: 0 10px 30px rgba(59,130,246,0.1);
++ 351 }
++ 352 .contact-card i {
++ 353   font-size: 1.5rem;
++ 354   width: 50px;
++ 355   height: 50px;
++ 356   display: flex;
++ 357   align-items: center;
++ 358   justify-content: center;
++ 359   border-radius: 0.8rem;
++ 360   flex-shrink: 0;
++ 361 }
++ 362 </style>
++ 363 </head>
++ 364 
++ 365 <body>
++ 366 
++ 367 <canvas id="bg"></canvas>
++ 368 
++ 369 <!-- Mobile Menu -->
++ 370 <div id="mobileMenu">
++ 371   <button id="mobileMenuClose"><i class="fas fa-times"></i></button>
++ 372   <a href="#home" onclick="closeMobileMenu()">الرئيسية</a>
++ 373   <a href="#about" onclick="closeMobileMenu()">عني</a>
++ 374   <a href="#services" onclick="closeMobileMenu()">خدماتي</a>
++ 375   <a href="#work" onclick="closeMobileMenu()">أعمالي</a>
++ 376   <a href="#why" onclick="closeMobileMenu()">لماذا أنا</a>
++ 377   <a href="#contact" onclick="closeMobileMenu()">تواصل</a>
++ 378 </div>
++ 379 
++ 380 <!-- Header -->
++ 381 <header class="fixed top-0 w-full p-4 z-50">
++ 382   <div class="max-w-7xl mx-auto nav-glass px-6 py-3 flex justify-between items-center">
++ 383     <a href="#home" class="flex items-center gap-3 text-decoration-none" style="text-decoration:none;color:inherit;">
++ 384       <div style="width:40px;height:40px;border-radius:0.7rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;color:white;">ك</div>
++ 385       <span class="font-black text-lg" style="letter-spacing:-0.02em;">KARAM</span>
++ 386     </a>
++ 387     <nav class="hidden md:flex gap-8 items-center">
++ 388       <a href="#home" class="navlink">الرئيسية</a>
++ 389       <a href="#about" class="navlink">عني</a>
++ 390       <a href="#services" class="navlink">خدماتي</a>
++ 391       <a href="#work" class="navlink">أعمالي</a>
++ 392       <a href="#why" class="navlink">لماذا أنا</a>
++ 393       <a href="#contact" class="navlink">تواصل</a>
++ 394     </nav>
++ 395     <div class="flex items-center gap-4">
++ 396       <a href="#contact" class="btn-primary hidden md:inline-flex" style="padding:0.6rem 1.5rem;font-size:0.9rem;border-radius:0.7rem;">
++ 397         <span>ابدأ مشروعك</span>
++ 398       </a>
++ 399       <button id="hamburger" onclick="openMobileMenu()">
++ 400         <span></span><span></span><span></span>
++ 401       </button>
++ 402     </div>
++ 403   </div>
++ 404 </header>
++ 405 
++ 406 <!-- Hero -->
++ 407 <section id="home" class="min-h-screen flex items-center justify-center text-center px-6 relative" style="padding-top:120px;">
++ 408   <div class="glow-blob" style="background:#3b82f6;top:20%;right:10%;"></div>
++ 409   <div class="glow-blob" style="background:#8b5cf6;bottom:20%;left:10%;"></div>
++ 410 
++ 411   <div class="reveal" style="max-width:800px;">
++ 412     <div class="section-tag" style="margin-bottom:2rem;">مصمم جرافيك &bull; مبدع رقمي</div>
++ 413     <h1 class="hero-title font-black gradient-text" style="font-size:5.5rem;line-height:1.1;margin-bottom:1.5rem;">
++ 414       كرم
++ 415     </h1>
++ 416     <p class="text-xl" style="color:var(--text-muted);max-width:550px;margin:0 auto 1rem;">
++ 417       أحوّل الأفكار إلى تجارب بصرية مستقبلية تتفاعل مع الزائر وتترك أثراً لا يُنسى
++ 418     </p>
++ 419     <div class="divider" style="margin:2rem auto;"></div>
++ 420     <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:2.5rem;">
++ 421       <a href="#work" class="btn-primary">
++ 422         <span>استعرض أعمالي</span>
++ 423         <i class="fas fa-arrow-left"></i>
++ 424       </a>
++ 425       <a href="#contact" class="btn-outline">
++ 426         <span>تواصل معي</span>
++ 427       </a>
++ 428     </div>
++ 429   </div>
++ 430 </section>
++ 431 
++ 432 <!-- Stats -->
++ 433 <section class="py-16 px-6">
++ 434   <div class="max-w-5xl mx-auto reveal">
++ 435     <div class="glass p-8" style="border-radius:1.5rem;">
++ 436       <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
++ 437         <div>
++ 438           <div class="stat-number">+50</div>
++ 439           <div style="color:var(--text-muted);font-size:0.95rem;font-weight:600;">مشروع منجز</div>
++ 440         </div>
++ 441         <div>
++ 442           <div class="stat-number">+30</div>
++ 443           <div style="color:var(--text-muted);font-size:0.95rem;font-weight:600;">عميل سعيد</div>
++ 444         </div>
++ 445         <div>
++ 446           <div class="stat-number">+3</div>
++ 447           <div style="color:var(--text-muted);font-size:0.95rem;font-weight:600;">سنوات خبرة</div>
++ 448         </div>
++ 449         <div>
++ 450           <div class="stat-number">∞</div>
++ 451           <div style="color:var(--text-muted);font-size:0.95rem;font-weight:600;">شغف وإبداع</div>
++ 452         </div>
++ 453       </div>
++ 454     </div>
++ 455   </div>
++ 456 </section>
++ 457 
++ 458 <!-- About -->
++ 459 <section id="about" class="py-32 px-6 relative">
++ 460   <div class="glow-blob" style="background:#8b5cf6;top:0;left:20%;"></div>
++ 461   <div class="max-w-6xl mx-auto reveal">
++ 462     <div class="text-center mb-16">
++ 463       <div class="section-tag">تعرّف عليّ</div>
++ 464       <h2 class="section-title">مصمم من المستقبل</h2>
++ 465       <div class="divider" style="margin-top:1rem;"></div>
++ 466     </div>
++ 467     <div class="grid md:grid-cols-2 gap-12 items-center">
++ 468       <div class="glass p-10" style="border-radius:1.5rem;">
++ 469         <div style="width:100%;aspect-ratio:1;border-radius:1.2rem;background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(139,92,246,0.15));display:flex;align-items:center;justify-content:center;font-size:6rem;">
++ 470           <i class="fas fa-palette" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;"></i>
++ 471         </div>
++ 472       </div>
++ 473       <div>
++ 474         <h3 style="font-size:1.8rem;font-weight:800;margin-bottom:1.5rem;">أبني تجارب رقمية حية</h3>
++ 475         <p style="color:var(--text-muted);font-size:1.05rem;line-height:2;margin-bottom:1.5rem;">
++ 476           أدمج الإبداع والتقنية في كل مشروع لأجعل التصميم ينبض بالحياة. أعمل على تحويل الأفكار المعقدة إلى هويات بصرية بسيطة وقوية تتحدث عن علامتك التجارية.
++ 477         </p>
++ 478         <p style="color:var(--text-muted);font-size:1.05rem;line-height:2;margin-bottom:2rem;">
++ 479           رحلتي في التصميم بدأت من شغف حقيقي بتحويل المفاهيم إلى تجارب بصرية مؤثرة. أؤمن أن كل علامة تجارية تستحق هوية فريدة تعكس قيمها ورؤيتها.
++ 480         </p>
++ 481         <div style="display:flex;flex-wrap:wrap;gap:0.8rem;">
++ 482           <span style="padding:0.5rem 1.2rem;border-radius:0.7rem;background:rgba(59,130,246,0.1);color:var(--accent);font-size:0.85rem;font-weight:600;border:1px solid rgba(59,130,246,0.1);">Photoshop</span>
++ 483           <span style="padding:0.5rem 1.2rem;border-radius:0.7rem;background:rgba(139,92,246,0.1);color:#8b5cf6;font-size:0.85rem;font-weight:600;border:1px solid rgba(139,92,246,0.1);">Illustrator</span>
++ 484           <span style="padding:0.5rem 1.2rem;border-radius:0.7rem;background:rgba(236,72,153,0.1);color:#ec4899;font-size:0.85rem;font-weight:600;border:1px solid rgba(236,72,153,0.1);">Figma</span>
++ 485           <span style="padding:0.5rem 1.2rem;border-radius:0.7rem;background:rgba(16,185,129,0.1);color:#10b981;font-size:0.85rem;font-weight:600;border:1px solid rgba(16,185,129,0.1);">After Effects</span>
++ 486           <span style="padding:0.5rem 1.2rem;border-radius:0.7rem;background:rgba(245,158,11,0.1);color:#f59e0b;font-size:0.85rem;font-weight:600;border:1px solid rgba(245,158,11,0.1);">Blender</span>
++ 487         </div>
++ 488       </div>
++ 489     </div>
++ 490   </div>
++ 491 </section>
++ 492 
++ 493 <!-- Services -->
++ 494 <section id="services" class="py-32 px-6 relative">
++ 495   <div class="glow-blob" style="background:#3b82f6;bottom:10%;right:5%;"></div>
++ 496   <div class="max-w-7xl mx-auto reveal">
++ 497     <div class="text-center mb-16">
++ 498       <div class="section-tag">ما أقدمه</div>
++ 499       <h2 class="section-title">خدماتي</h2>
++ 500       <p class="section-subtitle">حلول تصميمية متكاملة تأخذ علامتك التجارية إلى مستوى آخر</p>
++ 501     </div>
++ 502     <div class="grid md:grid-cols-3 gap-8">
++ 503       <div class="glass p-10 portfolio-card text-center">
++ 504         <div class="service-icon">
++ 505           <i class="fas fa-fingerprint"></i>
++ 506         </div>
++ 507         <h3 class="font-bold text-xl mb-4">تصميم هوية بصرية</h3>
++ 508         <p style="color:var(--text-muted);font-size:0.95rem;line-height:1.9;">
++ 509           تحويل أفكارك إلى هوية بصرية متناسقة وجذابة تعبر عن جوهر علامتك التجارية وتميزها عن المنافسين.
++ 510         </p>
++ 511       </div>
++ 512       <div class="glass p-10 portfolio-card text-center">
++ 513         <div class="service-icon" style="background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(236,72,153,0.15));">
++ 514           <i class="fas fa-wand-magic-sparkles" style="color:#8b5cf6;"></i>
++ 515         </div>
++ 516         <h3 class="font-bold text-xl mb-4">تجارب تفاعلية</h3>
++ 517         <p style="color:var(--text-muted);font-size:0.95rem;line-height:1.9;">
++ 518           تصميم واجهات تفاعلية عصرية تخلق تجربة استثنائية للمستخدم وتترك انطباعاً بصرياً مؤثراً.
++ 519         </p>
++ 520       </div>
++ 521       <div class="glass p-10 portfolio-card text-center">
++ 522         <div class="service-icon" style="background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(59,130,246,0.15));">
++ 523           <i class="fas fa-rocket" style="color:#10b981;"></i>
++ 524         </div>
++ 525         <h3 class="font-bold text-xl mb-4">براند مستقبلي</h3>
++ 526         <p style="color:var(--text-muted);font-size:0.95rem;line-height:1.9;">
++ 527           خلق هوية مبتكرة للعلامات التجارية تتخطى التقليدي وتأخذها إلى البعد الرقمي المستقبلي.
++ 528         </p>
++ 529       </div>
++ 530     </div>
++ 531   </div>
++ 532 </section>
++ 533 
++ 534 <!-- Work / Portfolio -->
++ 535 <section id="work" class="py-32 px-6 relative">
++ 536   <div class="glow-blob" style="background:#ec4899;top:30%;left:5%;"></div>
++ 537   <div class="max-w-7xl mx-auto reveal">
++ 538     <div class="text-center mb-16">
++ 539       <div class="section-tag">معرض الأعمال</div>
++ 540       <h2 class="section-title">أعمالي المختارة</h2>
++ 541       <p class="section-subtitle">مجموعة من أبرز المشاريع التي عملت عليها</p>
++ 542     </div>
++ 543     <div class="grid md:grid-cols-3 gap-8">
++ 544       <div class="glass portfolio-card" style="overflow:hidden;">
++ 545         <div style="overflow:hidden;border-radius:1.5rem 1.5rem 0 0;">
++ 546           <img src="https://via.placeholder.com/600x400/1a1b2e/3b82f6?text=ENERGY+BRAND" style="width:100%;display:block;aspect-ratio:4/3;object-fit:cover;">
++ 547         </div>
++ 548         <div class="p-6">
++ 549           <div style="display:flex;gap:0.5rem;margin-bottom:0.8rem;">
++ 550             <span style="padding:0.25rem 0.75rem;border-radius:0.5rem;background:rgba(59,130,246,0.1);color:var(--accent);font-size:0.75rem;font-weight:600;">هوية بصرية</span>
++ 551           </div>
++ 552           <h3 class="font-bold text-lg mb-2">هوية طاقية</h3>
++ 553           <p style="color:var(--text-muted);font-size:0.9rem;">تجربة تصميمية مبتكرة للعلامات التجارية في قطاع الطاقة المتجددة.</p>
++ 554         </div>
++ 555       </div>
++ 556       <div class="glass portfolio-card" style="overflow:hidden;">
++ 557         <div style="overflow:hidden;border-radius:1.5rem 1.5rem 0 0;">
++ 558           <img src="https://via.placeholder.com/600x400/1a1b2e/8b5cf6?text=AI+EXPERIENCE" style="width:100%;display:block;aspect-ratio:4/3;object-fit:cover;">
++ 559         </div>
++ 560         <div class="p-6">
++ 561           <div style="display:flex;gap:0.5rem;margin-bottom:0.8rem;">
++ 562             <span style="padding:0.25rem 0.75rem;border-radius:0.5rem;background:rgba(139,92,246,0.1);color:#8b5cf6;font-size:0.75rem;font-weight:600;">تفاعلي</span>
++ 563           </div>
++ 564           <h3 class="font-bold text-lg mb-2">تجربة AI بصرية</h3>
++ 565           <p style="color:var(--text-muted);font-size:0.9rem;">تصميم تفاعلي قائم على الذكاء الاصطناعي لشركة تقنية ناشئة.</p>
++ 566         </div>
++ 567       </div>
++ 568       <div class="glass portfolio-card" style="overflow:hidden;">
++ 569         <div style="overflow:hidden;border-radius:1.5rem 1.5rem 0 0;">
++ 570           <img src="https://via.placeholder.com/600x400/1a1b2e/ec4899?text=FUTURE+BRAND" style="width:100%;display:block;aspect-ratio:4/3;object-fit:cover;">
++ 571         </div>
++ 572         <div class="p-6">
++ 573           <div style="display:flex;gap:0.5rem;margin-bottom:0.8rem;">
++ 574             <span style="padding:0.25rem 0.75rem;border-radius:0.5rem;background:rgba(236,72,153,0.1);color:#ec4899;font-size:0.75rem;font-weight:600;">براند</span>
++ 575           </div>
++ 576           <h3 class="font-bold text-lg mb-2">براند من بعد آخر</h3>
++ 577           <p style="color:var(--text-muted);font-size:0.9rem;">تحويل الهوية التقليدية إلى عالم رقمي مستقبلي لعلامة فاخرة.</p>
++ 578         </div>
++ 579       </div>
++ 580     </div>
++ 581   </div>
++ 582 </section>
++ 583 
++ 584 <!-- Why Me -->
++ 585 <section id="why" class="py-32 px-6 relative">
++ 586   <div class="glow-blob" style="background:#8b5cf6;bottom:20%;right:15%;"></div>
++ 587   <div class="max-w-6xl mx-auto reveal">
++ 588     <div class="text-center mb-16">
++ 589       <div class="section-tag">المميزات</div>
++ 590       <h2 class="section-title">لماذا التعامل معي؟</h2>
++ 591       <p class="section-subtitle">أقدم قيمة حقيقية في كل مشروع أعمل عليه</p>
++ 592     </div>
++ 593     <div class="grid md:grid-cols-2 gap-6">
++ 594       <div class="glass p-8 portfolio-card" style="display:flex;gap:1.5rem;align-items:flex-start;">
++ 595         <div class="why-icon" style="background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(59,130,246,0.05));color:var(--accent);">
++ 596           <i class="fas fa-lightbulb"></i>
++ 597         </div>
++ 598         <div>
++ 599           <h3 class="font-bold text-lg mb-2">إبداع بلا حدود</h3>
++ 600           <p style="color:var(--text-muted);font-size:0.95rem;line-height:1.8;">أفكار مبتكرة وتصاميم فريدة تميز علامتك عن المنافسين وتخلق هوية لا تُنسى.</p>
++ 601         </div>
++ 602       </div>
++ 603       <div class="glass p-8 portfolio-card" style="display:flex;gap:1.5rem;align-items:flex-start;">
++ 604         <div class="why-icon" style="background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(139,92,246,0.05));color:#8b5cf6;">
++ 605           <i class="fas fa-clock"></i>
++ 606         </div>
++ 607         <div>
++ 608           <h3 class="font-bold text-lg mb-2">التزام بالمواعيد</h3>
++ 609           <p style="color:var(--text-muted);font-size:0.95rem;line-height:1.8;">أحترم وقتك وأسلّم المشاريع في الموعد المحدد مع الحفاظ على أعلى مستوى جودة.</p>
++ 610         </div>
++ 611       </div>
++ 612       <div class="glass p-8 portfolio-card" style="display:flex;gap:1.5rem;align-items:flex-start;">
++ 613         <div class="why-icon" style="background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(16,185,129,0.05));color:#10b981;">
++ 614           <i class="fas fa-comments"></i>
++ 615         </div>
++ 616         <div>
++ 617           <h3 class="font-bold text-lg mb-2">تواصل مستمر</h3>
++ 618           <p style="color:var(--text-muted);font-size:0.95rem;line-height:1.8;">أبقيك على اطلاع دائم بمراحل العمل وأستمع لملاحظاتك لتحقيق رؤيتك بدقة.</p>
++ 619         </div>
++ 620       </div>
++ 621       <div class="glass p-8 portfolio-card" style="display:flex;gap:1.5rem;align-items:flex-start;">
++ 622         <div class="why-icon" style="background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(245,158,11,0.05));color:#f59e0b;">
++ 623           <i class="fas fa-star"></i>
++ 624         </div>
++ 625         <div>
++ 626           <h3 class="font-bold text-lg mb-2">جودة استثنائية</h3>
++ 627           <p style="color:var(--text-muted);font-size:0.95rem;line-height:1.8;">أهتم بأدق التفاصيل في كل مشروع لأضمن نتيجة نهائية تفوق التوقعات.</p>
++ 628         </div>
++ 629       </div>
++ 630     </div>
++ 631   </div>
++ 632 </section>
++ 633 
++ 634 <!-- CTA -->
++ 635 <section class="py-24 px-6">
++ 636   <div class="max-w-4xl mx-auto reveal">
++ 637     <div class="glass p-16 text-center relative" style="overflow:hidden;">
++ 638       <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(59,130,246,0.05),rgba(139,92,246,0.05));pointer-events:none;"></div>
++ 639       <h2 style="font-size:2.5rem;font-weight:900;margin-bottom:1rem;position:relative;">عندك مشروع؟</h2>
++ 640       <p style="color:var(--text-muted);font-size:1.1rem;margin-bottom:2.5rem;position:relative;">خلنا نحول فكرتك إلى واقع بصري مذهل</p>
++ 641       <a href="#contact" class="btn-primary" style="position:relative;">
++ 642         <span>ابدأ الآن</span>
++ 643         <i class="fas fa-arrow-left"></i>
++ 644       </a>
++ 645     </div>
++ 646   </div>
++ 647 </section>
++ 648 
++ 649 <!-- Contact -->
++ 650 <section id="contact" class="py-32 px-6 relative">
++ 651   <div class="glow-blob" style="background:#3b82f6;top:10%;left:30%;"></div>
++ 652   <div class="max-w-5xl mx-auto reveal">
++ 653     <div class="text-center mb-16">
++ 654       <div class="section-tag">تواصل</div>
++ 655       <h2 class="section-title">تواصل معي</h2>
++ 656       <p class="section-subtitle">جاهز لبدء مشروعك؟ تواصل معي عبر أي من القنوات التالية</p>
++ 657     </div>
++ 658     <div class="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
++ 659       <a href="https://wa.me/9647511672958" target="_blank" class="glass contact-card portfolio-card">
++ 660         <i class="fab fa-whatsapp" style="background:rgba(37,211,102,0.1);color:#25d366;"></i>
++ 661         <div>
++ 662           <div class="font-bold">WhatsApp</div>
++ 663           <div style="color:var(--text-muted);font-size:0.85rem;">راسلني مباشرة</div>
++ 664         </div>
++ 665       </a>
++ 666       <a href="https://instagram.com/23.iqk" target="_blank" class="glass contact-card portfolio-card">
++ 667         <i class="fab fa-instagram" style="background:linear-gradient(135deg,rgba(228,64,95,0.1),rgba(181,70,209,0.1));color:#e4405f;"></i>
++ 668         <div>
++ 669           <div class="font-bold">Instagram</div>
++ 670           <div style="color:var(--text-muted);font-size:0.85rem;">@23.iqk</div>
++ 671         </div>
++ 672       </a>
++ 673     </div>
++ 674   </div>
++ 675 </section>
++ 676 
++ 677 <!-- Footer -->
++ 678 <footer style="border-top:1px solid rgba(255,255,255,0.05);padding:3rem 1.5rem;">
++ 679   <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
++ 680     <div class="flex items-center gap-3">
++ 681       <div style="width:32px;height:32px;border-radius:0.5rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.85rem;color:white;">ك</div>
++ 682       <span class="font-bold" style="font-size:0.95rem;">KARAM PORTAL LAB</span>
++ 683     </div>
++ 684     <p style="color:var(--text-muted);font-size:0.85rem;">© 2040 — جميع الحقوق محفوظة</p>
++ 685     <div class="flex gap-4">
++ 686       <a href="https://wa.me/9647511672958" target="_blank" style="color:var(--text-muted);transition:color 0.3s;" onmouseover="this.style.color='#25d366'" onmouseout="this.style.color='var(--text-muted)'"><i class="fab fa-whatsapp" style="font-size:1.2rem;"></i></a>
++ 687       <a href="https://instagram.com/23.iqk" target="_blank" style="color:var(--text-muted);transition:color 0.3s;" onmouseover="this.style.color='#e4405f'" onmouseout="this.style.color='var(--text-muted)'"><i class="fab fa-instagram" style="font-size:1.2rem;"></i></a>
++ 688     </div>
++ 689   </div>
++ 690 </footer>
++ 691 
++ 692 <script>
++ 693 /* ---------- Mobile Menu ---------- */
++ 694 function openMobileMenu() {
++ 695   document.getElementById('mobileMenu').classList.add('active');
++ 696   document.body.style.overflow = 'hidden';
++ 697 }
++ 698 function closeMobileMenu() {
++ 699   document.getElementById('mobileMenu').classList.remove('active');
++ 700   document.body.style.overflow = '';
++ 701 }
++ 702 document.getElementById('mobileMenuClose').addEventListener('click', closeMobileMenu);
++ 703 
++ 704 /* ---------- Scroll Reveal ---------- */
++ 705 const observer = new IntersectionObserver((entries) => {
++ 706   entries.forEach(entry => {
++ 707     if (entry.isIntersecting) {
++ 708       entry.target.classList.add('visible');
++ 709     }
++ 710   });
++ 711 }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
++ 712 
++ 713 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
++ 714 
++ 715 /* ---------- Smooth active nav ---------- */
++ 716 const sections = document.querySelectorAll('section[id]');
++ 717 const navLinks = document.querySelectorAll('.navlink');
++ 718 
++ 719 window.addEventListener('scroll', () => {
++ 720   let current = '';
++ 721   sections.forEach(section => {
++ 722     const sectionTop = section.offsetTop - 200;
++ 723     if (pageYOffset >= sectionTop) {
++ 724       current = section.getAttribute('id');
++ 725     }
++ 726   });
++ 727   navLinks.forEach(link => {
++ 728     link.style.color = '';
++ 729     if (link.getAttribute('href') === '#' + current) {
++ 730       link.style.color = 'white';
++ 731     }
++ 732   });
++ 733 });
++ 734 
++ 735 /* ---------- WebGL Particles ---------- */
++ 736 const scene = new THREE.Scene();
++ 737 const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000);
++ 738 const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg'), alpha: true, antialias: true });
++ 739 renderer.setSize(innerWidth, innerHeight);
++ 740 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
++ 741 camera.position.z = 3;
++ 742 
++ 743 const particlesGeometry = new THREE.BufferGeometry();
++ 744 const particlesCount = 800;
++ 745 const posArray = new Float32Array(particlesCount * 3);
++ 746 const colArray = new Float32Array(particlesCount * 3);
++ 747 
++ 748 for (let i = 0; i < particlesCount; i++) {
++ 749   const i3 = i * 3;
++ 750   posArray[i3] = (Math.random() - 0.5) * 14;
++ 751   posArray[i3 + 1] = (Math.random() - 0.5) * 14;
++ 752   posArray[i3 + 2] = (Math.random() - 0.5) * 14;
++ 753 
++ 754   // Blue to purple gradient colors
++ 755   const t = Math.random();
++ 756   colArray[i3] = 0.23 + t * 0.31;     // R
++ 757   colArray[i3 + 1] = 0.31 + t * 0.05; // G
++ 758   colArray[i3 + 2] = 0.96 - t * 0.0;  // B
++ 759 }
++ 760 
++ 761 particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
++ 762 particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colArray, 3));
++ 763 
++ 764 const particlesMaterial = new THREE.PointsMaterial({
++ 765   size: 0.035,
++ 766   transparent: true,
++ 767   opacity: 0.6,
++ 768   vertexColors: true,
++ 769   blending: THREE.AdditiveBlending,
++ 770   depthWrite: false,
++ 771 });
++ 772 
++ 773 const particles = new THREE.Points(particlesGeometry, particlesMaterial);
++ 774 scene.add(particles);
++ 775 
++ 776 let mouseX = 0, mouseY = 0;
++ 777 let targetMouseX = 0, targetMouseY = 0;
++ 778 
++ 779 document.addEventListener('mousemove', e => {
++ 780   targetMouseX = (e.clientX / innerWidth) * 2 - 1;
++ 781   targetMouseY = -(e.clientY / innerHeight) * 2 + 1;
++ 782 });
++ 783 
++ 784 function animate() {
++ 785   requestAnimationFrame(animate);
++ 786 
++ 787   // Smooth mouse following
++ 788   mouseX += (targetMouseX - mouseX) * 0.05;
++ 789   mouseY += (targetMouseY - mouseY) * 0.05;
++ 790 
++ 791   particles.rotation.y += 0.0005 + mouseX * 0.01;
++ 792   particles.rotation.x += 0.0003 + mouseY * 0.01;
++ 793 
++ 794   renderer.render(scene, camera);
++ 795 }
++ 796 animate();
++ 797 
++ 798 window.addEventListener('resize', () => {
++ 799   renderer.setSize(innerWidth, innerHeight);
++ 800   camera.aspect = innerWidth / innerHeight;
++ 801   camera.updateProjectionMatrix();
++ 802 });
++ 803 </script>
++ 804 
++ 805 </body>
++ 806 </html>
