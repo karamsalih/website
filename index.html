@@ -1,806 +1,1010 @@
-+   1 <!DOCTYPE html>
-+   2 <html lang="ar" dir="rtl">
-+   3 <head>
-+   4 <meta charset="UTF-8" />
-+   5 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-+   6 <title>كرم | مصمم جرافيك 2040</title>
-+   7 
-+   8 <script src="https://cdn.tailwindcss.com"></script>
-+   9 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-+  10 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-+  11 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-+  12 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-+  13 
-+  14 <style>
-+  15 * { margin:0; padding:0; box-sizing:border-box; }
-+  16 
-+  17 :root {
-+  18   --bg: #06070e;
-+  19   --bg-secondary: #0d0f1a;
-+  20   --text: #e5e7eb;
-+  21   --text-muted: #9ca3af;
-+  22   --accent: #3b82f6;
-+  23   --accent-secondary: #8b5cf6;
-+  24   --card-bg: rgba(255,255,255,0.03);
-+  25   --card-border: rgba(255,255,255,0.06);
-+  26   --glow: rgba(59,130,246,0.15);
-+  27 }
-+  28 
-+  29 html { scroll-behavior: smooth; }
-+  30 
-+  31 body {
-+  32   font-family:'Cairo','Tajawal',sans-serif;
-+  33   background: var(--bg);
-+  34   color: var(--text);
-+  35   overflow-x:hidden;
-+  36   line-height: 1.8;
-+  37 }
-+  38 
-+  39 #bg { position: fixed; inset:0; z-index:-2; pointer-events:none; }
-+  40 
-+  41 /* Scrollbar */
-+  42 ::-webkit-scrollbar { width: 6px; }
-+  43 ::-webkit-scrollbar-track { background: var(--bg); }
-+  44 ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
-+  45 
-+  46 /* Glass cards */
-+  47 .glass {
-+  48   background: var(--card-bg);
-+  49   backdrop-filter: blur(30px);
-+  50   -webkit-backdrop-filter: blur(30px);
-+  51   border-radius: 1.5rem;
-+  52   border: 1px solid var(--card-border);
-+  53 }
-+  54 
-+  55 /* Glow effect behind sections */
-+  56 .glow-blob {
-+  57   position: absolute;
-+  58   width: 400px;
-+  59   height: 400px;
-+  60   border-radius: 50%;
-+  61   filter: blur(120px);
-+  62   opacity: 0.12;
-+  63   pointer-events: none;
-+  64   z-index: -1;
-+  65 }
-+  66 
-+  67 /* Animated gradient text */
-+  68 .gradient-text {
-+  69   background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6);
-+  70   background-size: 300% 300%;
-+  71   -webkit-background-clip: text;
-+  72   -webkit-text-fill-color: transparent;
-+  73   background-clip: text;
-+  74   animation: gradientShift 6s ease infinite;
-+  75 }
-+  76 
-+  77 @keyframes gradientShift {
-+  78   0%,100% { background-position: 0% 50%; }
-+  79   50% { background-position: 100% 50%; }
-+  80 }
-+  81 
-+  82 /* Buttons */
-+  83 .btn-primary {
-+  84   display: inline-flex;
-+  85   align-items: center;
-+  86   gap: 0.75rem;
-+  87   padding: 1rem 2.5rem;
-+  88   border-radius: 1rem;
-+  89   font-weight: 700;
-+  90   font-size: 1.05rem;
-+  91   background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-+  92   color: white;
-+  93   cursor: pointer;
-+  94   text-decoration: none;
-+  95   border: none;
-+  96   position: relative;
-+  97   overflow: hidden;
-+  98   transition: transform 0.3s, box-shadow 0.3s;
-+  99 }
-+ 100 .btn-primary::before {
-+ 101   content:'';
-+ 102   position:absolute;
-+ 103   inset:0;
-+ 104   background: linear-gradient(135deg, #8b5cf6, #ec4899);
-+ 105   opacity:0;
-+ 106   transition: opacity 0.4s;
-+ 107 }
-+ 108 .btn-primary:hover {
-+ 109   transform: translateY(-3px);
-+ 110   box-shadow: 0 10px 40px rgba(59,130,246,0.3);
-+ 111 }
-+ 112 .btn-primary:hover::before { opacity:1; }
-+ 113 .btn-primary span { position:relative; z-index:1; }
-+ 114 .btn-primary i { position:relative; z-index:1; }
-+ 115 
-+ 116 .btn-outline {
-+ 117   display: inline-flex;
-+ 118   align-items: center;
-+ 119   gap: 0.75rem;
-+ 120   padding: 1rem 2.5rem;
-+ 121   border-radius: 1rem;
-+ 122   font-weight: 700;
-+ 123   font-size: 1.05rem;
-+ 124   background: transparent;
-+ 125   color: var(--accent);
-+ 126   cursor: pointer;
-+ 127   text-decoration: none;
-+ 128   border: 2px solid rgba(59,130,246,0.3);
-+ 129   transition: all 0.3s;
-+ 130 }
-+ 131 .btn-outline:hover {
-+ 132   background: rgba(59,130,246,0.1);
-+ 133   border-color: var(--accent);
-+ 134   transform: translateY(-3px);
-+ 135 }
-+ 136 
-+ 137 /* Portfolio cards */
-+ 138 .portfolio-card {
-+ 139   transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.4s;
-+ 140   overflow: hidden;
-+ 141 }
-+ 142 .portfolio-card:hover {
-+ 143   transform: translateY(-8px);
-+ 144   box-shadow: 0 20px 50px rgba(59,130,246,0.15);
-+ 145   border-color: rgba(59,130,246,0.2);
-+ 146 }
-+ 147 .portfolio-card img {
-+ 148   transition: transform 0.5s;
-+ 149 }
-+ 150 .portfolio-card:hover img {
-+ 151   transform: scale(1.05);
-+ 152 }
-+ 153 
-+ 154 /* Service icon */
-+ 155 .service-icon {
-+ 156   width: 70px;
-+ 157   height: 70px;
-+ 158   border-radius: 1rem;
-+ 159   display: flex;
-+ 160   align-items: center;
-+ 161   justify-content: center;
-+ 162   font-size: 1.6rem;
-+ 163   margin: 0 auto 1.5rem;
-+ 164   background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(139,92,246,0.15));
-+ 165   color: var(--accent);
-+ 166   border: 1px solid rgba(59,130,246,0.1);
-+ 167 }
-+ 168 
-+ 169 /* Stats */
-+ 170 .stat-number {
-+ 171   font-size: 3rem;
-+ 172   font-weight: 900;
-+ 173   background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-+ 174   -webkit-background-clip: text;
-+ 175   -webkit-text-fill-color: transparent;
-+ 176   background-clip: text;
-+ 177 }
-+ 178 
-+ 179 /* Nav */
-+ 180 .nav-glass {
-+ 181   background: rgba(6,7,14,0.75);
-+ 182   backdrop-filter: blur(20px);
-+ 183   -webkit-backdrop-filter: blur(20px);
-+ 184   border: 1px solid rgba(255,255,255,0.05);
-+ 185   border-radius: 1rem;
-+ 186   transition: all 0.3s;
-+ 187 }
-+ 188 
-+ 189 .navlink {
-+ 190   position: relative;
-+ 191   color: var(--text-muted);
-+ 192   text-decoration: none;
-+ 193   font-weight: 600;
-+ 194   font-size: 0.95rem;
-+ 195   transition: color 0.3s;
-+ 196   padding: 0.25rem 0;
-+ 197 }
-+ 198 .navlink::after {
-+ 199   content:'';
-+ 200   position:absolute;
-+ 201   bottom:-2px;
-+ 202   right:0;
-+ 203   width:0;
-+ 204   height:2px;
-+ 205   background: var(--accent);
-+ 206   transition: width 0.3s;
-+ 207 }
-+ 208 .navlink:hover { color: white; }
-+ 209 .navlink:hover::after { width:100%; }
-+ 210 
-+ 211 /* Section title */
-+ 212 .section-title {
-+ 213   font-size: 2.8rem;
-+ 214   font-weight: 900;
-+ 215   margin-bottom: 1rem;
-+ 216 }
-+ 217 .section-subtitle {
-+ 218   color: var(--text-muted);
-+ 219   font-size: 1.1rem;
-+ 220   max-width: 600px;
-+ 221   margin: 0 auto 4rem;
-+ 222 }
-+ 223 .section-tag {
-+ 224   display: inline-block;
-+ 225   padding: 0.4rem 1.2rem;
-+ 226   border-radius: 2rem;
-+ 227   font-size: 0.85rem;
-+ 228   font-weight: 700;
-+ 229   background: rgba(59,130,246,0.1);
-+ 230   color: var(--accent);
-+ 231   border: 1px solid rgba(59,130,246,0.15);
-+ 232   margin-bottom: 1.5rem;
-+ 233   letter-spacing: 0.05em;
-+ 234 }
-+ 235 
-+ 236 /* Why card icon */
-+ 237 .why-icon {
-+ 238   width: 56px;
-+ 239   height: 56px;
-+ 240   border-radius: 0.9rem;
-+ 241   display: flex;
-+ 242   align-items: center;
-+ 243   justify-content: center;
-+ 244   font-size: 1.3rem;
-+ 245   flex-shrink: 0;
-+ 246 }
-+ 247 
-+ 248 /* Divider line */
-+ 249 .divider {
-+ 250   width: 60px;
-+ 251   height: 3px;
-+ 252   background: linear-gradient(90deg, var(--accent), var(--accent-secondary));
-+ 253   border-radius: 2px;
-+ 254   margin: 0 auto;
-+ 255 }
-+ 256 
-+ 257 /* Floating shapes */
-+ 258 .floating-shape {
-+ 259   position: absolute;
-+ 260   border-radius: 50%;
-+ 261   pointer-events: none;
-+ 262   animation: floatShape 8s ease-in-out infinite;
-+ 263 }
-+ 264 @keyframes floatShape {
-+ 265   0%,100% { transform: translateY(0) rotate(0deg); }
-+ 266   50% { transform: translateY(-30px) rotate(180deg); }
-+ 267 }
-+ 268 
-+ 269 /* Fade-in on scroll */
-+ 270 .reveal {
-+ 271   opacity: 0;
-+ 272   transform: translateY(40px);
-+ 273   transition: opacity 0.8s ease, transform 0.8s ease;
-+ 274 }
-+ 275 .reveal.visible {
-+ 276   opacity: 1;
-+ 277   transform: translateY(0);
-+ 278 }
-+ 279 
-+ 280 /* Mobile menu */
-+ 281 #mobileMenu {
-+ 282   display: none;
-+ 283   position: fixed;
-+ 284   inset: 0;
-+ 285   z-index: 200;
-+ 286   background: rgba(6,7,14,0.95);
-+ 287   backdrop-filter: blur(30px);
-+ 288   flex-direction: column;
-+ 289   align-items: center;
-+ 290   justify-content: center;
-+ 291   gap: 2rem;
-+ 292 }
-+ 293 #mobileMenu.active { display: flex; }
-+ 294 #mobileMenu a {
-+ 295   color: white;
-+ 296   text-decoration: none;
-+ 297   font-size: 1.5rem;
-+ 298   font-weight: 700;
-+ 299   transition: color 0.3s;
-+ 300 }
-+ 301 #mobileMenu a:hover { color: var(--accent); }
-+ 302 #mobileMenuClose {
-+ 303   position: absolute;
-+ 304   top: 1.5rem;
-+ 305   left: 1.5rem;
-+ 306   font-size: 2rem;
-+ 307   color: white;
-+ 308   cursor: pointer;
-+ 309   background: none;
-+ 310   border: none;
-+ 311 }
-+ 312 
-+ 313 /* Hamburger */
-+ 314 #hamburger {
-+ 315   display: none;
-+ 316   flex-direction: column;
-+ 317   gap: 5px;
-+ 318   cursor: pointer;
-+ 319   background: none;
-+ 320   border: none;
-+ 321   padding: 0.5rem;
-+ 322 }
-+ 323 #hamburger span {
-+ 324   width: 24px;
-+ 325   height: 2px;
-+ 326   background: white;
-+ 327   border-radius: 2px;
-+ 328   transition: all 0.3s;
-+ 329 }
-+ 330 
-+ 331 @media (max-width: 768px) {
-+ 332   #hamburger { display: flex; }
-+ 333   .section-title { font-size: 2rem; }
-+ 334   .hero-title { font-size: 3.5rem !important; }
-+ 335 }
-+ 336 
-+ 337 /* Contact card */
-+ 338 .contact-card {
-+ 339   display: flex;
-+ 340   align-items: center;
-+ 341   gap: 1.2rem;
-+ 342   padding: 1.5rem 2rem;
-+ 343   text-decoration: none;
-+ 344   color: var(--text);
-+ 345   transition: all 0.3s;
-+ 346 }
-+ 347 .contact-card:hover {
-+ 348   transform: translateY(-4px);
-+ 349   border-color: rgba(59,130,246,0.25);
-+ 350   box-shadow: 0 10px 30px rgba(59,130,246,0.1);
-+ 351 }
-+ 352 .contact-card i {
-+ 353   font-size: 1.5rem;
-+ 354   width: 50px;
-+ 355   height: 50px;
-+ 356   display: flex;
-+ 357   align-items: center;
-+ 358   justify-content: center;
-+ 359   border-radius: 0.8rem;
-+ 360   flex-shrink: 0;
-+ 361 }
-+ 362 </style>
-+ 363 </head>
-+ 364 
-+ 365 <body>
-+ 366 
-+ 367 <canvas id="bg"></canvas>
-+ 368 
-+ 369 <!-- Mobile Menu -->
-+ 370 <div id="mobileMenu">
-+ 371   <button id="mobileMenuClose"><i class="fas fa-times"></i></button>
-+ 372   <a href="#home" onclick="closeMobileMenu()">الرئيسية</a>
-+ 373   <a href="#about" onclick="closeMobileMenu()">عني</a>
-+ 374   <a href="#services" onclick="closeMobileMenu()">خدماتي</a>
-+ 375   <a href="#work" onclick="closeMobileMenu()">أعمالي</a>
-+ 376   <a href="#why" onclick="closeMobileMenu()">لماذا أنا</a>
-+ 377   <a href="#contact" onclick="closeMobileMenu()">تواصل</a>
-+ 378 </div>
-+ 379 
-+ 380 <!-- Header -->
-+ 381 <header class="fixed top-0 w-full p-4 z-50">
-+ 382   <div class="max-w-7xl mx-auto nav-glass px-6 py-3 flex justify-between items-center">
-+ 383     <a href="#home" class="flex items-center gap-3 text-decoration-none" style="text-decoration:none;color:inherit;">
-+ 384       <div style="width:40px;height:40px;border-radius:0.7rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;color:white;">ك</div>
-+ 385       <span class="font-black text-lg" style="letter-spacing:-0.02em;">KARAM</span>
-+ 386     </a>
-+ 387     <nav class="hidden md:flex gap-8 items-center">
-+ 388       <a href="#home" class="navlink">الرئيسية</a>
-+ 389       <a href="#about" class="navlink">عني</a>
-+ 390       <a href="#services" class="navlink">خدماتي</a>
-+ 391       <a href="#work" class="navlink">أعمالي</a>
-+ 392       <a href="#why" class="navlink">لماذا أنا</a>
-+ 393       <a href="#contact" class="navlink">تواصل</a>
-+ 394     </nav>
-+ 395     <div class="flex items-center gap-4">
-+ 396       <a href="#contact" class="btn-primary hidden md:inline-flex" style="padding:0.6rem 1.5rem;font-size:0.9rem;border-radius:0.7rem;">
-+ 397         <span>ابدأ مشروعك</span>
-+ 398       </a>
-+ 399       <button id="hamburger" onclick="openMobileMenu()">
-+ 400         <span></span><span></span><span></span>
-+ 401       </button>
-+ 402     </div>
-+ 403   </div>
-+ 404 </header>
-+ 405 
-+ 406 <!-- Hero -->
-+ 407 <section id="home" class="min-h-screen flex items-center justify-center text-center px-6 relative" style="padding-top:120px;">
-+ 408   <div class="glow-blob" style="background:#3b82f6;top:20%;right:10%;"></div>
-+ 409   <div class="glow-blob" style="background:#8b5cf6;bottom:20%;left:10%;"></div>
-+ 410 
-+ 411   <div class="reveal" style="max-width:800px;">
-+ 412     <div class="section-tag" style="margin-bottom:2rem;">مصمم جرافيك &bull; مبدع رقمي</div>
-+ 413     <h1 class="hero-title font-black gradient-text" style="font-size:5.5rem;line-height:1.1;margin-bottom:1.5rem;">
-+ 414       كرم
-+ 415     </h1>
-+ 416     <p class="text-xl" style="color:var(--text-muted);max-width:550px;margin:0 auto 1rem;">
-+ 417       أحوّل الأفكار إلى تجارب بصرية مستقبلية تتفاعل مع الزائر وتترك أثراً لا يُنسى
-+ 418     </p>
-+ 419     <div class="divider" style="margin:2rem auto;"></div>
-+ 420     <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:2.5rem;">
-+ 421       <a href="#work" class="btn-primary">
-+ 422         <span>استعرض أعمالي</span>
-+ 423         <i class="fas fa-arrow-left"></i>
-+ 424       </a>
-+ 425       <a href="#contact" class="btn-outline">
-+ 426         <span>تواصل معي</span>
-+ 427       </a>
-+ 428     </div>
-+ 429   </div>
-+ 430 </section>
-+ 431 
-+ 432 <!-- Stats -->
-+ 433 <section class="py-16 px-6">
-+ 434   <div class="max-w-5xl mx-auto reveal">
-+ 435     <div class="glass p-8" style="border-radius:1.5rem;">
-+ 436       <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-+ 437         <div>
-+ 438           <div class="stat-number">+50</div>
-+ 439           <div style="color:var(--text-muted);font-size:0.95rem;font-weight:600;">مشروع منجز</div>
-+ 440         </div>
-+ 441         <div>
-+ 442           <div class="stat-number">+30</div>
-+ 443           <div style="color:var(--text-muted);font-size:0.95rem;font-weight:600;">عميل سعيد</div>
-+ 444         </div>
-+ 445         <div>
-+ 446           <div class="stat-number">+3</div>
-+ 447           <div style="color:var(--text-muted);font-size:0.95rem;font-weight:600;">سنوات خبرة</div>
-+ 448         </div>
-+ 449         <div>
-+ 450           <div class="stat-number">∞</div>
-+ 451           <div style="color:var(--text-muted);font-size:0.95rem;font-weight:600;">شغف وإبداع</div>
-+ 452         </div>
-+ 453       </div>
-+ 454     </div>
-+ 455   </div>
-+ 456 </section>
-+ 457 
-+ 458 <!-- About -->
-+ 459 <section id="about" class="py-32 px-6 relative">
-+ 460   <div class="glow-blob" style="background:#8b5cf6;top:0;left:20%;"></div>
-+ 461   <div class="max-w-6xl mx-auto reveal">
-+ 462     <div class="text-center mb-16">
-+ 463       <div class="section-tag">تعرّف عليّ</div>
-+ 464       <h2 class="section-title">مصمم من المستقبل</h2>
-+ 465       <div class="divider" style="margin-top:1rem;"></div>
-+ 466     </div>
-+ 467     <div class="grid md:grid-cols-2 gap-12 items-center">
-+ 468       <div class="glass p-10" style="border-radius:1.5rem;">
-+ 469         <div style="width:100%;aspect-ratio:1;border-radius:1.2rem;background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(139,92,246,0.15));display:flex;align-items:center;justify-content:center;font-size:6rem;">
-+ 470           <i class="fas fa-palette" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;"></i>
-+ 471         </div>
-+ 472       </div>
-+ 473       <div>
-+ 474         <h3 style="font-size:1.8rem;font-weight:800;margin-bottom:1.5rem;">أبني تجارب رقمية حية</h3>
-+ 475         <p style="color:var(--text-muted);font-size:1.05rem;line-height:2;margin-bottom:1.5rem;">
-+ 476           أدمج الإبداع والتقنية في كل مشروع لأجعل التصميم ينبض بالحياة. أعمل على تحويل الأفكار المعقدة إلى هويات بصرية بسيطة وقوية تتحدث عن علامتك التجارية.
-+ 477         </p>
-+ 478         <p style="color:var(--text-muted);font-size:1.05rem;line-height:2;margin-bottom:2rem;">
-+ 479           رحلتي في التصميم بدأت من شغف حقيقي بتحويل المفاهيم إلى تجارب بصرية مؤثرة. أؤمن أن كل علامة تجارية تستحق هوية فريدة تعكس قيمها ورؤيتها.
-+ 480         </p>
-+ 481         <div style="display:flex;flex-wrap:wrap;gap:0.8rem;">
-+ 482           <span style="padding:0.5rem 1.2rem;border-radius:0.7rem;background:rgba(59,130,246,0.1);color:var(--accent);font-size:0.85rem;font-weight:600;border:1px solid rgba(59,130,246,0.1);">Photoshop</span>
-+ 483           <span style="padding:0.5rem 1.2rem;border-radius:0.7rem;background:rgba(139,92,246,0.1);color:#8b5cf6;font-size:0.85rem;font-weight:600;border:1px solid rgba(139,92,246,0.1);">Illustrator</span>
-+ 484           <span style="padding:0.5rem 1.2rem;border-radius:0.7rem;background:rgba(236,72,153,0.1);color:#ec4899;font-size:0.85rem;font-weight:600;border:1px solid rgba(236,72,153,0.1);">Figma</span>
-+ 485           <span style="padding:0.5rem 1.2rem;border-radius:0.7rem;background:rgba(16,185,129,0.1);color:#10b981;font-size:0.85rem;font-weight:600;border:1px solid rgba(16,185,129,0.1);">After Effects</span>
-+ 486           <span style="padding:0.5rem 1.2rem;border-radius:0.7rem;background:rgba(245,158,11,0.1);color:#f59e0b;font-size:0.85rem;font-weight:600;border:1px solid rgba(245,158,11,0.1);">Blender</span>
-+ 487         </div>
-+ 488       </div>
-+ 489     </div>
-+ 490   </div>
-+ 491 </section>
-+ 492 
-+ 493 <!-- Services -->
-+ 494 <section id="services" class="py-32 px-6 relative">
-+ 495   <div class="glow-blob" style="background:#3b82f6;bottom:10%;right:5%;"></div>
-+ 496   <div class="max-w-7xl mx-auto reveal">
-+ 497     <div class="text-center mb-16">
-+ 498       <div class="section-tag">ما أقدمه</div>
-+ 499       <h2 class="section-title">خدماتي</h2>
-+ 500       <p class="section-subtitle">حلول تصميمية متكاملة تأخذ علامتك التجارية إلى مستوى آخر</p>
-+ 501     </div>
-+ 502     <div class="grid md:grid-cols-3 gap-8">
-+ 503       <div class="glass p-10 portfolio-card text-center">
-+ 504         <div class="service-icon">
-+ 505           <i class="fas fa-fingerprint"></i>
-+ 506         </div>
-+ 507         <h3 class="font-bold text-xl mb-4">تصميم هوية بصرية</h3>
-+ 508         <p style="color:var(--text-muted);font-size:0.95rem;line-height:1.9;">
-+ 509           تحويل أفكارك إلى هوية بصرية متناسقة وجذابة تعبر عن جوهر علامتك التجارية وتميزها عن المنافسين.
-+ 510         </p>
-+ 511       </div>
-+ 512       <div class="glass p-10 portfolio-card text-center">
-+ 513         <div class="service-icon" style="background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(236,72,153,0.15));">
-+ 514           <i class="fas fa-wand-magic-sparkles" style="color:#8b5cf6;"></i>
-+ 515         </div>
-+ 516         <h3 class="font-bold text-xl mb-4">تجارب تفاعلية</h3>
-+ 517         <p style="color:var(--text-muted);font-size:0.95rem;line-height:1.9;">
-+ 518           تصميم واجهات تفاعلية عصرية تخلق تجربة استثنائية للمستخدم وتترك انطباعاً بصرياً مؤثراً.
-+ 519         </p>
-+ 520       </div>
-+ 521       <div class="glass p-10 portfolio-card text-center">
-+ 522         <div class="service-icon" style="background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(59,130,246,0.15));">
-+ 523           <i class="fas fa-rocket" style="color:#10b981;"></i>
-+ 524         </div>
-+ 525         <h3 class="font-bold text-xl mb-4">براند مستقبلي</h3>
-+ 526         <p style="color:var(--text-muted);font-size:0.95rem;line-height:1.9;">
-+ 527           خلق هوية مبتكرة للعلامات التجارية تتخطى التقليدي وتأخذها إلى البعد الرقمي المستقبلي.
-+ 528         </p>
-+ 529       </div>
-+ 530     </div>
-+ 531   </div>
-+ 532 </section>
-+ 533 
-+ 534 <!-- Work / Portfolio -->
-+ 535 <section id="work" class="py-32 px-6 relative">
-+ 536   <div class="glow-blob" style="background:#ec4899;top:30%;left:5%;"></div>
-+ 537   <div class="max-w-7xl mx-auto reveal">
-+ 538     <div class="text-center mb-16">
-+ 539       <div class="section-tag">معرض الأعمال</div>
-+ 540       <h2 class="section-title">أعمالي المختارة</h2>
-+ 541       <p class="section-subtitle">مجموعة من أبرز المشاريع التي عملت عليها</p>
-+ 542     </div>
-+ 543     <div class="grid md:grid-cols-3 gap-8">
-+ 544       <div class="glass portfolio-card" style="overflow:hidden;">
-+ 545         <div style="overflow:hidden;border-radius:1.5rem 1.5rem 0 0;">
-+ 546           <img src="https://via.placeholder.com/600x400/1a1b2e/3b82f6?text=ENERGY+BRAND" style="width:100%;display:block;aspect-ratio:4/3;object-fit:cover;">
-+ 547         </div>
-+ 548         <div class="p-6">
-+ 549           <div style="display:flex;gap:0.5rem;margin-bottom:0.8rem;">
-+ 550             <span style="padding:0.25rem 0.75rem;border-radius:0.5rem;background:rgba(59,130,246,0.1);color:var(--accent);font-size:0.75rem;font-weight:600;">هوية بصرية</span>
-+ 551           </div>
-+ 552           <h3 class="font-bold text-lg mb-2">هوية طاقية</h3>
-+ 553           <p style="color:var(--text-muted);font-size:0.9rem;">تجربة تصميمية مبتكرة للعلامات التجارية في قطاع الطاقة المتجددة.</p>
-+ 554         </div>
-+ 555       </div>
-+ 556       <div class="glass portfolio-card" style="overflow:hidden;">
-+ 557         <div style="overflow:hidden;border-radius:1.5rem 1.5rem 0 0;">
-+ 558           <img src="https://via.placeholder.com/600x400/1a1b2e/8b5cf6?text=AI+EXPERIENCE" style="width:100%;display:block;aspect-ratio:4/3;object-fit:cover;">
-+ 559         </div>
-+ 560         <div class="p-6">
-+ 561           <div style="display:flex;gap:0.5rem;margin-bottom:0.8rem;">
-+ 562             <span style="padding:0.25rem 0.75rem;border-radius:0.5rem;background:rgba(139,92,246,0.1);color:#8b5cf6;font-size:0.75rem;font-weight:600;">تفاعلي</span>
-+ 563           </div>
-+ 564           <h3 class="font-bold text-lg mb-2">تجربة AI بصرية</h3>
-+ 565           <p style="color:var(--text-muted);font-size:0.9rem;">تصميم تفاعلي قائم على الذكاء الاصطناعي لشركة تقنية ناشئة.</p>
-+ 566         </div>
-+ 567       </div>
-+ 568       <div class="glass portfolio-card" style="overflow:hidden;">
-+ 569         <div style="overflow:hidden;border-radius:1.5rem 1.5rem 0 0;">
-+ 570           <img src="https://via.placeholder.com/600x400/1a1b2e/ec4899?text=FUTURE+BRAND" style="width:100%;display:block;aspect-ratio:4/3;object-fit:cover;">
-+ 571         </div>
-+ 572         <div class="p-6">
-+ 573           <div style="display:flex;gap:0.5rem;margin-bottom:0.8rem;">
-+ 574             <span style="padding:0.25rem 0.75rem;border-radius:0.5rem;background:rgba(236,72,153,0.1);color:#ec4899;font-size:0.75rem;font-weight:600;">براند</span>
-+ 575           </div>
-+ 576           <h3 class="font-bold text-lg mb-2">براند من بعد آخر</h3>
-+ 577           <p style="color:var(--text-muted);font-size:0.9rem;">تحويل الهوية التقليدية إلى عالم رقمي مستقبلي لعلامة فاخرة.</p>
-+ 578         </div>
-+ 579       </div>
-+ 580     </div>
-+ 581   </div>
-+ 582 </section>
-+ 583 
-+ 584 <!-- Why Me -->
-+ 585 <section id="why" class="py-32 px-6 relative">
-+ 586   <div class="glow-blob" style="background:#8b5cf6;bottom:20%;right:15%;"></div>
-+ 587   <div class="max-w-6xl mx-auto reveal">
-+ 588     <div class="text-center mb-16">
-+ 589       <div class="section-tag">المميزات</div>
-+ 590       <h2 class="section-title">لماذا التعامل معي؟</h2>
-+ 591       <p class="section-subtitle">أقدم قيمة حقيقية في كل مشروع أعمل عليه</p>
-+ 592     </div>
-+ 593     <div class="grid md:grid-cols-2 gap-6">
-+ 594       <div class="glass p-8 portfolio-card" style="display:flex;gap:1.5rem;align-items:flex-start;">
-+ 595         <div class="why-icon" style="background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(59,130,246,0.05));color:var(--accent);">
-+ 596           <i class="fas fa-lightbulb"></i>
-+ 597         </div>
-+ 598         <div>
-+ 599           <h3 class="font-bold text-lg mb-2">إبداع بلا حدود</h3>
-+ 600           <p style="color:var(--text-muted);font-size:0.95rem;line-height:1.8;">أفكار مبتكرة وتصاميم فريدة تميز علامتك عن المنافسين وتخلق هوية لا تُنسى.</p>
-+ 601         </div>
-+ 602       </div>
-+ 603       <div class="glass p-8 portfolio-card" style="display:flex;gap:1.5rem;align-items:flex-start;">
-+ 604         <div class="why-icon" style="background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(139,92,246,0.05));color:#8b5cf6;">
-+ 605           <i class="fas fa-clock"></i>
-+ 606         </div>
-+ 607         <div>
-+ 608           <h3 class="font-bold text-lg mb-2">التزام بالمواعيد</h3>
-+ 609           <p style="color:var(--text-muted);font-size:0.95rem;line-height:1.8;">أحترم وقتك وأسلّم المشاريع في الموعد المحدد مع الحفاظ على أعلى مستوى جودة.</p>
-+ 610         </div>
-+ 611       </div>
-+ 612       <div class="glass p-8 portfolio-card" style="display:flex;gap:1.5rem;align-items:flex-start;">
-+ 613         <div class="why-icon" style="background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(16,185,129,0.05));color:#10b981;">
-+ 614           <i class="fas fa-comments"></i>
-+ 615         </div>
-+ 616         <div>
-+ 617           <h3 class="font-bold text-lg mb-2">تواصل مستمر</h3>
-+ 618           <p style="color:var(--text-muted);font-size:0.95rem;line-height:1.8;">أبقيك على اطلاع دائم بمراحل العمل وأستمع لملاحظاتك لتحقيق رؤيتك بدقة.</p>
-+ 619         </div>
-+ 620       </div>
-+ 621       <div class="glass p-8 portfolio-card" style="display:flex;gap:1.5rem;align-items:flex-start;">
-+ 622         <div class="why-icon" style="background:linear-gradient(135deg,rgba(245,158,11,0.15),rgba(245,158,11,0.05));color:#f59e0b;">
-+ 623           <i class="fas fa-star"></i>
-+ 624         </div>
-+ 625         <div>
-+ 626           <h3 class="font-bold text-lg mb-2">جودة استثنائية</h3>
-+ 627           <p style="color:var(--text-muted);font-size:0.95rem;line-height:1.8;">أهتم بأدق التفاصيل في كل مشروع لأضمن نتيجة نهائية تفوق التوقعات.</p>
-+ 628         </div>
-+ 629       </div>
-+ 630     </div>
-+ 631   </div>
-+ 632 </section>
-+ 633 
-+ 634 <!-- CTA -->
-+ 635 <section class="py-24 px-6">
-+ 636   <div class="max-w-4xl mx-auto reveal">
-+ 637     <div class="glass p-16 text-center relative" style="overflow:hidden;">
-+ 638       <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(59,130,246,0.05),rgba(139,92,246,0.05));pointer-events:none;"></div>
-+ 639       <h2 style="font-size:2.5rem;font-weight:900;margin-bottom:1rem;position:relative;">عندك مشروع؟</h2>
-+ 640       <p style="color:var(--text-muted);font-size:1.1rem;margin-bottom:2.5rem;position:relative;">خلنا نحول فكرتك إلى واقع بصري مذهل</p>
-+ 641       <a href="#contact" class="btn-primary" style="position:relative;">
-+ 642         <span>ابدأ الآن</span>
-+ 643         <i class="fas fa-arrow-left"></i>
-+ 644       </a>
-+ 645     </div>
-+ 646   </div>
-+ 647 </section>
-+ 648 
-+ 649 <!-- Contact -->
-+ 650 <section id="contact" class="py-32 px-6 relative">
-+ 651   <div class="glow-blob" style="background:#3b82f6;top:10%;left:30%;"></div>
-+ 652   <div class="max-w-5xl mx-auto reveal">
-+ 653     <div class="text-center mb-16">
-+ 654       <div class="section-tag">تواصل</div>
-+ 655       <h2 class="section-title">تواصل معي</h2>
-+ 656       <p class="section-subtitle">جاهز لبدء مشروعك؟ تواصل معي عبر أي من القنوات التالية</p>
-+ 657     </div>
-+ 658     <div class="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
-+ 659       <a href="https://wa.me/9647511672958" target="_blank" class="glass contact-card portfolio-card">
-+ 660         <i class="fab fa-whatsapp" style="background:rgba(37,211,102,0.1);color:#25d366;"></i>
-+ 661         <div>
-+ 662           <div class="font-bold">WhatsApp</div>
-+ 663           <div style="color:var(--text-muted);font-size:0.85rem;">راسلني مباشرة</div>
-+ 664         </div>
-+ 665       </a>
-+ 666       <a href="https://instagram.com/23.iqk" target="_blank" class="glass contact-card portfolio-card">
-+ 667         <i class="fab fa-instagram" style="background:linear-gradient(135deg,rgba(228,64,95,0.1),rgba(181,70,209,0.1));color:#e4405f;"></i>
-+ 668         <div>
-+ 669           <div class="font-bold">Instagram</div>
-+ 670           <div style="color:var(--text-muted);font-size:0.85rem;">@23.iqk</div>
-+ 671         </div>
-+ 672       </a>
-+ 673     </div>
-+ 674   </div>
-+ 675 </section>
-+ 676 
-+ 677 <!-- Footer -->
-+ 678 <footer style="border-top:1px solid rgba(255,255,255,0.05);padding:3rem 1.5rem;">
-+ 679   <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-+ 680     <div class="flex items-center gap-3">
-+ 681       <div style="width:32px;height:32px;border-radius:0.5rem;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.85rem;color:white;">ك</div>
-+ 682       <span class="font-bold" style="font-size:0.95rem;">KARAM PORTAL LAB</span>
-+ 683     </div>
-+ 684     <p style="color:var(--text-muted);font-size:0.85rem;">© 2040 — جميع الحقوق محفوظة</p>
-+ 685     <div class="flex gap-4">
-+ 686       <a href="https://wa.me/9647511672958" target="_blank" style="color:var(--text-muted);transition:color 0.3s;" onmouseover="this.style.color='#25d366'" onmouseout="this.style.color='var(--text-muted)'"><i class="fab fa-whatsapp" style="font-size:1.2rem;"></i></a>
-+ 687       <a href="https://instagram.com/23.iqk" target="_blank" style="color:var(--text-muted);transition:color 0.3s;" onmouseover="this.style.color='#e4405f'" onmouseout="this.style.color='var(--text-muted)'"><i class="fab fa-instagram" style="font-size:1.2rem;"></i></a>
-+ 688     </div>
-+ 689   </div>
-+ 690 </footer>
-+ 691 
-+ 692 <script>
-+ 693 /* ---------- Mobile Menu ---------- */
-+ 694 function openMobileMenu() {
-+ 695   document.getElementById('mobileMenu').classList.add('active');
-+ 696   document.body.style.overflow = 'hidden';
-+ 697 }
-+ 698 function closeMobileMenu() {
-+ 699   document.getElementById('mobileMenu').classList.remove('active');
-+ 700   document.body.style.overflow = '';
-+ 701 }
-+ 702 document.getElementById('mobileMenuClose').addEventListener('click', closeMobileMenu);
-+ 703 
-+ 704 /* ---------- Scroll Reveal ---------- */
-+ 705 const observer = new IntersectionObserver((entries) => {
-+ 706   entries.forEach(entry => {
-+ 707     if (entry.isIntersecting) {
-+ 708       entry.target.classList.add('visible');
-+ 709     }
-+ 710   });
-+ 711 }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-+ 712 
-+ 713 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-+ 714 
-+ 715 /* ---------- Smooth active nav ---------- */
-+ 716 const sections = document.querySelectorAll('section[id]');
-+ 717 const navLinks = document.querySelectorAll('.navlink');
-+ 718 
-+ 719 window.addEventListener('scroll', () => {
-+ 720   let current = '';
-+ 721   sections.forEach(section => {
-+ 722     const sectionTop = section.offsetTop - 200;
-+ 723     if (pageYOffset >= sectionTop) {
-+ 724       current = section.getAttribute('id');
-+ 725     }
-+ 726   });
-+ 727   navLinks.forEach(link => {
-+ 728     link.style.color = '';
-+ 729     if (link.getAttribute('href') === '#' + current) {
-+ 730       link.style.color = 'white';
-+ 731     }
-+ 732   });
-+ 733 });
-+ 734 
-+ 735 /* ---------- WebGL Particles ---------- */
-+ 736 const scene = new THREE.Scene();
-+ 737 const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000);
-+ 738 const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg'), alpha: true, antialias: true });
-+ 739 renderer.setSize(innerWidth, innerHeight);
-+ 740 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-+ 741 camera.position.z = 3;
-+ 742 
-+ 743 const particlesGeometry = new THREE.BufferGeometry();
-+ 744 const particlesCount = 800;
-+ 745 const posArray = new Float32Array(particlesCount * 3);
-+ 746 const colArray = new Float32Array(particlesCount * 3);
-+ 747 
-+ 748 for (let i = 0; i < particlesCount; i++) {
-+ 749   const i3 = i * 3;
-+ 750   posArray[i3] = (Math.random() - 0.5) * 14;
-+ 751   posArray[i3 + 1] = (Math.random() - 0.5) * 14;
-+ 752   posArray[i3 + 2] = (Math.random() - 0.5) * 14;
-+ 753 
-+ 754   // Blue to purple gradient colors
-+ 755   const t = Math.random();
-+ 756   colArray[i3] = 0.23 + t * 0.31;     // R
-+ 757   colArray[i3 + 1] = 0.31 + t * 0.05; // G
-+ 758   colArray[i3 + 2] = 0.96 - t * 0.0;  // B
-+ 759 }
-+ 760 
-+ 761 particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-+ 762 particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colArray, 3));
-+ 763 
-+ 764 const particlesMaterial = new THREE.PointsMaterial({
-+ 765   size: 0.035,
-+ 766   transparent: true,
-+ 767   opacity: 0.6,
-+ 768   vertexColors: true,
-+ 769   blending: THREE.AdditiveBlending,
-+ 770   depthWrite: false,
-+ 771 });
-+ 772 
-+ 773 const particles = new THREE.Points(particlesGeometry, particlesMaterial);
-+ 774 scene.add(particles);
-+ 775 
-+ 776 let mouseX = 0, mouseY = 0;
-+ 777 let targetMouseX = 0, targetMouseY = 0;
-+ 778 
-+ 779 document.addEventListener('mousemove', e => {
-+ 780   targetMouseX = (e.clientX / innerWidth) * 2 - 1;
-+ 781   targetMouseY = -(e.clientY / innerHeight) * 2 + 1;
-+ 782 });
-+ 783 
-+ 784 function animate() {
-+ 785   requestAnimationFrame(animate);
-+ 786 
-+ 787   // Smooth mouse following
-+ 788   mouseX += (targetMouseX - mouseX) * 0.05;
-+ 789   mouseY += (targetMouseY - mouseY) * 0.05;
-+ 790 
-+ 791   particles.rotation.y += 0.0005 + mouseX * 0.01;
-+ 792   particles.rotation.x += 0.0003 + mouseY * 0.01;
-+ 793 
-+ 794   renderer.render(scene, camera);
-+ 795 }
-+ 796 animate();
-+ 797 
-+ 798 window.addEventListener('resize', () => {
-+ 799   renderer.setSize(innerWidth, innerHeight);
-+ 800   camera.aspect = innerWidth / innerHeight;
-+ 801   camera.updateProjectionMatrix();
-+ 802 });
-+ 803 </script>
-+ 804 
-+ 805 </body>
-+ 806 </html>
++    1 <!DOCTYPE html>
++    2 <html lang="ar" dir="rtl">
++    3 <head>
++    4   <meta charset="UTF-8">
++    5   <meta name="viewport" content="width=device-width, initial-scale=1.0">
++    6   <title>كرم | مصمم جرافيك 2040</title>
++    7   <meta name="description" content="كرم - مصمم جرافيك محترف، تصميم هويات بصرية وتجارب تفاعلية مستقبلية">
++    8 
++    9   <!-- Fonts -->
++   10   <link rel="preconnect" href="https://fonts.googleapis.com">
++   11   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
++   12   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
++   13 
++   14   <!-- Font Awesome -->
++   15   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
++   16 
++   17   <style>
++   18     /* ===== RESET & BASE ===== */
++   19     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
++   20 
++   21     :root {
++   22       --bg: #06070e;
++   23       --bg2: #0c0e1a;
++   24       --text: #e8eaed;
++   25       --muted: #8b8fa3;
++   26       --accent: #3b82f6;
++   27       --accent2: #8b5cf6;
++   28       --pink: #ec4899;
++   29       --green: #10b981;
++   30       --amber: #f59e0b;
++   31       --card: rgba(255,255,255,0.03);
++   32       --border: rgba(255,255,255,0.06);
++   33       --radius: 1.25rem;
++   34     }
++   35 
++   36     html { scroll-behavior: smooth; }
++   37 
++   38     body {
++   39       font-family: 'Cairo', sans-serif;
++   40       background: var(--bg);
++   41       color: var(--text);
++   42       overflow-x: hidden;
++   43       line-height: 1.85;
++   44     }
++   45 
++   46     a { text-decoration: none; color: inherit; }
++   47     img { max-width: 100%; display: block; }
++   48     ul { list-style: none; }
++   49 
++   50     /* Scrollbar */
++   51     ::-webkit-scrollbar { width: 5px; }
++   52     ::-webkit-scrollbar-track { background: var(--bg); }
++   53     ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
++   54 
++   55     /* ===== UTILITIES ===== */
++   56     .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
++   57 
++   58     .section { padding: 8rem 0; position: relative; }
++   59 
++   60     .section-header { text-align: center; margin-bottom: 4rem; }
++   61 
++   62     .tag {
++   63       display: inline-block;
++   64       padding: 0.35rem 1.2rem;
++   65       border-radius: 2rem;
++   66       font-size: 0.82rem;
++   67       font-weight: 700;
++   68       background: rgba(59,130,246,0.08);
++   69       color: var(--accent);
++   70       border: 1px solid rgba(59,130,246,0.12);
++   71       margin-bottom: 1.2rem;
++   72     }
++   73 
++   74     .section-title {
++   75       font-size: 2.6rem;
++   76       font-weight: 900;
++   77       margin-bottom: 0.5rem;
++   78     }
++   79 
++   80     .section-desc {
++   81       color: var(--muted);
++   82       font-size: 1.05rem;
++   83       max-width: 560px;
++   84       margin: 0.8rem auto 0;
++   85     }
++   86 
++   87     .divider {
++   88       width: 50px;
++   89       height: 3px;
++   90       background: linear-gradient(90deg, var(--accent), var(--accent2));
++   91       border-radius: 3px;
++   92       margin: 1.2rem auto 0;
++   93     }
++   94 
++   95     /* Gradient animated text */
++   96     .grad-text {
++   97       background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6);
++   98       background-size: 300% 300%;
++   99       -webkit-background-clip: text;
++  100       -webkit-text-fill-color: transparent;
++  101       background-clip: text;
++  102       animation: gradMove 5s ease infinite;
++  103     }
++  104     @keyframes gradMove {
++  105       0%,100% { background-position: 0% 50%; }
++  106       50% { background-position: 100% 50%; }
++  107     }
++  108 
++  109     /* Glass */
++  110     .glass {
++  111       background: var(--card);
++  112       backdrop-filter: blur(24px);
++  113       -webkit-backdrop-filter: blur(24px);
++  114       border-radius: var(--radius);
++  115       border: 1px solid var(--border);
++  116     }
++  117 
++  118     /* Glow blobs */
++  119     .glow {
++  120       position: absolute;
++  121       width: 380px;
++  122       height: 380px;
++  123       border-radius: 50%;
++  124       filter: blur(130px);
++  125       opacity: 0.1;
++  126       pointer-events: none;
++  127       z-index: 0;
++  128     }
++  129 
++  130     /* Buttons */
++  131     .btn {
++  132       display: inline-flex;
++  133       align-items: center;
++  134       gap: 0.6rem;
++  135       padding: 0.9rem 2.2rem;
++  136       border-radius: 0.85rem;
++  137       font-family: 'Cairo', sans-serif;
++  138       font-weight: 700;
++  139       font-size: 1rem;
++  140       cursor: pointer;
++  141       border: none;
++  142       transition: transform 0.3s, box-shadow 0.3s;
++  143     }
++  144     .btn:hover { transform: translateY(-3px); }
++  145 
++  146     .btn-fill {
++  147       background: linear-gradient(135deg, var(--accent), var(--accent2));
++  148       color: #fff;
++  149     }
++  150     .btn-fill:hover { box-shadow: 0 12px 35px rgba(59,130,246,0.3); }
++  151 
++  152     .btn-ghost {
++  153       background: transparent;
++  154       color: var(--accent);
++  155       border: 2px solid rgba(59,130,246,0.25);
++  156     }
++  157     .btn-ghost:hover {
++  158       background: rgba(59,130,246,0.08);
++  159       border-color: var(--accent);
++  160     }
++  161 
++  162     /* Cards hover */
++  163     .card-hover { transition: transform 0.35s, box-shadow 0.35s, border-color 0.35s; }
++  164     .card-hover:hover {
++  165       transform: translateY(-6px);
++  166       box-shadow: 0 16px 40px rgba(59,130,246,0.1);
++  167       border-color: rgba(59,130,246,0.15);
++  168     }
++  169 
++  170     /* Reveal on scroll */
++  171     .reveal {
++  172       opacity: 0;
++  173       transform: translateY(35px);
++  174       transition: opacity 0.7s ease, transform 0.7s ease;
++  175     }
++  176     .reveal.show {
++  177       opacity: 1;
++  178       transform: translateY(0);
++  179     }
++  180 
++  181     /* Grid helpers */
++  182     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
++  183     .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
++  184     .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
++  185 
++  186     /* ===== NAVBAR ===== */
++  187     .navbar {
++  188       position: fixed;
++  189       top: 0;
++  190       width: 100%;
++  191       z-index: 100;
++  192       padding: 1rem 0;
++  193       transition: background 0.3s;
++  194     }
++  195     .navbar.scrolled .nav-inner {
++  196       background: rgba(6,7,14,0.85);
++  197       backdrop-filter: blur(20px);
++  198       -webkit-backdrop-filter: blur(20px);
++  199       border: 1px solid rgba(255,255,255,0.04);
++  200     }
++  201     .nav-inner {
++  202       max-width: 1200px;
++  203       margin: 0 auto;
++  204       padding: 0.7rem 1.8rem;
++  205       border-radius: 1rem;
++  206       display: flex;
++  207       justify-content: space-between;
++  208       align-items: center;
++  209       transition: all 0.3s;
++  210     }
++  211 
++  212     .logo {
++  213       display: flex;
++  214       align-items: center;
++  215       gap: 0.7rem;
++  216     }
++  217     .logo-icon {
++  218       width: 38px;
++  219       height: 38px;
++  220       border-radius: 0.6rem;
++  221       background: linear-gradient(135deg, var(--accent), var(--accent2));
++  222       display: flex;
++  223       align-items: center;
++  224       justify-content: center;
++  225       font-weight: 900;
++  226       font-size: 1rem;
++  227       color: #fff;
++  228     }
++  229     .logo-text { font-weight: 900; font-size: 1.1rem; letter-spacing: -0.02em; }
++  230 
++  231     .nav-links { display: flex; gap: 2rem; align-items: center; }
++  232     .nav-link {
++  233       color: var(--muted);
++  234       font-weight: 600;
++  235       font-size: 0.92rem;
++  236       position: relative;
++  237       transition: color 0.3s;
++  238     }
++  239     .nav-link::after {
++  240       content: '';
++  241       position: absolute;
++  242       bottom: -4px;
++  243       right: 0;
++  244       width: 0;
++  245       height: 2px;
++  246       background: var(--accent);
++  247       transition: width 0.3s;
++  248     }
++  249     .nav-link:hover { color: #fff; }
++  250     .nav-link:hover::after { width: 100%; }
++  251     .nav-link.active { color: #fff; }
++  252     .nav-link.active::after { width: 100%; }
++  253 
++  254     .nav-cta {
++  255       padding: 0.55rem 1.4rem;
++  256       font-size: 0.88rem;
++  257       border-radius: 0.6rem;
++  258     }
++  259 
++  260     /* Hamburger */
++  261     .hamburger {
++  262       display: none;
++  263       flex-direction: column;
++  264       gap: 5px;
++  265       cursor: pointer;
++  266       background: none;
++  267       border: none;
++  268       padding: 0.4rem;
++  269     }
++  270     .hamburger span {
++  271       width: 22px;
++  272       height: 2px;
++  273       background: #fff;
++  274       border-radius: 2px;
++  275       transition: all 0.3s;
++  276     }
++  277 
++  278     /* Mobile menu */
++  279     .mobile-menu {
++  280       display: none;
++  281       position: fixed;
++  282       inset: 0;
++  283       z-index: 200;
++  284       background: rgba(6,7,14,0.96);
++  285       backdrop-filter: blur(30px);
++  286       -webkit-backdrop-filter: blur(30px);
++  287       flex-direction: column;
++  288       align-items: center;
++  289       justify-content: center;
++  290       gap: 2rem;
++  291     }
++  292     .mobile-menu.open { display: flex; }
++  293     .mobile-menu a {
++  294       color: #fff;
++  295       font-size: 1.4rem;
++  296       font-weight: 700;
++  297       transition: color 0.3s;
++  298     }
++  299     .mobile-menu a:hover { color: var(--accent); }
++  300     .mobile-close {
++  301       position: absolute;
++  302       top: 1.5rem;
++  303       left: 1.5rem;
++  304       font-size: 1.8rem;
++  305       color: #fff;
++  306       cursor: pointer;
++  307       background: none;
++  308       border: none;
++  309     }
++  310 
++  311     /* ===== HERO ===== */
++  312     .hero {
++  313       min-height: 100vh;
++  314       display: flex;
++  315       align-items: center;
++  316       justify-content: center;
++  317       text-align: center;
++  318       padding: 8rem 1.5rem 4rem;
++  319       position: relative;
++  320     }
++  321     .hero-title {
++  322       font-size: 5rem;
++  323       font-weight: 900;
++  324       line-height: 1.1;
++  325       margin-bottom: 1.2rem;
++  326     }
++  327     .hero-sub {
++  328       color: var(--muted);
++  329       font-size: 1.15rem;
++  330       max-width: 520px;
++  331       margin: 0 auto 2.5rem;
++  332     }
++  333     .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
++  334 
++  335     /* ===== STATS ===== */
++  336     .stats-grid { text-align: center; }
++  337     .stat-num {
++  338       font-size: 2.8rem;
++  339       font-weight: 900;
++  340       background: linear-gradient(135deg, var(--accent), var(--accent2));
++  341       -webkit-background-clip: text;
++  342       -webkit-text-fill-color: transparent;
++  343       background-clip: text;
++  344     }
++  345     .stat-label { color: var(--muted); font-size: 0.9rem; font-weight: 600; }
++  346 
++  347     /* ===== ABOUT ===== */
++  348     .about-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; align-items: center; }
++  349     .about-visual {
++  350       aspect-ratio: 1;
++  351       border-radius: var(--radius);
++  352       background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1));
++  353       display: flex;
++  354       align-items: center;
++  355       justify-content: center;
++  356       font-size: 5rem;
++  357     }
++  358     .about-visual i {
++  359       background: linear-gradient(135deg, var(--accent), var(--accent2));
++  360       -webkit-background-clip: text;
++  361       -webkit-text-fill-color: transparent;
++  362     }
++  363     .about-text h3 { font-size: 1.7rem; font-weight: 800; margin-bottom: 1.2rem; }
++  364     .about-text p { color: var(--muted); font-size: 1rem; margin-bottom: 1.2rem; }
++  365 
++  366     .skills { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
++  367     .skill {
++  368       padding: 0.4rem 1rem;
++  369       border-radius: 0.6rem;
++  370       font-size: 0.82rem;
++  371       font-weight: 700;
++  372     }
++  373 
++  374     /* ===== SERVICES ===== */
++  375     .service-card { padding: 2.5rem 2rem; text-align: center; }
++  376     .service-icon {
++  377       width: 64px;
++  378       height: 64px;
++  379       border-radius: 1rem;
++  380       display: flex;
++  381       align-items: center;
++  382       justify-content: center;
++  383       font-size: 1.4rem;
++  384       margin: 0 auto 1.5rem;
++  385     }
++  386     .service-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.8rem; }
++  387     .service-card p { color: var(--muted); font-size: 0.92rem; line-height: 1.8; }
++  388 
++  389     /* ===== PORTFOLIO ===== */
++  390     .port-card { overflow: hidden; }
++  391     .port-img {
++  392       overflow: hidden;
++  393       border-radius: var(--radius) var(--radius) 0 0;
++  394     }
++  395     .port-img-inner {
++  396       width: 100%;
++  397       aspect-ratio: 4/3;
++  398       display: flex;
++  399       align-items: center;
++  400       justify-content: center;
++  401       font-size: 1.3rem;
++  402       font-weight: 800;
++  403       color: rgba(255,255,255,0.7);
++  404       letter-spacing: 0.05em;
++  405       transition: transform 0.5s;
++  406     }
++  407     .port-card:hover .port-img-inner { transform: scale(1.06); }
++  408     .port-body { padding: 1.5rem; }
++  409     .port-tag {
++  410       display: inline-block;
++  411       padding: 0.2rem 0.65rem;
++  412       border-radius: 0.4rem;
++  413       font-size: 0.72rem;
++  414       font-weight: 700;
++  415       margin-bottom: 0.6rem;
++  416     }
++  417     .port-body h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
++  418     .port-body p { color: var(--muted); font-size: 0.88rem; }
++  419 
++  420     /* ===== WHY ME ===== */
++  421     .why-card {
++  422       padding: 2rem;
++  423       display: flex;
++  424       gap: 1.3rem;
++  425       align-items: flex-start;
++  426     }
++  427     .why-icon {
++  428       width: 52px;
++  429       height: 52px;
++  430       border-radius: 0.8rem;
++  431       display: flex;
++  432       align-items: center;
++  433       justify-content: center;
++  434       font-size: 1.2rem;
++  435       flex-shrink: 0;
++  436     }
++  437     .why-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; }
++  438     .why-card p { color: var(--muted); font-size: 0.92rem; line-height: 1.8; }
++  439 
++  440     /* ===== CTA ===== */
++  441     .cta-box {
++  442       padding: 5rem 3rem;
++  443       text-align: center;
++  444       overflow: hidden;
++  445       position: relative;
++  446     }
++  447     .cta-box::before {
++  448       content: '';
++  449       position: absolute;
++  450       inset: 0;
++  451       background: linear-gradient(135deg, rgba(59,130,246,0.04), rgba(139,92,246,0.04));
++  452       pointer-events: none;
++  453     }
++  454     .cta-box h2 { font-size: 2.3rem; font-weight: 900; margin-bottom: 0.8rem; position: relative; }
++  455     .cta-box p { color: var(--muted); font-size: 1.05rem; margin-bottom: 2rem; position: relative; }
++  456 
++  457     /* ===== CONTACT ===== */
++  458     .contact-card {
++  459       display: flex;
++  460       align-items: center;
++  461       gap: 1.2rem;
++  462       padding: 1.5rem 2rem;
++  463     }
++  464     .contact-icon {
++  465       width: 48px;
++  466       height: 48px;
++  467       border-radius: 0.7rem;
++  468       display: flex;
++  469       align-items: center;
++  470       justify-content: center;
++  471       font-size: 1.3rem;
++  472       flex-shrink: 0;
++  473     }
++  474     .contact-card .label { font-weight: 700; font-size: 1rem; }
++  475     .contact-card .sub { color: var(--muted); font-size: 0.82rem; }
++  476 
++  477     /* ===== FOOTER ===== */
++  478     .footer {
++  479       border-top: 1px solid rgba(255,255,255,0.04);
++  480       padding: 2rem 0;
++  481     }
++  482     .footer-inner {
++  483       display: flex;
++  484       justify-content: space-between;
++  485       align-items: center;
++  486       flex-wrap: wrap;
++  487       gap: 1rem;
++  488     }
++  489     .footer-copy { color: var(--muted); font-size: 0.82rem; }
++  490     .footer-socials { display: flex; gap: 1rem; }
++  491     .footer-socials a {
++  492       color: var(--muted);
++  493       font-size: 1.15rem;
++  494       transition: color 0.3s;
++  495     }
++  496     .footer-socials a:hover { color: var(--accent); }
++  497 
++  498     /* ===== CANVAS BG ===== */
++  499     #bgCanvas {
++  500       position: fixed;
++  501       top: 0;
++  502       left: 0;
++  503       width: 100%;
++  504       height: 100%;
++  505       z-index: -1;
++  506       pointer-events: none;
++  507     }
++  508 
++  509     /* ===== RESPONSIVE ===== */
++  510     @media (max-width: 900px) {
++  511       .grid-3 { grid-template-columns: 1fr; }
++  512       .grid-4 { grid-template-columns: repeat(2, 1fr); }
++  513       .grid-2 { grid-template-columns: 1fr; }
++  514       .about-grid { grid-template-columns: 1fr; }
++  515       .nav-links { display: none; }
++  516       .nav-cta { display: none !important; }
++  517       .hamburger { display: flex; }
++  518       .hero-title { font-size: 3.2rem; }
++  519       .section-title { font-size: 2rem; }
++  520       .section { padding: 5rem 0; }
++  521       .hero { padding-top: 6rem; }
++  522       .cta-box { padding: 3rem 1.5rem; }
++  523     }
++  524 
++  525     @media (max-width: 500px) {
++  526       .grid-4 { grid-template-columns: 1fr 1fr; }
++  527       .hero-title { font-size: 2.6rem; }
++  528       .stat-num { font-size: 2.2rem; }
++  529     }
++  530   </style>
++  531 </head>
++  532 
++  533 <body>
++  534 
++  535   <!-- Background Canvas -->
++  536   <canvas id="bgCanvas"></canvas>
++  537 
++  538   <!-- Mobile Menu -->
++  539   <div class="mobile-menu" id="mobileMenu">
++  540     <button class="mobile-close" id="mobileClose" aria-label="Close menu">
++  541       <i class="fas fa-times"></i>
++  542     </button>
++  543     <a href="#home" class="mob-link">الرئيسية</a>
++  544     <a href="#about" class="mob-link">عني</a>
++  545     <a href="#services" class="mob-link">خدماتي</a>
++  546     <a href="#work" class="mob-link">أعمالي</a>
++  547     <a href="#why" class="mob-link">لماذا أنا</a>
++  548     <a href="#contact" class="mob-link">تواصل</a>
++  549   </div>
++  550 
++  551   <!-- Navbar -->
++  552   <nav class="navbar" id="navbar">
++  553     <div class="nav-inner glass">
++  554       <a href="#home" class="logo">
++  555         <div class="logo-icon">ك</div>
++  556         <span class="logo-text">KARAM</span>
++  557       </a>
++  558       <div class="nav-links">
++  559         <a href="#home" class="nav-link">الرئيسية</a>
++  560         <a href="#about" class="nav-link">عني</a>
++  561         <a href="#services" class="nav-link">خدماتي</a>
++  562         <a href="#work" class="nav-link">أعمالي</a>
++  563         <a href="#why" class="nav-link">لماذا أنا</a>
++  564         <a href="#contact" class="nav-link">تواصل</a>
++  565       </div>
++  566       <div style="display:flex;align-items:center;gap:0.8rem;">
++  567         <a href="#contact" class="btn btn-fill nav-cta">ابدأ مشروعك</a>
++  568         <button class="hamburger" id="hamburger" aria-label="Open menu">
++  569           <span></span><span></span><span></span>
++  570         </button>
++  571       </div>
++  572     </div>
++  573   </nav>
++  574 
++  575   <!-- ===== HERO ===== -->
++  576   <section class="hero" id="home">
++  577     <div class="glow" style="background:var(--accent);top:15%;right:8%;"></div>
++  578     <div class="glow" style="background:var(--accent2);bottom:15%;left:8%;"></div>
++  579     <div class="reveal">
++  580       <div class="tag">مصمم جرافيك &bull; مبدع رقمي</div>
++  581       <h1 class="hero-title grad-text">كرم</h1>
++  582       <p class="hero-sub">
++  583         أحوّل الأفكار إلى تجارب بصرية مستقبلية تتفاعل مع الزائر وتترك أثراً لا يُنسى
++  584       </p>
++  585       <div class="divider" style="margin-bottom:2.5rem;"></div>
++  586       <div class="hero-btns">
++  587         <a href="#work" class="btn btn-fill">
++  588           <span>استعرض أعمالي</span>
++  589           <i class="fas fa-arrow-left"></i>
++  590         </a>
++  591         <a href="#contact" class="btn btn-ghost">تواصل معي</a>
++  592       </div>
++  593     </div>
++  594   </section>
++  595 
++  596   <!-- ===== STATS ===== -->
++  597   <section style="padding:3rem 0;">
++  598     <div class="container reveal">
++  599       <div class="glass" style="padding:2.5rem;">
++  600         <div class="grid-4 stats-grid">
++  601           <div>
++  602             <div class="stat-num">+50</div>
++  603             <div class="stat-label">مشروع منجز</div>
++  604           </div>
++  605           <div>
++  606             <div class="stat-num">+30</div>
++  607             <div class="stat-label">عميل سعيد</div>
++  608           </div>
++  609           <div>
++  610             <div class="stat-num">+3</div>
++  611             <div class="stat-label">سنوات خبرة</div>
++  612           </div>
++  613           <div>
++  614             <div class="stat-num">&infin;</div>
++  615             <div class="stat-label">شغف وإبداع</div>
++  616           </div>
++  617         </div>
++  618       </div>
++  619     </div>
++  620   </section>
++  621 
++  622   <!-- ===== ABOUT ===== -->
++  623   <section class="section" id="about">
++  624     <div class="glow" style="background:var(--accent2);top:0;left:15%;"></div>
++  625     <div class="container reveal">
++  626       <div class="section-header">
++  627         <div class="tag">تعرّف عليّ</div>
++  628         <h2 class="section-title">مصمم من المستقبل</h2>
++  629         <div class="divider"></div>
++  630       </div>
++  631       <div class="about-grid">
++  632         <div class="glass" style="padding:2rem;">
++  633           <div class="about-visual">
++  634             <i class="fas fa-palette"></i>
++  635           </div>
++  636         </div>
++  637         <div class="about-text">
++  638           <h3>أبني تجارب رقمية حية</h3>
++  639           <p>
++  640             أدمج الإبداع والتقنية في كل مشروع لأجعل التصميم ينبض بالحياة.
++  641             أعمل على تحويل الأفكار المعقدة إلى هويات بصرية بسيطة وقوية تتحدث عن علامتك التجارية.
++  642           </p>
++  643           <p>
++  644             رحلتي في التصميم بدأت من شغف حقيقي بتحويل المفاهيم إلى تجارب بصرية مؤثرة.
++  645             أؤمن أن كل علامة تجارية تستحق هوية فريدة تعكس قيمها ورؤيتها.
++  646           </p>
++  647           <div class="skills">
++  648             <span class="skill" style="background:rgba(59,130,246,0.1);color:var(--accent);border:1px solid rgba(59,130,246,0.1);">Photoshop</span>
++  649             <span class="skill" style="background:rgba(139,92,246,0.1);color:var(--accent2);border:1px solid rgba(139,92,246,0.1);">Illustrator</span>
++  650             <span class="skill" style="background:rgba(236,72,153,0.1);color:var(--pink);border:1px solid rgba(236,72,153,0.1);">Figma</span>
++  651             <span class="skill" style="background:rgba(16,185,129,0.1);color:var(--green);border:1px solid rgba(16,185,129,0.1);">After Effects</span>
++  652             <span class="skill" style="background:rgba(245,158,11,0.1);color:var(--amber);border:1px solid rgba(245,158,11,0.1);">Blender</span>
++  653           </div>
++  654         </div>
++  655       </div>
++  656     </div>
++  657   </section>
++  658 
++  659   <!-- ===== SERVICES ===== -->
++  660   <section class="section" id="services">
++  661     <div class="glow" style="background:var(--accent);bottom:5%;right:5%;"></div>
++  662     <div class="container reveal">
++  663       <div class="section-header">
++  664         <div class="tag">ما أقدمه</div>
++  665         <h2 class="section-title">خدماتي</h2>
++  666         <p class="section-desc">حلول تصميمية متكاملة تأخذ علامتك التجارية إلى مستوى آخر</p>
++  667       </div>
++  668       <div class="grid-3">
++  669         <div class="glass service-card card-hover">
++  670           <div class="service-icon" style="background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(139,92,246,0.12));color:var(--accent);">
++  671             <i class="fas fa-fingerprint"></i>
++  672           </div>
++  673           <h3>تصميم هوية بصرية</h3>
++  674           <p>تحويل أفكارك إلى هوية بصرية متناسقة وجذابة تعبر عن جوهر علامتك التجارية وتميزها عن المنافسين.</p>
++  675         </div>
++  676         <div class="glass service-card card-hover">
++  677           <div class="service-icon" style="background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(236,72,153,0.12));color:var(--accent2);">
++  678             <i class="fas fa-wand-magic-sparkles"></i>
++  679           </div>
++  680           <h3>تجارب تفاعلية</h3>
++  681           <p>تصميم واجهات تفاعلية عصرية تخلق تجربة استثنائية للمستخدم وتترك انطباعاً بصرياً مؤثراً.</p>
++  682         </div>
++  683         <div class="glass service-card card-hover">
++  684           <div class="service-icon" style="background:linear-gradient(135deg,rgba(16,185,129,0.12),rgba(59,130,246,0.12));color:var(--green);">
++  685             <i class="fas fa-rocket"></i>
++  686           </div>
++  687           <h3>براند مستقبلي</h3>
++  688           <p>خلق هوية مبتكرة للعلامات التجارية تتخطى التقليدي وتأخذها إلى البعد الرقمي المستقبلي.</p>
++  689         </div>
++  690       </div>
++  691     </div>
++  692   </section>
++  693 
++  694   <!-- ===== PORTFOLIO ===== -->
++  695   <section class="section" id="work">
++  696     <div class="glow" style="background:var(--pink);top:25%;left:5%;"></div>
++  697     <div class="container reveal">
++  698       <div class="section-header">
++  699         <div class="tag">معرض الأعمال</div>
++  700         <h2 class="section-title">أعمالي المختارة</h2>
++  701         <p class="section-desc">مجموعة من أبرز المشاريع التي عملت عليها</p>
++  702       </div>
++  703       <div class="grid-3">
++  704         <!-- Card 1 -->
++  705         <div class="glass port-card card-hover">
++  706           <div class="port-img">
++  707             <div class="port-img-inner" style="background:linear-gradient(135deg,#0f172a,#1e3a5f);">
++  708               <span><i class="fas fa-bolt" style="margin-left:0.5rem;"></i> ENERGY BRAND</span>
++  709             </div>
++  710           </div>
++  711           <div class="port-body">
++  712             <span class="port-tag" style="background:rgba(59,130,246,0.1);color:var(--accent);">هوية بصرية</span>
++  713             <h3>هوية طاقية</h3>
++  714             <p>تجربة تصميمية مبتكرة للعلامات التجارية في قطاع الطاقة المتجددة.</p>
++  715           </div>
++  716         </div>
++  717         <!-- Card 2 -->
++  718         <div class="glass port-card card-hover">
++  719           <div class="port-img">
++  720             <div class="port-img-inner" style="background:linear-gradient(135deg,#1a0a2e,#2d1b69);">
++  721               <span><i class="fas fa-brain" style="margin-left:0.5rem;"></i> AI EXPERIENCE</span>
++  722             </div>
++  723           </div>
++  724           <div class="port-body">
++  725             <span class="port-tag" style="background:rgba(139,92,246,0.1);color:var(--accent2);">تفاعلي</span>
++  726             <h3>تجربة AI بصرية</h3>
++  727             <p>تصميم تفاعلي قائم على الذكاء الاصطناعي لشركة تقنية ناشئة.</p>
++  728           </div>
++  729         </div>
++  730         <!-- Card 3 -->
++  731         <div class="glass port-card card-hover">
++  732           <div class="port-img">
++  733             <div class="port-img-inner" style="background:linear-gradient(135deg,#2a0a1a,#6b213f);">
++  734               <span><i class="fas fa-gem" style="margin-left:0.5rem;"></i> FUTURE BRAND</span>
++  735             </div>
++  736           </div>
++  737           <div class="port-body">
++  738             <span class="port-tag" style="background:rgba(236,72,153,0.1);color:var(--pink);">براند</span>
++  739             <h3>براند من بعد آخر</h3>
++  740             <p>تحويل الهوية التقليدية إلى عالم رقمي مستقبلي لعلامة فاخرة.</p>
++  741           </div>
++  742         </div>
++  743       </div>
++  744     </div>
++  745   </section>
++  746 
++  747   <!-- ===== WHY ME ===== -->
++  748   <section class="section" id="why">
++  749     <div class="glow" style="background:var(--accent2);bottom:15%;right:10%;"></div>
++  750     <div class="container reveal">
++  751       <div class="section-header">
++  752         <div class="tag">المميزات</div>
++  753         <h2 class="section-title">لماذا التعامل معي؟</h2>
++  754         <p class="section-desc">أقدم قيمة حقيقية في كل مشروع أعمل عليه</p>
++  755       </div>
++  756       <div class="grid-2">
++  757         <div class="glass why-card card-hover">
++  758           <div class="why-icon" style="background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(59,130,246,0.04));color:var(--accent);">
++  759             <i class="fas fa-lightbulb"></i>
++  760           </div>
++  761           <div>
++  762             <h3>إبداع بلا حدود</h3>
++  763             <p>أفكار مبتكرة وتصاميم فريدة تميز علامتك عن المنافسين وتخلق هوية لا تُنسى.</p>
++  764           </div>
++  765         </div>
++  766         <div class="glass why-card card-hover">
++  767           <div class="why-icon" style="background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(139,92,246,0.04));color:var(--accent2);">
++  768             <i class="fas fa-clock"></i>
++  769           </div>
++  770           <div>
++  771             <h3>التزام بالمواعيد</h3>
++  772             <p>أحترم وقتك وأسلّم المشاريع في الموعد المحدد مع الحفاظ على أعلى مستوى جودة.</p>
++  773           </div>
++  774         </div>
++  775         <div class="glass why-card card-hover">
++  776           <div class="why-icon" style="background:linear-gradient(135deg,rgba(16,185,129,0.12),rgba(16,185,129,0.04));color:var(--green);">
++  777             <i class="fas fa-comments"></i>
++  778           </div>
++  779           <div>
++  780             <h3>تواصل مستمر</h3>
++  781             <p>أبقيك على اطلاع دائم بمراحل العمل وأستمع لملاحظاتك لتحقيق رؤيتك بدقة.</p>
++  782           </div>
++  783         </div>
++  784         <div class="glass why-card card-hover">
++  785           <div class="why-icon" style="background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(245,158,11,0.04));color:var(--amber);">
++  786             <i class="fas fa-star"></i>
++  787           </div>
++  788           <div>
++  789             <h3>جودة استثنائية</h3>
++  790             <p>أهتم بأدق التفاصيل في كل مشروع لأضمن نتيجة نهائية تفوق التوقعات.</p>
++  791           </div>
++  792         </div>
++  793       </div>
++  794     </div>
++  795   </section>
++  796 
++  797   <!-- ===== CTA ===== -->
++  798   <section style="padding:4rem 0;">
++  799     <div class="container reveal">
++  800       <div class="glass cta-box">
++  801         <h2>عندك مشروع؟</h2>
++  802         <p>خلنا نحول فكرتك إلى واقع بصري مذهل</p>
++  803         <a href="#contact" class="btn btn-fill" style="position:relative;">
++  804           <span>ابدأ الآن</span>
++  805           <i class="fas fa-arrow-left"></i>
++  806         </a>
++  807       </div>
++  808     </div>
++  809   </section>
++  810 
++  811   <!-- ===== CONTACT ===== -->
++  812   <section class="section" id="contact">
++  813     <div class="glow" style="background:var(--accent);top:10%;left:25%;"></div>
++  814     <div class="container reveal">
++  815       <div class="section-header">
++  816         <div class="tag">تواصل</div>
++  817         <h2 class="section-title">تواصل معي</h2>
++  818         <p class="section-desc">جاهز لبدء مشروعك؟ تواصل معي عبر أي من القنوات التالية</p>
++  819       </div>
++  820       <div class="grid-2" style="max-width:600px;margin:0 auto;">
++  821         <a href="https://wa.me/9647511672958" target="_blank" class="glass contact-card card-hover">
++  822           <div class="contact-icon" style="background:rgba(37,211,102,0.1);color:#25d366;">
++  823             <i class="fab fa-whatsapp"></i>
++  824           </div>
++  825           <div>
++  826             <div class="label">WhatsApp</div>
++  827             <div class="sub">راسلني مباشرة</div>
++  828           </div>
++  829         </a>
++  830         <a href="https://instagram.com/23.iqk" target="_blank" class="glass contact-card card-hover">
++  831           <div class="contact-icon" style="background:linear-gradient(135deg,rgba(228,64,95,0.1),rgba(181,70,209,0.1));color:#e4405f;">
++  832             <i class="fab fa-instagram"></i>
++  833           </div>
++  834           <div>
++  835             <div class="label">Instagram</div>
++  836             <div class="sub">@23.iqk</div>
++  837           </div>
++  838         </a>
++  839       </div>
++  840     </div>
++  841   </section>
++  842 
++  843   <!-- ===== FOOTER ===== -->
++  844   <footer class="footer">
++  845     <div class="container">
++  846       <div class="footer-inner">
++  847         <div class="logo">
++  848           <div class="logo-icon" style="width:30px;height:30px;font-size:0.8rem;">ك</div>
++  849           <span style="font-weight:700;font-size:0.9rem;">KARAM PORTAL LAB</span>
++  850         </div>
++  851         <span class="footer-copy">&copy; 2040 &mdash; جميع الحقوق محفوظة</span>
++  852         <div class="footer-socials">
++  853           <a href="https://wa.me/9647511672958" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
++  854           <a href="https://instagram.com/23.iqk" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
++  855         </div>
++  856       </div>
++  857     </div>
++  858   </footer>
++  859 
++  860   <!-- ===== SCRIPTS ===== -->
++  861   <script>
++  862     // ---------- MOBILE MENU ----------
++  863     var hamburger = document.getElementById('hamburger');
++  864     var mobileMenu = document.getElementById('mobileMenu');
++  865     var mobileClose = document.getElementById('mobileClose');
++  866     var mobLinks = document.querySelectorAll('.mob-link');
++  867 
++  868     hamburger.addEventListener('click', function() {
++  869       mobileMenu.classList.add('open');
++  870       document.body.style.overflow = 'hidden';
++  871     });
++  872     mobileClose.addEventListener('click', closeMenu);
++  873     mobLinks.forEach(function(link) { link.addEventListener('click', closeMenu); });
++  874 
++  875     function closeMenu() {
++  876       mobileMenu.classList.remove('open');
++  877       document.body.style.overflow = '';
++  878     }
++  879 
++  880     // ---------- NAVBAR SCROLL ----------
++  881     var navbar = document.getElementById('navbar');
++  882     window.addEventListener('scroll', function() {
++  883       if (window.scrollY > 60) {
++  884         navbar.classList.add('scrolled');
++  885       } else {
++  886         navbar.classList.remove('scrolled');
++  887       }
++  888     });
++  889 
++  890     // ---------- ACTIVE NAV LINK ----------
++  891     var sections = document.querySelectorAll('section[id]');
++  892     var navLinksAll = document.querySelectorAll('.nav-link');
++  893 
++  894     window.addEventListener('scroll', function() {
++  895       var current = '';
++  896       sections.forEach(function(sec) {
++  897         var top = sec.offsetTop - 250;
++  898         if (window.pageYOffset >= top) {
++  899           current = sec.getAttribute('id');
++  900         }
++  901       });
++  902       navLinksAll.forEach(function(link) {
++  903         link.classList.remove('active');
++  904         if (link.getAttribute('href') === '#' + current) {
++  905           link.classList.add('active');
++  906         }
++  907       });
++  908     });
++  909 
++  910     // ---------- SCROLL REVEAL ----------
++  911     var revealObserver = new IntersectionObserver(function(entries) {
++  912       entries.forEach(function(entry) {
++  913         if (entry.isIntersecting) {
++  914           entry.target.classList.add('show');
++  915         }
++  916       });
++  917     }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
++  918 
++  919     document.querySelectorAll('.reveal').forEach(function(el) {
++  920       revealObserver.observe(el);
++  921     });
++  922 
++  923     // ---------- PARTICLE BACKGROUND ----------
++  924     (function() {
++  925       var canvas = document.getElementById('bgCanvas');
++  926       var ctx = canvas.getContext('2d');
++  927       var particles = [];
++  928       var mouseX = 0;
++  929       var mouseY = 0;
++  930       var count = 90;
++  931 
++  932       function resize() {
++  933         canvas.width = window.innerWidth;
++  934         canvas.height = window.innerHeight;
++  935       }
++  936       resize();
++  937       window.addEventListener('resize', resize);
++  938 
++  939       document.addEventListener('mousemove', function(e) {
++  940         mouseX = e.clientX;
++  941         mouseY = e.clientY;
++  942       });
++  943 
++  944       for (var i = 0; i < count; i++) {
++  945         particles.push({
++  946           x: Math.random() * canvas.width,
++  947           y: Math.random() * canvas.height,
++  948           vx: (Math.random() - 0.5) * 0.4,
++  949           vy: (Math.random() - 0.5) * 0.4,
++  950           r: Math.random() * 2 + 0.5,
++  951           o: Math.random() * 0.4 + 0.1
++  952         });
++  953       }
++  954 
++  955       function draw() {
++  956         ctx.clearRect(0, 0, canvas.width, canvas.height);
++  957 
++  958         for (var i = 0; i < particles.length; i++) {
++  959           var p = particles[i];
++  960           p.x += p.vx;
++  961           p.y += p.vy;
++  962 
++  963           if (p.x < 0) p.x = canvas.width;
++  964           if (p.x > canvas.width) p.x = 0;
++  965           if (p.y < 0) p.y = canvas.height;
++  966           if (p.y > canvas.height) p.y = 0;
++  967 
++  968           ctx.beginPath();
++  969           ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
++  970           ctx.fillStyle = 'rgba(59,130,246,' + p.o + ')';
++  971           ctx.fill();
++  972 
++  973           // Connect nearby particles
++  974           for (var j = i + 1; j < particles.length; j++) {
++  975             var p2 = particles[j];
++  976             var dx = p.x - p2.x;
++  977             var dy = p.y - p2.y;
++  978             var dist = Math.sqrt(dx * dx + dy * dy);
++  979             if (dist < 150) {
++  980               ctx.beginPath();
++  981               ctx.moveTo(p.x, p.y);
++  982               ctx.lineTo(p2.x, p2.y);
++  983               ctx.strokeStyle = 'rgba(59,130,246,' + (0.06 * (1 - dist / 150)) + ')';
++  984               ctx.lineWidth = 0.5;
++  985               ctx.stroke();
++  986             }
++  987           }
++  988 
++  989           // Mouse interaction
++  990           var dxm = p.x - mouseX;
++  991           var dym = p.y - mouseY;
++  992           var distm = Math.sqrt(dxm * dxm + dym * dym);
++  993           if (distm < 180) {
++  994             ctx.beginPath();
++  995             ctx.moveTo(p.x, p.y);
++  996             ctx.lineTo(mouseX, mouseY);
++  997             ctx.strokeStyle = 'rgba(139,92,246,' + (0.12 * (1 - distm / 180)) + ')';
++  998             ctx.lineWidth = 0.6;
++  999             ctx.stroke();
++ 1000           }
++ 1001         }
++ 1002 
++ 1003         requestAnimationFrame(draw);
++ 1004       }
++ 1005       draw();
++ 1006     })();
++ 1007   </script>
++ 1008 
++ 1009 </body>
++ 1010 </html>
