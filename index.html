@@ -3,107 +3,144 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>كرم | PORTAL 2040</title>
+<title>كرم | مصمم جرافيك 2040</title>
 
+<!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+
+<!-- Three.js for 3D Neon Effects -->
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
 <style>
-:root{--bg:#020617;--neon:#3b82f6}
-body{margin:0;font-family:'Cairo',sans-serif;background:var(--bg);color:#e5e7eb;overflow-x:hidden}
-
-/* WebGL */
-#bg{position:fixed;inset:0;z-index:-3}
-
-/* Energy cursor mask */
-.mask{position:fixed;inset:0;pointer-events:none;
-background:radial-gradient(350px at var(--x) var(--y),
-rgba(59,130,246,.25),transparent 60%);
-mix-blend-mode:screen;z-index:-1}
-
-/* Glass */
-.glass{background:rgba(255,255,255,.05);backdrop-filter:blur(30px);
-border:1px solid rgba(255,255,255,.08);border-radius:1.5rem}
-
-/* Portal transition overlay */
-.portal{position:fixed;inset:0;background:radial-gradient(circle,#3b82f6 0%,#020617 70%);
-transform:scale(0);border-radius:50%;z-index:999;pointer-events:none}
-.portal.active{animation:portalOpen 1s forwards}
-@keyframes portalOpen{
-0%{transform:scale(0)}
-70%{transform:scale(20)}
-100%{transform:scale(0)}
+:root {
+  --bg: #0b0c17;
+  --neon: #3b82f6;
+  --accent: #8b5cf6;
 }
 
-/* Reveal */
-.reveal{opacity:0;transform:translateY(80px);
-transition:1s cubic-bezier(.19,1,.22,1)}
-.reveal.active{opacity:1;transform:none}
+body {
+  margin: 0;
+  font-family: 'Cairo', sans-serif;
+  background: var(--bg);
+  color: #e5e7eb;
+  overflow-x: hidden;
+}
 
-/* Magnetic */
-.magnetic{transition:transform .2s ease}
+/* Canvas background */
+#bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+}
 
-/* Button */
-.btn{padding:1rem 3rem;border-radius:1rem;font-weight:900;
-background:linear-gradient(120deg,#3b82f6,#22d3ee);position:relative;overflow:hidden}
-.btn::after{content:'';position:absolute;inset:0;
-background:linear-gradient(90deg,transparent,#fff4,transparent);
-transform:translateX(-100%);animation:scan 4s infinite}
-@keyframes scan{to{transform:translateX(100%)}}
+/* Neon glow */
+.neon-text {
+  color: var(--neon);
+  text-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon), 0 0 30px var(--accent);
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(25px);
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Cards hover effect */
+.portfolio-card {
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.portfolio-card:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow: 0 15px 35px rgba(59,130,246,0.5);
+}
+
+/* Buttons neon */
+.btn {
+  padding: 1rem 3rem;
+  border-radius: 1rem;
+  font-weight: 900;
+  background: linear-gradient(120deg, #3b82f6, #8b5cf6);
+  position: relative;
+  overflow: hidden;
+  color: white;
+}
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent,#fff4, transparent);
+  transform: translateX(-100%);
+  animation: scan 4s infinite;
+}
+@keyframes scan {
+  to { transform: translateX(100%); }
+}
 </style>
 </head>
-
 <body class="scroll-smooth">
 
 <canvas id="bg"></canvas>
-<div class="mask"></div>
-<div class="portal" id="portal"></div>
 
 <header class="fixed top-0 w-full p-6 z-50">
-  <div class="max-w-7xl mx-auto glass p-4 flex justify-between">
-    <span class="text-blue-400 font-black">@23.iqk</span>
+  <div class="max-w-7xl mx-auto flex justify-between items-center glass p-4">
+    <span class="text-neon-text font-black text-xl">@23.iqk</span>
     <nav class="hidden md:flex gap-8">
-      <a href="#home" class="navlink">الرئيسية</a>
-      <a href="#about" class="navlink">عني</a>
-      <a href="#work" class="navlink">أعمالي</a>
-      <a href="#contact" class="navlink">تواصل</a>
+      <a href="#home" class="navlink hover:text-blue-400">الرئيسية</a>
+      <a href="#about" class="navlink hover:text-blue-400">عني</a>
+      <a href="#work" class="navlink hover:text-blue-400">أعمالي</a>
+      <a href="#contact" class="navlink hover:text-blue-400">تواصل</a>
     </nav>
   </div>
 </header>
 
 <section id="home" class="min-h-screen flex items-center justify-center text-center px-6">
   <div>
-    <h1 class="text-7xl font-black reveal">كرم</h1>
-    <p class="text-gray-400 mt-6 text-xl reveal">بوابة التصميم من المستقبل</p>
-    <div class="mt-12 reveal">
-      <a href="#work" class="btn magnetic navlink">ادخل البوابة</a>
+    <h1 class="text-7xl font-black neon-text">كرم</h1>
+    <p class="text-gray-400 mt-6 text-xl">بوابة التصميم من المستقبل</p>
+    <div class="mt-12">
+      <a href="#work" class="btn">ادخل البوابة</a>
     </div>
   </div>
 </section>
 
 <section id="about" class="py-40 px-6">
-  <div class="max-w-6xl mx-auto glass p-16 reveal text-center">
-    <h2 class="text-5xl font-black text-blue-400 mb-10">مصمم 2040</h2>
+  <div class="max-w-6xl mx-auto glass p-16 text-center">
+    <h2 class="text-5xl font-black neon-text mb-10">مصمم 2040</h2>
     <p class="text-gray-300 leading-relaxed text-lg">
       أبني تجارب رقمية حية تتفاعل مع الزائر وتخلق بعد جديد للهوية البصرية.
+      أعمل على دمج الإبداع والتقنية في كل مشروع لأجعل التصميم ينبض بالحياة.
     </p>
   </div>
 </section>
 
 <section id="work" class="py-40 px-6">
   <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-10">
-    <div class="glass p-12 reveal magnetic">هوية طاقية</div>
-    <div class="glass p-12 reveal magnetic">تجربة AI بصرية</div>
-    <div class="glass p-12 reveal magnetic">براند من بعد آخر</div>
+    <div class="glass p-6 portfolio-card">
+      <img src="https://via.placeholder.com/400x300.png?text=هوية+طاقة" class="rounded-lg mb-4">
+      <h3 class="font-black text-xl neon-text">هوية طاقية</h3>
+      <p class="text-gray-300 mt-2 text-sm">تجربة تصميمية مبتكرة للعلامات التجارية.</p>
+    </div>
+    <div class="glass p-6 portfolio-card">
+      <img src="https://via.placeholder.com/400x300.png?text=AI+تجربة" class="rounded-lg mb-4">
+      <h3 class="font-black text-xl neon-text">تجربة AI بصرية</h3>
+      <p class="text-gray-300 mt-2 text-sm">تصميم تفاعلي قائم على الذكاء الاصطناعي.</p>
+    </div>
+    <div class="glass p-6 portfolio-card">
+      <img src="https://via.placeholder.com/400x300.png?text=براند+مستقبلي" class="rounded-lg mb-4">
+      <h3 class="font-black text-xl neon-text">براند من بعد آخر</h3>
+      <p class="text-gray-300 mt-2 text-sm">تحويل الهوية التقليدية إلى عالم رقمي مستقبلي.</p>
+    </div>
   </div>
 </section>
 
 <section id="contact" class="py-40 text-center px-6">
-  <h2 class="text-6xl font-black text-blue-400 reveal">نفتح بُعد جديد؟</h2>
-  <div class="mt-12 flex justify-center gap-8 reveal">
-    <a href="https://wa.me/9647511672958" target="_blank" class="glass p-6 magnetic">WhatsApp</a>
-    <a href="https://instagram.com/23.iqk" target="_blank" class="glass p-6 magnetic">Instagram</a>
+  <h2 class="text-6xl font-black neon-text">نفتح بُعد جديد؟</h2>
+  <div class="mt-12 flex justify-center gap-8">
+    <a href="https://wa.me/9647511672958" target="_blank" class="glass p-6 portfolio-card">WhatsApp</a>
+    <a href="https://instagram.com/23.iqk" target="_blank" class="glass p-6 portfolio-card">Instagram</a>
   </div>
 </section>
 
@@ -112,81 +149,42 @@ transform:translateX(-100%);animation:scan 4s infinite}
 </footer>
 
 <script>
-/* ---------- AI Reactive Energy Field ---------- */
-const scene=new THREE.Scene();
-const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,.1,1000);
-const renderer=new THREE.WebGLRenderer({canvas:bg,alpha:true});
-renderer.setSize(innerWidth,innerHeight);
-camera.position.z=2;
+/* ---------- Neon Particles Background ---------- */
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ canvas: bg, alpha:true });
+renderer.setSize(innerWidth, innerHeight);
+camera.position.z = 2;
 
-const geo=new THREE.IcosahedronGeometry(1,10);
-const mat=new THREE.MeshStandardMaterial({color:0x3b82f6,wireframe:true});
-const mesh=new THREE.Mesh(geo,mat);
-scene.add(mesh);
+const particlesGeometry = new THREE.BufferGeometry();
+const particlesCount = 1000;
+const posArray = new Float32Array(particlesCount*3);
+for(let i=0;i<particlesCount*3;i++) {
+  posArray[i] = (Math.random()-0.5)*10;
+}
+particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray,3));
+const particlesMaterial = new THREE.PointsMaterial({ color:0x3b82f6, size:0.05, transparent:true });
+const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+scene.add(particles);
 
-const light=new THREE.PointLight(0xffffff,1);
-light.position.set(5,5,5);
-scene.add(light);
-
-let mouseSpeed=0,lastX=0,lastY=0;
-document.addEventListener('mousemove',e=>{
-  const dx=e.clientX-lastX;
-  const dy=e.clientY-lastY;
-  mouseSpeed=Math.sqrt(dx*dx+dy*dy)*0.01;
-  lastX=e.clientX;lastY=e.clientY;
-  document.documentElement.style.setProperty('--x',e.clientX+'px');
-  document.documentElement.style.setProperty('--y',e.clientY+'px');
+let mouseX=0, mouseY=0;
+document.addEventListener('mousemove', e => {
+  mouseX = (e.clientX / innerWidth) * 2 -1;
+  mouseY = -(e.clientY / innerHeight) * 2 +1;
 });
 
 function animate(){
   requestAnimationFrame(animate);
-  mesh.rotation.x+=0.003+mouseSpeed;
-  mesh.rotation.y+=0.005+mouseSpeed;
-  mesh.scale.setScalar(1+mouseSpeed*2);
+  particles.rotation.y += 0.001 + mouseX*0.05;
+  particles.rotation.x += 0.001 + mouseY*0.05;
   renderer.render(scene,camera);
 }
 animate();
 
-addEventListener('resize',()=>{
-  renderer.setSize(innerWidth,innerHeight);
-  camera.aspect=innerWidth/innerHeight;
+window.addEventListener('resize', ()=>{
+  renderer.setSize(innerWidth, innerHeight);
+  camera.aspect = innerWidth/innerHeight;
   camera.updateProjectionMatrix();
-});
-
-/* ---------- Reveal ---------- */
-const reveals=document.querySelectorAll('.reveal');
-addEventListener('scroll',()=>{
-  reveals.forEach(el=>{
-    if(el.getBoundingClientRect().top<innerHeight-100)
-      el.classList.add('active');
-  });
-});
-
-/* ---------- Magnetic ---------- */
-document.querySelectorAll('.magnetic').forEach(el=>{
-  el.addEventListener('mousemove',e=>{
-    const r=el.getBoundingClientRect();
-    const x=e.clientX-r.left-r.width/2;
-    const y=e.clientY-r.top-r.height/2;
-    el.style.transform=`translate(${x*.2}px,${y*.2}px)`;
-  });
-  el.addEventListener('mouseleave',()=>el.style.transform='');
-});
-
-/* ---------- Portal Transition ---------- */
-const portal=document.getElementById('portal');
-document.querySelectorAll('.navlink').forEach(link=>{
-  link.addEventListener('click',e=>{
-    if(link.hash){
-      e.preventDefault();
-      portal.classList.add('active');
-      setTimeout(()=>{
-        document.querySelector(link.hash)
-        .scrollIntoView({behavior:'smooth'});
-      },400);
-      setTimeout(()=>portal.classList.remove('active'),1000);
-    }
-  });
 });
 </script>
 
