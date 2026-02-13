@@ -5,11 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>كرم | مصمم جرافيك 2040</title>
 
-<!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
-
-<!-- Three.js -->
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
 <style>
@@ -18,85 +15,65 @@
   --bg-light: #fefefe;
   --text-dark: #e5e7eb;
   --text-light: #0b0c17;
-  --neon: #3b82f6;
-  --accent: #8b5cf6;
+  --accent: #3b82f6;
   --card-dark: rgba(255,255,255,0.05);
   --card-light: rgba(0,0,0,0.05);
 }
 
 body {
-  margin: 0;
-  font-family: 'Cairo', sans-serif;
+  margin:0;
+  font-family:'Cairo',sans-serif;
   background: var(--bg-dark);
   color: var(--text-dark);
   transition: background 0.5s, color 0.5s;
-  overflow-x: hidden;
+  overflow-x:hidden;
 }
 
-/* Canvas background */
 #bg { position: fixed; inset:0; z-index:-2; }
 
-/* Neon text */
-.neon-text { 
-  color: var(--neon);
-  text-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon), 0 0 30px var(--accent);
-}
-
-/* Glass card */
+/* Glass cards */
 .glass {
   background: var(--card-dark);
   backdrop-filter: blur(25px);
-  border-radius: 1.5rem;
-  border: 1px solid rgba(255,255,255,0.08);
+  border-radius:1.5rem;
+  border:1px solid rgba(255,255,255,0.08);
   transition: background 0.5s;
 }
 
-/* Portfolio hover effect */
-.portfolio-card {
-  transition: transform 0.3s, box-shadow 0.3s;
-}
-.portfolio-card:hover {
-  transform: translateY(-10px) scale(1.05);
-  box-shadow: 0 15px 35px rgba(59,130,246,0.5);
-}
-
-/* Buttons neon */
+/* Buttons */
 .btn {
   padding: 1rem 3rem;
   border-radius: 1rem;
-  font-weight: 900;
-  background: linear-gradient(120deg, #3b82f6, #8b5cf6);
-  position: relative;
-  overflow: hidden;
-  color: white;
+  font-weight:900;
+  background: linear-gradient(120deg,#3b82f6,#8b5cf6);
+  color:white;
+  cursor:pointer;
+  transition: transform 0.3s;
 }
-.btn::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent,#fff4, transparent);
-  transform: translateX(-100%);
-  animation: scan 4s infinite;
-}
-@keyframes scan { to { transform: translateX(100%); } }
+.btn:hover { transform: scale(1.05); }
 
-/* Theme toggle button */
+/* Portfolio hover */
+.portfolio-card { transition: transform 0.3s, box-shadow 0.3s; }
+.portfolio-card:hover { transform: translateY(-10px) scale(1.05); box-shadow:0 15px 35px rgba(59,130,246,0.5); }
+
+/* Theme toggle button fixed */
 #themeToggle {
   position: fixed;
   top: 20px; right: 20px;
   z-index: 100;
-  padding: 0.6rem 1.2rem;
-  background: var(--neon);
-  color: white;
-  border-radius: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 0 15px var(--neon);
+  padding:0.6rem 1.2rem;
+  background: var(--accent);
+  color:white;
+  border-radius:0.8rem;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 0 15px var(--accent);
   transition: all 0.3s;
 }
 #themeToggle:hover { transform: scale(1.1); }
 </style>
 </head>
+
 <body>
 
 <canvas id="bg"></canvas>
@@ -106,11 +83,13 @@ body {
 
 <header class="fixed top-0 w-full p-6 z-50">
   <div class="max-w-7xl mx-auto flex justify-between items-center glass p-4">
-    <span class="neon-text font-black text-xl">@23.iqk</span>
+    <span class="font-black text-xl">@23.iqk</span>
     <nav class="hidden md:flex gap-8">
       <a href="#home" class="navlink hover:text-blue-400">الرئيسية</a>
       <a href="#about" class="navlink hover:text-blue-400">عني</a>
+      <a href="#services" class="navlink hover:text-blue-400">خدماتي</a>
       <a href="#work" class="navlink hover:text-blue-400">أعمالي</a>
+      <a href="#why" class="navlink hover:text-blue-400">لماذا التعامل معي</a>
       <a href="#contact" class="navlink hover:text-blue-400">تواصل</a>
     </nav>
   </div>
@@ -118,7 +97,7 @@ body {
 
 <section id="home" class="min-h-screen flex items-center justify-center text-center px-6">
   <div>
-    <h1 class="text-7xl font-black neon-text">كرم</h1>
+    <h1 class="text-7xl font-black">كرم</h1>
     <p class="text-gray-400 mt-6 text-xl">بوابة التصميم من المستقبل</p>
     <div class="mt-12">
       <a href="#work" class="btn">ادخل البوابة</a>
@@ -128,7 +107,7 @@ body {
 
 <section id="about" class="py-40 px-6">
   <div class="max-w-6xl mx-auto glass p-16 text-center">
-    <h2 class="text-5xl font-black neon-text mb-10">مصمم 2040</h2>
+    <h2 class="text-5xl font-black mb-10">مصمم 2040</h2>
     <p class="text-gray-300 leading-relaxed text-lg">
       أبني تجارب رقمية حية تتفاعل مع الزائر وتخلق بعد جديد للهوية البصرية.
       أدمج الإبداع والتقنية في كل مشروع لأجعل التصميم ينبض بالحياة.
@@ -136,31 +115,63 @@ body {
   </div>
 </section>
 
+<section id="services" class="py-40 px-6">
+  <div class="max-w-7xl mx-auto text-center mb-16">
+    <h2 class="text-5xl font-black mb-10">خدماتي</h2>
+    <div class="grid md:grid-cols-3 gap-10">
+      <div class="glass p-8 portfolio-card">
+        <h3 class="font-black text-xl mb-4">تصميم هوية بصرية</h3>
+        <p class="text-gray-300 text-sm">تحويل أفكارك إلى هوية جذابة ومتناسقة بصرياً.</p>
+      </div>
+      <div class="glass p-8 portfolio-card">
+        <h3 class="font-black text-xl mb-4">تجارب تفاعلية</h3>
+        <p class="text-gray-300 text-sm">تصميم واجهات تفاعلية تترك أثر بصري على الزائر.</p>
+      </div>
+      <div class="glass p-8 portfolio-card">
+        <h3 class="font-black text-xl mb-4">تصميم براند مستقبلي</h3>
+        <p class="text-gray-300 text-sm">خلق هوية مبتكرة للعلامات التجارية تتخطى التقليدي.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="work" class="py-40 px-6">
   <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-10">
     <div class="glass p-6 portfolio-card">
       <img src="https://via.placeholder.com/400x300.png?text=هوية+طاقة" class="rounded-lg mb-4">
-      <h3 class="font-black text-xl neon-text">هوية طاقية</h3>
+      <h3 class="font-black text-xl">هوية طاقية</h3>
       <p class="text-gray-300 mt-2 text-sm">تجربة تصميمية مبتكرة للعلامات التجارية.</p>
     </div>
     <div class="glass p-6 portfolio-card">
       <img src="https://via.placeholder.com/400x300.png?text=AI+تجربة" class="rounded-lg mb-4">
-      <h3 class="font-black text-xl neon-text">تجربة AI بصرية</h3>
+      <h3 class="font-black text-xl">تجربة AI بصرية</h3>
       <p class="text-gray-300 mt-2 text-sm">تصميم تفاعلي قائم على الذكاء الاصطناعي.</p>
     </div>
     <div class="glass p-6 portfolio-card">
       <img src="https://via.placeholder.com/400x300.png?text=براند+مستقبلي" class="rounded-lg mb-4">
-      <h3 class="font-black text-xl neon-text">براند من بعد آخر</h3>
+      <h3 class="font-black text-xl">براند من بعد آخر</h3>
       <p class="text-gray-300 mt-2 text-sm">تحويل الهوية التقليدية إلى عالم رقمي مستقبلي.</p>
     </div>
   </div>
 </section>
 
+<section id="why" class="py-40 px-6">
+  <div class="max-w-6xl mx-auto text-center glass p-16">
+    <h2 class="text-5xl font-black mb-10">لماذا التعامل معي؟</h2>
+    <p class="text-gray-300 leading-relaxed text-lg mb-6">
+      لأنني أدمج الإبداع مع التقنية لأقدم تصاميم تتفاعل مع المستخدم وتترك أثر بصري لا يُنسى.
+    </p>
+    <p class="text-gray-300 leading-relaxed text-lg">
+      أسعى دائماً لفهم علامتك التجارية وتحويلها إلى تجربة رقمية متكاملة وجذابة.
+    </p>
+  </div>
+</section>
+
 <section id="contact" class="py-40 text-center px-6">
-  <h2 class="text-6xl font-black neon-text">نفتح بُعد جديد؟</h2>
-  <div class="mt-12 flex justify-center gap-8">
-    <a href="https://wa.me/9647511672958" target="_blank" class="glass p-6 portfolio-card">WhatsApp</a>
-    <a href="https://instagram.com/23.iqk" target="_blank" class="glass p-6 portfolio-card">Instagram</a>
+  <h2 class="text-5xl font-black mb-10">تواصل معي</h2>
+  <div class="flex justify-center gap-8">
+    <a href="https://wa.me/9647511672958" target="_blank" class="glass p-6 portfolio-card btn">WhatsApp</a>
+    <a href="https://instagram.com/23.iqk" target="_blank" class="glass p-6 portfolio-card btn">Instagram</a>
   </div>
 </section>
 
@@ -175,7 +186,7 @@ let dark = true;
 
 themeToggle.addEventListener('click', () => {
   dark = !dark;
-  if(dark) {
+  if(dark){
     document.body.style.background = 'var(--bg-dark)';
     document.body.style.color = 'var(--text-dark)';
     document.querySelectorAll('.glass').forEach(c=>c.style.background='var(--card-dark)');
@@ -186,7 +197,7 @@ themeToggle.addEventListener('click', () => {
   }
 });
 
-/* ---------- Neon Particles ---------- */
+/* ---------- WebGL Particles ---------- */
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ canvas: bg, alpha:true });
