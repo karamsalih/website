@@ -1,1010 +1,598 @@
-+    1 <!DOCTYPE html>
-+    2 <html lang="ar" dir="rtl">
-+    3 <head>
-+    4   <meta charset="UTF-8">
-+    5   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-+    6   <title>كرم | مصمم جرافيك 2040</title>
-+    7   <meta name="description" content="كرم - مصمم جرافيك محترف، تصميم هويات بصرية وتجارب تفاعلية مستقبلية">
-+    8 
-+    9   <!-- Fonts -->
-+   10   <link rel="preconnect" href="https://fonts.googleapis.com">
-+   11   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-+   12   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-+   13 
-+   14   <!-- Font Awesome -->
-+   15   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-+   16 
-+   17   <style>
-+   18     /* ===== RESET & BASE ===== */
-+   19     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-+   20 
-+   21     :root {
-+   22       --bg: #06070e;
-+   23       --bg2: #0c0e1a;
-+   24       --text: #e8eaed;
-+   25       --muted: #8b8fa3;
-+   26       --accent: #3b82f6;
-+   27       --accent2: #8b5cf6;
-+   28       --pink: #ec4899;
-+   29       --green: #10b981;
-+   30       --amber: #f59e0b;
-+   31       --card: rgba(255,255,255,0.03);
-+   32       --border: rgba(255,255,255,0.06);
-+   33       --radius: 1.25rem;
-+   34     }
-+   35 
-+   36     html { scroll-behavior: smooth; }
-+   37 
-+   38     body {
-+   39       font-family: 'Cairo', sans-serif;
-+   40       background: var(--bg);
-+   41       color: var(--text);
-+   42       overflow-x: hidden;
-+   43       line-height: 1.85;
-+   44     }
-+   45 
-+   46     a { text-decoration: none; color: inherit; }
-+   47     img { max-width: 100%; display: block; }
-+   48     ul { list-style: none; }
-+   49 
-+   50     /* Scrollbar */
-+   51     ::-webkit-scrollbar { width: 5px; }
-+   52     ::-webkit-scrollbar-track { background: var(--bg); }
-+   53     ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
-+   54 
-+   55     /* ===== UTILITIES ===== */
-+   56     .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
-+   57 
-+   58     .section { padding: 8rem 0; position: relative; }
-+   59 
-+   60     .section-header { text-align: center; margin-bottom: 4rem; }
-+   61 
-+   62     .tag {
-+   63       display: inline-block;
-+   64       padding: 0.35rem 1.2rem;
-+   65       border-radius: 2rem;
-+   66       font-size: 0.82rem;
-+   67       font-weight: 700;
-+   68       background: rgba(59,130,246,0.08);
-+   69       color: var(--accent);
-+   70       border: 1px solid rgba(59,130,246,0.12);
-+   71       margin-bottom: 1.2rem;
-+   72     }
-+   73 
-+   74     .section-title {
-+   75       font-size: 2.6rem;
-+   76       font-weight: 900;
-+   77       margin-bottom: 0.5rem;
-+   78     }
-+   79 
-+   80     .section-desc {
-+   81       color: var(--muted);
-+   82       font-size: 1.05rem;
-+   83       max-width: 560px;
-+   84       margin: 0.8rem auto 0;
-+   85     }
-+   86 
-+   87     .divider {
-+   88       width: 50px;
-+   89       height: 3px;
-+   90       background: linear-gradient(90deg, var(--accent), var(--accent2));
-+   91       border-radius: 3px;
-+   92       margin: 1.2rem auto 0;
-+   93     }
-+   94 
-+   95     /* Gradient animated text */
-+   96     .grad-text {
-+   97       background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6);
-+   98       background-size: 300% 300%;
-+   99       -webkit-background-clip: text;
-+  100       -webkit-text-fill-color: transparent;
-+  101       background-clip: text;
-+  102       animation: gradMove 5s ease infinite;
-+  103     }
-+  104     @keyframes gradMove {
-+  105       0%,100% { background-position: 0% 50%; }
-+  106       50% { background-position: 100% 50%; }
-+  107     }
-+  108 
-+  109     /* Glass */
-+  110     .glass {
-+  111       background: var(--card);
-+  112       backdrop-filter: blur(24px);
-+  113       -webkit-backdrop-filter: blur(24px);
-+  114       border-radius: var(--radius);
-+  115       border: 1px solid var(--border);
-+  116     }
-+  117 
-+  118     /* Glow blobs */
-+  119     .glow {
-+  120       position: absolute;
-+  121       width: 380px;
-+  122       height: 380px;
-+  123       border-radius: 50%;
-+  124       filter: blur(130px);
-+  125       opacity: 0.1;
-+  126       pointer-events: none;
-+  127       z-index: 0;
-+  128     }
-+  129 
-+  130     /* Buttons */
-+  131     .btn {
-+  132       display: inline-flex;
-+  133       align-items: center;
-+  134       gap: 0.6rem;
-+  135       padding: 0.9rem 2.2rem;
-+  136       border-radius: 0.85rem;
-+  137       font-family: 'Cairo', sans-serif;
-+  138       font-weight: 700;
-+  139       font-size: 1rem;
-+  140       cursor: pointer;
-+  141       border: none;
-+  142       transition: transform 0.3s, box-shadow 0.3s;
-+  143     }
-+  144     .btn:hover { transform: translateY(-3px); }
-+  145 
-+  146     .btn-fill {
-+  147       background: linear-gradient(135deg, var(--accent), var(--accent2));
-+  148       color: #fff;
-+  149     }
-+  150     .btn-fill:hover { box-shadow: 0 12px 35px rgba(59,130,246,0.3); }
-+  151 
-+  152     .btn-ghost {
-+  153       background: transparent;
-+  154       color: var(--accent);
-+  155       border: 2px solid rgba(59,130,246,0.25);
-+  156     }
-+  157     .btn-ghost:hover {
-+  158       background: rgba(59,130,246,0.08);
-+  159       border-color: var(--accent);
-+  160     }
-+  161 
-+  162     /* Cards hover */
-+  163     .card-hover { transition: transform 0.35s, box-shadow 0.35s, border-color 0.35s; }
-+  164     .card-hover:hover {
-+  165       transform: translateY(-6px);
-+  166       box-shadow: 0 16px 40px rgba(59,130,246,0.1);
-+  167       border-color: rgba(59,130,246,0.15);
-+  168     }
-+  169 
-+  170     /* Reveal on scroll */
-+  171     .reveal {
-+  172       opacity: 0;
-+  173       transform: translateY(35px);
-+  174       transition: opacity 0.7s ease, transform 0.7s ease;
-+  175     }
-+  176     .reveal.show {
-+  177       opacity: 1;
-+  178       transform: translateY(0);
-+  179     }
-+  180 
-+  181     /* Grid helpers */
-+  182     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-+  183     .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
-+  184     .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
-+  185 
-+  186     /* ===== NAVBAR ===== */
-+  187     .navbar {
-+  188       position: fixed;
-+  189       top: 0;
-+  190       width: 100%;
-+  191       z-index: 100;
-+  192       padding: 1rem 0;
-+  193       transition: background 0.3s;
-+  194     }
-+  195     .navbar.scrolled .nav-inner {
-+  196       background: rgba(6,7,14,0.85);
-+  197       backdrop-filter: blur(20px);
-+  198       -webkit-backdrop-filter: blur(20px);
-+  199       border: 1px solid rgba(255,255,255,0.04);
-+  200     }
-+  201     .nav-inner {
-+  202       max-width: 1200px;
-+  203       margin: 0 auto;
-+  204       padding: 0.7rem 1.8rem;
-+  205       border-radius: 1rem;
-+  206       display: flex;
-+  207       justify-content: space-between;
-+  208       align-items: center;
-+  209       transition: all 0.3s;
-+  210     }
-+  211 
-+  212     .logo {
-+  213       display: flex;
-+  214       align-items: center;
-+  215       gap: 0.7rem;
-+  216     }
-+  217     .logo-icon {
-+  218       width: 38px;
-+  219       height: 38px;
-+  220       border-radius: 0.6rem;
-+  221       background: linear-gradient(135deg, var(--accent), var(--accent2));
-+  222       display: flex;
-+  223       align-items: center;
-+  224       justify-content: center;
-+  225       font-weight: 900;
-+  226       font-size: 1rem;
-+  227       color: #fff;
-+  228     }
-+  229     .logo-text { font-weight: 900; font-size: 1.1rem; letter-spacing: -0.02em; }
-+  230 
-+  231     .nav-links { display: flex; gap: 2rem; align-items: center; }
-+  232     .nav-link {
-+  233       color: var(--muted);
-+  234       font-weight: 600;
-+  235       font-size: 0.92rem;
-+  236       position: relative;
-+  237       transition: color 0.3s;
-+  238     }
-+  239     .nav-link::after {
-+  240       content: '';
-+  241       position: absolute;
-+  242       bottom: -4px;
-+  243       right: 0;
-+  244       width: 0;
-+  245       height: 2px;
-+  246       background: var(--accent);
-+  247       transition: width 0.3s;
-+  248     }
-+  249     .nav-link:hover { color: #fff; }
-+  250     .nav-link:hover::after { width: 100%; }
-+  251     .nav-link.active { color: #fff; }
-+  252     .nav-link.active::after { width: 100%; }
-+  253 
-+  254     .nav-cta {
-+  255       padding: 0.55rem 1.4rem;
-+  256       font-size: 0.88rem;
-+  257       border-radius: 0.6rem;
-+  258     }
-+  259 
-+  260     /* Hamburger */
-+  261     .hamburger {
-+  262       display: none;
-+  263       flex-direction: column;
-+  264       gap: 5px;
-+  265       cursor: pointer;
-+  266       background: none;
-+  267       border: none;
-+  268       padding: 0.4rem;
-+  269     }
-+  270     .hamburger span {
-+  271       width: 22px;
-+  272       height: 2px;
-+  273       background: #fff;
-+  274       border-radius: 2px;
-+  275       transition: all 0.3s;
-+  276     }
-+  277 
-+  278     /* Mobile menu */
-+  279     .mobile-menu {
-+  280       display: none;
-+  281       position: fixed;
-+  282       inset: 0;
-+  283       z-index: 200;
-+  284       background: rgba(6,7,14,0.96);
-+  285       backdrop-filter: blur(30px);
-+  286       -webkit-backdrop-filter: blur(30px);
-+  287       flex-direction: column;
-+  288       align-items: center;
-+  289       justify-content: center;
-+  290       gap: 2rem;
-+  291     }
-+  292     .mobile-menu.open { display: flex; }
-+  293     .mobile-menu a {
-+  294       color: #fff;
-+  295       font-size: 1.4rem;
-+  296       font-weight: 700;
-+  297       transition: color 0.3s;
-+  298     }
-+  299     .mobile-menu a:hover { color: var(--accent); }
-+  300     .mobile-close {
-+  301       position: absolute;
-+  302       top: 1.5rem;
-+  303       left: 1.5rem;
-+  304       font-size: 1.8rem;
-+  305       color: #fff;
-+  306       cursor: pointer;
-+  307       background: none;
-+  308       border: none;
-+  309     }
-+  310 
-+  311     /* ===== HERO ===== */
-+  312     .hero {
-+  313       min-height: 100vh;
-+  314       display: flex;
-+  315       align-items: center;
-+  316       justify-content: center;
-+  317       text-align: center;
-+  318       padding: 8rem 1.5rem 4rem;
-+  319       position: relative;
-+  320     }
-+  321     .hero-title {
-+  322       font-size: 5rem;
-+  323       font-weight: 900;
-+  324       line-height: 1.1;
-+  325       margin-bottom: 1.2rem;
-+  326     }
-+  327     .hero-sub {
-+  328       color: var(--muted);
-+  329       font-size: 1.15rem;
-+  330       max-width: 520px;
-+  331       margin: 0 auto 2.5rem;
-+  332     }
-+  333     .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-+  334 
-+  335     /* ===== STATS ===== */
-+  336     .stats-grid { text-align: center; }
-+  337     .stat-num {
-+  338       font-size: 2.8rem;
-+  339       font-weight: 900;
-+  340       background: linear-gradient(135deg, var(--accent), var(--accent2));
-+  341       -webkit-background-clip: text;
-+  342       -webkit-text-fill-color: transparent;
-+  343       background-clip: text;
-+  344     }
-+  345     .stat-label { color: var(--muted); font-size: 0.9rem; font-weight: 600; }
-+  346 
-+  347     /* ===== ABOUT ===== */
-+  348     .about-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; align-items: center; }
-+  349     .about-visual {
-+  350       aspect-ratio: 1;
-+  351       border-radius: var(--radius);
-+  352       background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1));
-+  353       display: flex;
-+  354       align-items: center;
-+  355       justify-content: center;
-+  356       font-size: 5rem;
-+  357     }
-+  358     .about-visual i {
-+  359       background: linear-gradient(135deg, var(--accent), var(--accent2));
-+  360       -webkit-background-clip: text;
-+  361       -webkit-text-fill-color: transparent;
-+  362     }
-+  363     .about-text h3 { font-size: 1.7rem; font-weight: 800; margin-bottom: 1.2rem; }
-+  364     .about-text p { color: var(--muted); font-size: 1rem; margin-bottom: 1.2rem; }
-+  365 
-+  366     .skills { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
-+  367     .skill {
-+  368       padding: 0.4rem 1rem;
-+  369       border-radius: 0.6rem;
-+  370       font-size: 0.82rem;
-+  371       font-weight: 700;
-+  372     }
-+  373 
-+  374     /* ===== SERVICES ===== */
-+  375     .service-card { padding: 2.5rem 2rem; text-align: center; }
-+  376     .service-icon {
-+  377       width: 64px;
-+  378       height: 64px;
-+  379       border-radius: 1rem;
-+  380       display: flex;
-+  381       align-items: center;
-+  382       justify-content: center;
-+  383       font-size: 1.4rem;
-+  384       margin: 0 auto 1.5rem;
-+  385     }
-+  386     .service-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.8rem; }
-+  387     .service-card p { color: var(--muted); font-size: 0.92rem; line-height: 1.8; }
-+  388 
-+  389     /* ===== PORTFOLIO ===== */
-+  390     .port-card { overflow: hidden; }
-+  391     .port-img {
-+  392       overflow: hidden;
-+  393       border-radius: var(--radius) var(--radius) 0 0;
-+  394     }
-+  395     .port-img-inner {
-+  396       width: 100%;
-+  397       aspect-ratio: 4/3;
-+  398       display: flex;
-+  399       align-items: center;
-+  400       justify-content: center;
-+  401       font-size: 1.3rem;
-+  402       font-weight: 800;
-+  403       color: rgba(255,255,255,0.7);
-+  404       letter-spacing: 0.05em;
-+  405       transition: transform 0.5s;
-+  406     }
-+  407     .port-card:hover .port-img-inner { transform: scale(1.06); }
-+  408     .port-body { padding: 1.5rem; }
-+  409     .port-tag {
-+  410       display: inline-block;
-+  411       padding: 0.2rem 0.65rem;
-+  412       border-radius: 0.4rem;
-+  413       font-size: 0.72rem;
-+  414       font-weight: 700;
-+  415       margin-bottom: 0.6rem;
-+  416     }
-+  417     .port-body h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
-+  418     .port-body p { color: var(--muted); font-size: 0.88rem; }
-+  419 
-+  420     /* ===== WHY ME ===== */
-+  421     .why-card {
-+  422       padding: 2rem;
-+  423       display: flex;
-+  424       gap: 1.3rem;
-+  425       align-items: flex-start;
-+  426     }
-+  427     .why-icon {
-+  428       width: 52px;
-+  429       height: 52px;
-+  430       border-radius: 0.8rem;
-+  431       display: flex;
-+  432       align-items: center;
-+  433       justify-content: center;
-+  434       font-size: 1.2rem;
-+  435       flex-shrink: 0;
-+  436     }
-+  437     .why-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; }
-+  438     .why-card p { color: var(--muted); font-size: 0.92rem; line-height: 1.8; }
-+  439 
-+  440     /* ===== CTA ===== */
-+  441     .cta-box {
-+  442       padding: 5rem 3rem;
-+  443       text-align: center;
-+  444       overflow: hidden;
-+  445       position: relative;
-+  446     }
-+  447     .cta-box::before {
-+  448       content: '';
-+  449       position: absolute;
-+  450       inset: 0;
-+  451       background: linear-gradient(135deg, rgba(59,130,246,0.04), rgba(139,92,246,0.04));
-+  452       pointer-events: none;
-+  453     }
-+  454     .cta-box h2 { font-size: 2.3rem; font-weight: 900; margin-bottom: 0.8rem; position: relative; }
-+  455     .cta-box p { color: var(--muted); font-size: 1.05rem; margin-bottom: 2rem; position: relative; }
-+  456 
-+  457     /* ===== CONTACT ===== */
-+  458     .contact-card {
-+  459       display: flex;
-+  460       align-items: center;
-+  461       gap: 1.2rem;
-+  462       padding: 1.5rem 2rem;
-+  463     }
-+  464     .contact-icon {
-+  465       width: 48px;
-+  466       height: 48px;
-+  467       border-radius: 0.7rem;
-+  468       display: flex;
-+  469       align-items: center;
-+  470       justify-content: center;
-+  471       font-size: 1.3rem;
-+  472       flex-shrink: 0;
-+  473     }
-+  474     .contact-card .label { font-weight: 700; font-size: 1rem; }
-+  475     .contact-card .sub { color: var(--muted); font-size: 0.82rem; }
-+  476 
-+  477     /* ===== FOOTER ===== */
-+  478     .footer {
-+  479       border-top: 1px solid rgba(255,255,255,0.04);
-+  480       padding: 2rem 0;
-+  481     }
-+  482     .footer-inner {
-+  483       display: flex;
-+  484       justify-content: space-between;
-+  485       align-items: center;
-+  486       flex-wrap: wrap;
-+  487       gap: 1rem;
-+  488     }
-+  489     .footer-copy { color: var(--muted); font-size: 0.82rem; }
-+  490     .footer-socials { display: flex; gap: 1rem; }
-+  491     .footer-socials a {
-+  492       color: var(--muted);
-+  493       font-size: 1.15rem;
-+  494       transition: color 0.3s;
-+  495     }
-+  496     .footer-socials a:hover { color: var(--accent); }
-+  497 
-+  498     /* ===== CANVAS BG ===== */
-+  499     #bgCanvas {
-+  500       position: fixed;
-+  501       top: 0;
-+  502       left: 0;
-+  503       width: 100%;
-+  504       height: 100%;
-+  505       z-index: -1;
-+  506       pointer-events: none;
-+  507     }
-+  508 
-+  509     /* ===== RESPONSIVE ===== */
-+  510     @media (max-width: 900px) {
-+  511       .grid-3 { grid-template-columns: 1fr; }
-+  512       .grid-4 { grid-template-columns: repeat(2, 1fr); }
-+  513       .grid-2 { grid-template-columns: 1fr; }
-+  514       .about-grid { grid-template-columns: 1fr; }
-+  515       .nav-links { display: none; }
-+  516       .nav-cta { display: none !important; }
-+  517       .hamburger { display: flex; }
-+  518       .hero-title { font-size: 3.2rem; }
-+  519       .section-title { font-size: 2rem; }
-+  520       .section { padding: 5rem 0; }
-+  521       .hero { padding-top: 6rem; }
-+  522       .cta-box { padding: 3rem 1.5rem; }
-+  523     }
-+  524 
-+  525     @media (max-width: 500px) {
-+  526       .grid-4 { grid-template-columns: 1fr 1fr; }
-+  527       .hero-title { font-size: 2.6rem; }
-+  528       .stat-num { font-size: 2.2rem; }
-+  529     }
-+  530   </style>
-+  531 </head>
-+  532 
-+  533 <body>
-+  534 
-+  535   <!-- Background Canvas -->
-+  536   <canvas id="bgCanvas"></canvas>
-+  537 
-+  538   <!-- Mobile Menu -->
-+  539   <div class="mobile-menu" id="mobileMenu">
-+  540     <button class="mobile-close" id="mobileClose" aria-label="Close menu">
-+  541       <i class="fas fa-times"></i>
-+  542     </button>
-+  543     <a href="#home" class="mob-link">الرئيسية</a>
-+  544     <a href="#about" class="mob-link">عني</a>
-+  545     <a href="#services" class="mob-link">خدماتي</a>
-+  546     <a href="#work" class="mob-link">أعمالي</a>
-+  547     <a href="#why" class="mob-link">لماذا أنا</a>
-+  548     <a href="#contact" class="mob-link">تواصل</a>
-+  549   </div>
-+  550 
-+  551   <!-- Navbar -->
-+  552   <nav class="navbar" id="navbar">
-+  553     <div class="nav-inner glass">
-+  554       <a href="#home" class="logo">
-+  555         <div class="logo-icon">ك</div>
-+  556         <span class="logo-text">KARAM</span>
-+  557       </a>
-+  558       <div class="nav-links">
-+  559         <a href="#home" class="nav-link">الرئيسية</a>
-+  560         <a href="#about" class="nav-link">عني</a>
-+  561         <a href="#services" class="nav-link">خدماتي</a>
-+  562         <a href="#work" class="nav-link">أعمالي</a>
-+  563         <a href="#why" class="nav-link">لماذا أنا</a>
-+  564         <a href="#contact" class="nav-link">تواصل</a>
-+  565       </div>
-+  566       <div style="display:flex;align-items:center;gap:0.8rem;">
-+  567         <a href="#contact" class="btn btn-fill nav-cta">ابدأ مشروعك</a>
-+  568         <button class="hamburger" id="hamburger" aria-label="Open menu">
-+  569           <span></span><span></span><span></span>
-+  570         </button>
-+  571       </div>
-+  572     </div>
-+  573   </nav>
-+  574 
-+  575   <!-- ===== HERO ===== -->
-+  576   <section class="hero" id="home">
-+  577     <div class="glow" style="background:var(--accent);top:15%;right:8%;"></div>
-+  578     <div class="glow" style="background:var(--accent2);bottom:15%;left:8%;"></div>
-+  579     <div class="reveal">
-+  580       <div class="tag">مصمم جرافيك &bull; مبدع رقمي</div>
-+  581       <h1 class="hero-title grad-text">كرم</h1>
-+  582       <p class="hero-sub">
-+  583         أحوّل الأفكار إلى تجارب بصرية مستقبلية تتفاعل مع الزائر وتترك أثراً لا يُنسى
-+  584       </p>
-+  585       <div class="divider" style="margin-bottom:2.5rem;"></div>
-+  586       <div class="hero-btns">
-+  587         <a href="#work" class="btn btn-fill">
-+  588           <span>استعرض أعمالي</span>
-+  589           <i class="fas fa-arrow-left"></i>
-+  590         </a>
-+  591         <a href="#contact" class="btn btn-ghost">تواصل معي</a>
-+  592       </div>
-+  593     </div>
-+  594   </section>
-+  595 
-+  596   <!-- ===== STATS ===== -->
-+  597   <section style="padding:3rem 0;">
-+  598     <div class="container reveal">
-+  599       <div class="glass" style="padding:2.5rem;">
-+  600         <div class="grid-4 stats-grid">
-+  601           <div>
-+  602             <div class="stat-num">+50</div>
-+  603             <div class="stat-label">مشروع منجز</div>
-+  604           </div>
-+  605           <div>
-+  606             <div class="stat-num">+30</div>
-+  607             <div class="stat-label">عميل سعيد</div>
-+  608           </div>
-+  609           <div>
-+  610             <div class="stat-num">+3</div>
-+  611             <div class="stat-label">سنوات خبرة</div>
-+  612           </div>
-+  613           <div>
-+  614             <div class="stat-num">&infin;</div>
-+  615             <div class="stat-label">شغف وإبداع</div>
-+  616           </div>
-+  617         </div>
-+  618       </div>
-+  619     </div>
-+  620   </section>
-+  621 
-+  622   <!-- ===== ABOUT ===== -->
-+  623   <section class="section" id="about">
-+  624     <div class="glow" style="background:var(--accent2);top:0;left:15%;"></div>
-+  625     <div class="container reveal">
-+  626       <div class="section-header">
-+  627         <div class="tag">تعرّف عليّ</div>
-+  628         <h2 class="section-title">مصمم من المستقبل</h2>
-+  629         <div class="divider"></div>
-+  630       </div>
-+  631       <div class="about-grid">
-+  632         <div class="glass" style="padding:2rem;">
-+  633           <div class="about-visual">
-+  634             <i class="fas fa-palette"></i>
-+  635           </div>
-+  636         </div>
-+  637         <div class="about-text">
-+  638           <h3>أبني تجارب رقمية حية</h3>
-+  639           <p>
-+  640             أدمج الإبداع والتقنية في كل مشروع لأجعل التصميم ينبض بالحياة.
-+  641             أعمل على تحويل الأفكار المعقدة إلى هويات بصرية بسيطة وقوية تتحدث عن علامتك التجارية.
-+  642           </p>
-+  643           <p>
-+  644             رحلتي في التصميم بدأت من شغف حقيقي بتحويل المفاهيم إلى تجارب بصرية مؤثرة.
-+  645             أؤمن أن كل علامة تجارية تستحق هوية فريدة تعكس قيمها ورؤيتها.
-+  646           </p>
-+  647           <div class="skills">
-+  648             <span class="skill" style="background:rgba(59,130,246,0.1);color:var(--accent);border:1px solid rgba(59,130,246,0.1);">Photoshop</span>
-+  649             <span class="skill" style="background:rgba(139,92,246,0.1);color:var(--accent2);border:1px solid rgba(139,92,246,0.1);">Illustrator</span>
-+  650             <span class="skill" style="background:rgba(236,72,153,0.1);color:var(--pink);border:1px solid rgba(236,72,153,0.1);">Figma</span>
-+  651             <span class="skill" style="background:rgba(16,185,129,0.1);color:var(--green);border:1px solid rgba(16,185,129,0.1);">After Effects</span>
-+  652             <span class="skill" style="background:rgba(245,158,11,0.1);color:var(--amber);border:1px solid rgba(245,158,11,0.1);">Blender</span>
-+  653           </div>
-+  654         </div>
-+  655       </div>
-+  656     </div>
-+  657   </section>
-+  658 
-+  659   <!-- ===== SERVICES ===== -->
-+  660   <section class="section" id="services">
-+  661     <div class="glow" style="background:var(--accent);bottom:5%;right:5%;"></div>
-+  662     <div class="container reveal">
-+  663       <div class="section-header">
-+  664         <div class="tag">ما أقدمه</div>
-+  665         <h2 class="section-title">خدماتي</h2>
-+  666         <p class="section-desc">حلول تصميمية متكاملة تأخذ علامتك التجارية إلى مستوى آخر</p>
-+  667       </div>
-+  668       <div class="grid-3">
-+  669         <div class="glass service-card card-hover">
-+  670           <div class="service-icon" style="background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(139,92,246,0.12));color:var(--accent);">
-+  671             <i class="fas fa-fingerprint"></i>
-+  672           </div>
-+  673           <h3>تصميم هوية بصرية</h3>
-+  674           <p>تحويل أفكارك إلى هوية بصرية متناسقة وجذابة تعبر عن جوهر علامتك التجارية وتميزها عن المنافسين.</p>
-+  675         </div>
-+  676         <div class="glass service-card card-hover">
-+  677           <div class="service-icon" style="background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(236,72,153,0.12));color:var(--accent2);">
-+  678             <i class="fas fa-wand-magic-sparkles"></i>
-+  679           </div>
-+  680           <h3>تجارب تفاعلية</h3>
-+  681           <p>تصميم واجهات تفاعلية عصرية تخلق تجربة استثنائية للمستخدم وتترك انطباعاً بصرياً مؤثراً.</p>
-+  682         </div>
-+  683         <div class="glass service-card card-hover">
-+  684           <div class="service-icon" style="background:linear-gradient(135deg,rgba(16,185,129,0.12),rgba(59,130,246,0.12));color:var(--green);">
-+  685             <i class="fas fa-rocket"></i>
-+  686           </div>
-+  687           <h3>براند مستقبلي</h3>
-+  688           <p>خلق هوية مبتكرة للعلامات التجارية تتخطى التقليدي وتأخذها إلى البعد الرقمي المستقبلي.</p>
-+  689         </div>
-+  690       </div>
-+  691     </div>
-+  692   </section>
-+  693 
-+  694   <!-- ===== PORTFOLIO ===== -->
-+  695   <section class="section" id="work">
-+  696     <div class="glow" style="background:var(--pink);top:25%;left:5%;"></div>
-+  697     <div class="container reveal">
-+  698       <div class="section-header">
-+  699         <div class="tag">معرض الأعمال</div>
-+  700         <h2 class="section-title">أعمالي المختارة</h2>
-+  701         <p class="section-desc">مجموعة من أبرز المشاريع التي عملت عليها</p>
-+  702       </div>
-+  703       <div class="grid-3">
-+  704         <!-- Card 1 -->
-+  705         <div class="glass port-card card-hover">
-+  706           <div class="port-img">
-+  707             <div class="port-img-inner" style="background:linear-gradient(135deg,#0f172a,#1e3a5f);">
-+  708               <span><i class="fas fa-bolt" style="margin-left:0.5rem;"></i> ENERGY BRAND</span>
-+  709             </div>
-+  710           </div>
-+  711           <div class="port-body">
-+  712             <span class="port-tag" style="background:rgba(59,130,246,0.1);color:var(--accent);">هوية بصرية</span>
-+  713             <h3>هوية طاقية</h3>
-+  714             <p>تجربة تصميمية مبتكرة للعلامات التجارية في قطاع الطاقة المتجددة.</p>
-+  715           </div>
-+  716         </div>
-+  717         <!-- Card 2 -->
-+  718         <div class="glass port-card card-hover">
-+  719           <div class="port-img">
-+  720             <div class="port-img-inner" style="background:linear-gradient(135deg,#1a0a2e,#2d1b69);">
-+  721               <span><i class="fas fa-brain" style="margin-left:0.5rem;"></i> AI EXPERIENCE</span>
-+  722             </div>
-+  723           </div>
-+  724           <div class="port-body">
-+  725             <span class="port-tag" style="background:rgba(139,92,246,0.1);color:var(--accent2);">تفاعلي</span>
-+  726             <h3>تجربة AI بصرية</h3>
-+  727             <p>تصميم تفاعلي قائم على الذكاء الاصطناعي لشركة تقنية ناشئة.</p>
-+  728           </div>
-+  729         </div>
-+  730         <!-- Card 3 -->
-+  731         <div class="glass port-card card-hover">
-+  732           <div class="port-img">
-+  733             <div class="port-img-inner" style="background:linear-gradient(135deg,#2a0a1a,#6b213f);">
-+  734               <span><i class="fas fa-gem" style="margin-left:0.5rem;"></i> FUTURE BRAND</span>
-+  735             </div>
-+  736           </div>
-+  737           <div class="port-body">
-+  738             <span class="port-tag" style="background:rgba(236,72,153,0.1);color:var(--pink);">براند</span>
-+  739             <h3>براند من بعد آخر</h3>
-+  740             <p>تحويل الهوية التقليدية إلى عالم رقمي مستقبلي لعلامة فاخرة.</p>
-+  741           </div>
-+  742         </div>
-+  743       </div>
-+  744     </div>
-+  745   </section>
-+  746 
-+  747   <!-- ===== WHY ME ===== -->
-+  748   <section class="section" id="why">
-+  749     <div class="glow" style="background:var(--accent2);bottom:15%;right:10%;"></div>
-+  750     <div class="container reveal">
-+  751       <div class="section-header">
-+  752         <div class="tag">المميزات</div>
-+  753         <h2 class="section-title">لماذا التعامل معي؟</h2>
-+  754         <p class="section-desc">أقدم قيمة حقيقية في كل مشروع أعمل عليه</p>
-+  755       </div>
-+  756       <div class="grid-2">
-+  757         <div class="glass why-card card-hover">
-+  758           <div class="why-icon" style="background:linear-gradient(135deg,rgba(59,130,246,0.12),rgba(59,130,246,0.04));color:var(--accent);">
-+  759             <i class="fas fa-lightbulb"></i>
-+  760           </div>
-+  761           <div>
-+  762             <h3>إبداع بلا حدود</h3>
-+  763             <p>أفكار مبتكرة وتصاميم فريدة تميز علامتك عن المنافسين وتخلق هوية لا تُنسى.</p>
-+  764           </div>
-+  765         </div>
-+  766         <div class="glass why-card card-hover">
-+  767           <div class="why-icon" style="background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(139,92,246,0.04));color:var(--accent2);">
-+  768             <i class="fas fa-clock"></i>
-+  769           </div>
-+  770           <div>
-+  771             <h3>التزام بالمواعيد</h3>
-+  772             <p>أحترم وقتك وأسلّم المشاريع في الموعد المحدد مع الحفاظ على أعلى مستوى جودة.</p>
-+  773           </div>
-+  774         </div>
-+  775         <div class="glass why-card card-hover">
-+  776           <div class="why-icon" style="background:linear-gradient(135deg,rgba(16,185,129,0.12),rgba(16,185,129,0.04));color:var(--green);">
-+  777             <i class="fas fa-comments"></i>
-+  778           </div>
-+  779           <div>
-+  780             <h3>تواصل مستمر</h3>
-+  781             <p>أبقيك على اطلاع دائم بمراحل العمل وأستمع لملاحظاتك لتحقيق رؤيتك بدقة.</p>
-+  782           </div>
-+  783         </div>
-+  784         <div class="glass why-card card-hover">
-+  785           <div class="why-icon" style="background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(245,158,11,0.04));color:var(--amber);">
-+  786             <i class="fas fa-star"></i>
-+  787           </div>
-+  788           <div>
-+  789             <h3>جودة استثنائية</h3>
-+  790             <p>أهتم بأدق التفاصيل في كل مشروع لأضمن نتيجة نهائية تفوق التوقعات.</p>
-+  791           </div>
-+  792         </div>
-+  793       </div>
-+  794     </div>
-+  795   </section>
-+  796 
-+  797   <!-- ===== CTA ===== -->
-+  798   <section style="padding:4rem 0;">
-+  799     <div class="container reveal">
-+  800       <div class="glass cta-box">
-+  801         <h2>عندك مشروع؟</h2>
-+  802         <p>خلنا نحول فكرتك إلى واقع بصري مذهل</p>
-+  803         <a href="#contact" class="btn btn-fill" style="position:relative;">
-+  804           <span>ابدأ الآن</span>
-+  805           <i class="fas fa-arrow-left"></i>
-+  806         </a>
-+  807       </div>
-+  808     </div>
-+  809   </section>
-+  810 
-+  811   <!-- ===== CONTACT ===== -->
-+  812   <section class="section" id="contact">
-+  813     <div class="glow" style="background:var(--accent);top:10%;left:25%;"></div>
-+  814     <div class="container reveal">
-+  815       <div class="section-header">
-+  816         <div class="tag">تواصل</div>
-+  817         <h2 class="section-title">تواصل معي</h2>
-+  818         <p class="section-desc">جاهز لبدء مشروعك؟ تواصل معي عبر أي من القنوات التالية</p>
-+  819       </div>
-+  820       <div class="grid-2" style="max-width:600px;margin:0 auto;">
-+  821         <a href="https://wa.me/9647511672958" target="_blank" class="glass contact-card card-hover">
-+  822           <div class="contact-icon" style="background:rgba(37,211,102,0.1);color:#25d366;">
-+  823             <i class="fab fa-whatsapp"></i>
-+  824           </div>
-+  825           <div>
-+  826             <div class="label">WhatsApp</div>
-+  827             <div class="sub">راسلني مباشرة</div>
-+  828           </div>
-+  829         </a>
-+  830         <a href="https://instagram.com/23.iqk" target="_blank" class="glass contact-card card-hover">
-+  831           <div class="contact-icon" style="background:linear-gradient(135deg,rgba(228,64,95,0.1),rgba(181,70,209,0.1));color:#e4405f;">
-+  832             <i class="fab fa-instagram"></i>
-+  833           </div>
-+  834           <div>
-+  835             <div class="label">Instagram</div>
-+  836             <div class="sub">@23.iqk</div>
-+  837           </div>
-+  838         </a>
-+  839       </div>
-+  840     </div>
-+  841   </section>
-+  842 
-+  843   <!-- ===== FOOTER ===== -->
-+  844   <footer class="footer">
-+  845     <div class="container">
-+  846       <div class="footer-inner">
-+  847         <div class="logo">
-+  848           <div class="logo-icon" style="width:30px;height:30px;font-size:0.8rem;">ك</div>
-+  849           <span style="font-weight:700;font-size:0.9rem;">KARAM PORTAL LAB</span>
-+  850         </div>
-+  851         <span class="footer-copy">&copy; 2040 &mdash; جميع الحقوق محفوظة</span>
-+  852         <div class="footer-socials">
-+  853           <a href="https://wa.me/9647511672958" target="_blank" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-+  854           <a href="https://instagram.com/23.iqk" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-+  855         </div>
-+  856       </div>
-+  857     </div>
-+  858   </footer>
-+  859 
-+  860   <!-- ===== SCRIPTS ===== -->
-+  861   <script>
-+  862     // ---------- MOBILE MENU ----------
-+  863     var hamburger = document.getElementById('hamburger');
-+  864     var mobileMenu = document.getElementById('mobileMenu');
-+  865     var mobileClose = document.getElementById('mobileClose');
-+  866     var mobLinks = document.querySelectorAll('.mob-link');
-+  867 
-+  868     hamburger.addEventListener('click', function() {
-+  869       mobileMenu.classList.add('open');
-+  870       document.body.style.overflow = 'hidden';
-+  871     });
-+  872     mobileClose.addEventListener('click', closeMenu);
-+  873     mobLinks.forEach(function(link) { link.addEventListener('click', closeMenu); });
-+  874 
-+  875     function closeMenu() {
-+  876       mobileMenu.classList.remove('open');
-+  877       document.body.style.overflow = '';
-+  878     }
-+  879 
-+  880     // ---------- NAVBAR SCROLL ----------
-+  881     var navbar = document.getElementById('navbar');
-+  882     window.addEventListener('scroll', function() {
-+  883       if (window.scrollY > 60) {
-+  884         navbar.classList.add('scrolled');
-+  885       } else {
-+  886         navbar.classList.remove('scrolled');
-+  887       }
-+  888     });
-+  889 
-+  890     // ---------- ACTIVE NAV LINK ----------
-+  891     var sections = document.querySelectorAll('section[id]');
-+  892     var navLinksAll = document.querySelectorAll('.nav-link');
-+  893 
-+  894     window.addEventListener('scroll', function() {
-+  895       var current = '';
-+  896       sections.forEach(function(sec) {
-+  897         var top = sec.offsetTop - 250;
-+  898         if (window.pageYOffset >= top) {
-+  899           current = sec.getAttribute('id');
-+  900         }
-+  901       });
-+  902       navLinksAll.forEach(function(link) {
-+  903         link.classList.remove('active');
-+  904         if (link.getAttribute('href') === '#' + current) {
-+  905           link.classList.add('active');
-+  906         }
-+  907       });
-+  908     });
-+  909 
-+  910     // ---------- SCROLL REVEAL ----------
-+  911     var revealObserver = new IntersectionObserver(function(entries) {
-+  912       entries.forEach(function(entry) {
-+  913         if (entry.isIntersecting) {
-+  914           entry.target.classList.add('show');
-+  915         }
-+  916       });
-+  917     }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-+  918 
-+  919     document.querySelectorAll('.reveal').forEach(function(el) {
-+  920       revealObserver.observe(el);
-+  921     });
-+  922 
-+  923     // ---------- PARTICLE BACKGROUND ----------
-+  924     (function() {
-+  925       var canvas = document.getElementById('bgCanvas');
-+  926       var ctx = canvas.getContext('2d');
-+  927       var particles = [];
-+  928       var mouseX = 0;
-+  929       var mouseY = 0;
-+  930       var count = 90;
-+  931 
-+  932       function resize() {
-+  933         canvas.width = window.innerWidth;
-+  934         canvas.height = window.innerHeight;
-+  935       }
-+  936       resize();
-+  937       window.addEventListener('resize', resize);
-+  938 
-+  939       document.addEventListener('mousemove', function(e) {
-+  940         mouseX = e.clientX;
-+  941         mouseY = e.clientY;
-+  942       });
-+  943 
-+  944       for (var i = 0; i < count; i++) {
-+  945         particles.push({
-+  946           x: Math.random() * canvas.width,
-+  947           y: Math.random() * canvas.height,
-+  948           vx: (Math.random() - 0.5) * 0.4,
-+  949           vy: (Math.random() - 0.5) * 0.4,
-+  950           r: Math.random() * 2 + 0.5,
-+  951           o: Math.random() * 0.4 + 0.1
-+  952         });
-+  953       }
-+  954 
-+  955       function draw() {
-+  956         ctx.clearRect(0, 0, canvas.width, canvas.height);
-+  957 
-+  958         for (var i = 0; i < particles.length; i++) {
-+  959           var p = particles[i];
-+  960           p.x += p.vx;
-+  961           p.y += p.vy;
-+  962 
-+  963           if (p.x < 0) p.x = canvas.width;
-+  964           if (p.x > canvas.width) p.x = 0;
-+  965           if (p.y < 0) p.y = canvas.height;
-+  966           if (p.y > canvas.height) p.y = 0;
-+  967 
-+  968           ctx.beginPath();
-+  969           ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-+  970           ctx.fillStyle = 'rgba(59,130,246,' + p.o + ')';
-+  971           ctx.fill();
-+  972 
-+  973           // Connect nearby particles
-+  974           for (var j = i + 1; j < particles.length; j++) {
-+  975             var p2 = particles[j];
-+  976             var dx = p.x - p2.x;
-+  977             var dy = p.y - p2.y;
-+  978             var dist = Math.sqrt(dx * dx + dy * dy);
-+  979             if (dist < 150) {
-+  980               ctx.beginPath();
-+  981               ctx.moveTo(p.x, p.y);
-+  982               ctx.lineTo(p2.x, p2.y);
-+  983               ctx.strokeStyle = 'rgba(59,130,246,' + (0.06 * (1 - dist / 150)) + ')';
-+  984               ctx.lineWidth = 0.5;
-+  985               ctx.stroke();
-+  986             }
-+  987           }
-+  988 
-+  989           // Mouse interaction
-+  990           var dxm = p.x - mouseX;
-+  991           var dym = p.y - mouseY;
-+  992           var distm = Math.sqrt(dxm * dxm + dym * dym);
-+  993           if (distm < 180) {
-+  994             ctx.beginPath();
-+  995             ctx.moveTo(p.x, p.y);
-+  996             ctx.lineTo(mouseX, mouseY);
-+  997             ctx.strokeStyle = 'rgba(139,92,246,' + (0.12 * (1 - distm / 180)) + ')';
-+  998             ctx.lineWidth = 0.6;
-+  999             ctx.stroke();
-+ 1000           }
-+ 1001         }
-+ 1002 
-+ 1003         requestAnimationFrame(draw);
-+ 1004       }
-+ 1005       draw();
-+ 1006     })();
-+ 1007   </script>
-+ 1008 
-+ 1009 </body>
-+ 1010 </html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>كرم | مصمم جرافيك 2040</title>
+  <meta name="description" content="كرم - مصمم جرافيك محترف، تصميم هويات بصرية وتجارب تفاعلية مستقبلية">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #06070e;
+      --bg2: #0c0e1a;
+      --text: #e8eaed;
+      --muted: #8b8fa3;
+      --accent: #3b82f6;
+      --accent2: #8b5cf6;
+      --pink: #ec4899;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --card: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.06);
+      --radius: 1.25rem;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.85;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    img { max-width: 100%; display: block; }
+    ul { list-style: none; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+    /* ===== UTILITIES ===== */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+    .section { padding: 8rem 0; position: relative; }
+    .section-header { text-align: center; margin-bottom: 4rem; }
+
+    .tag {
+      display: inline-block;
+      padding: 0.35rem 1.2rem;
+      border-radius: 2rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      background: rgba(59,130,246,0.08);
+      color: var(--accent);
+      border: 1px solid rgba(59,130,246,0.12);
+      margin-bottom: 1.2rem;
+    }
+
+    .section-title {
+      font-size: 2.6rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 560px;
+      margin: 0.8rem auto 0;
+    }
+
+    .divider {
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 3px;
+      margin: 1.2rem auto 0;
+    }
+
+    .grad-text {
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899, #3b82f6);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradMove 5s ease infinite;
+    }
+    @keyframes gradMove {
+      0%,100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .glass {
+      background: var(--card);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    .glow {
+      position: absolute;
+      width: 380px;
+      height: 380px;
+      border-radius: 50%;
+      filter: blur(130px);
+      opacity: 0.1;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.9rem 2.2rem;
+      border-radius: 0.85rem;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .btn:hover { transform: translateY(-3px); }
+
+    .btn-fill {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+    }
+    .btn-fill:hover { box-shadow: 0 12px 35px rgba(59,130,246,0.3); }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--accent);
+      border: 2px solid rgba(59,130,246,0.25);
+    }
+    .btn-ghost:hover {
+      background: rgba(59,130,246,0.08);
+      border-color: var(--accent);
+    }
+
+    .card-hover { transition: transform 0.35s, box-shadow 0.35s, border-color 0.35s; }
+    .card-hover:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(59,130,246,0.1);
+      border-color: rgba(59,130,246,0.15);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(35px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 1rem 0;
+      transition: background 0.3s;
+    }
+    .navbar.scrolled .nav-inner {
+      background: rgba(6,7,14,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.7rem 1.8rem;
+      border-radius: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 0.6rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1rem;
+      color: #fff;
+    }
+    .logo-text { font-weight: 900; font-size: 1.1rem; letter-spacing: -0.02em; }
+
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .nav-link {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.92rem;
+      position: relative;
+      transition: color 0.3s;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      right: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.3s;
+    }
+    .nav-link:hover { color: #fff; }
+    .nav-link:hover::after { width: 100%; }
+    .nav-link.active { color: #fff; }
+    .nav-link.active::after { width: 100%; }
+
+    .nav-cta { padding: 0.55rem 1.4rem; font-size: 0.88rem; border-radius: 0.6rem; }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0.4rem;
+    }
+    .hamburger span {
+      width: 22px;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(6,7,14,0.96);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      color: #fff;
+      font-size: 1.4rem;
+      font-weight: 700;
+      transition: color 0.3s;
+    }
+    .mobile-close {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      font-size: 1.8rem;
+      color: #fff;
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 8rem 1.5rem 4rem;
+      position: relative;
+    }
+    .hero-title {
+      font-size: 5rem;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 1.2rem;
+    }
+    .hero-sub {
+      color: var(--muted);
+      font-size: 1.15rem;
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* ===== STATS ===== */
+    .stats-grid { text-align: center; }
+    .stat-num {
+      font-size: 2.8rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-label { color: var(--muted); font-size: 0.9rem; font-weight: 600; }
+
+    /* ===== ABOUT ===== */
+    .about-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 3rem; align-items: center; }
+    .about-visual {
+      aspect-ratio: 1;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 5rem;
+    }
+    .about-visual i {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .about-text h3 { font-size: 1.7rem; font-weight: 800; margin-bottom: 1.2rem; }
+    .about-text p { color: var(--muted); font-size: 1rem; margin-bottom: 1.2rem; }
+
+    .skills { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
+    .skill {
+      padding: 0.4rem 1rem;
+      border-radius: 0.6rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    /* ===== SERVICES ===== */
+    .service-card { padding: 2.5rem 2rem; text-align: center; }
+    .service-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin: 0 auto 1.5rem;
+    }
+    .service-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 0.8rem; }
+    .service-card p { color: var(--muted); font-size: 0.92rem; line-height: 1.8; }
+
+    /* ===== PORTFOLIO ===== */
+    .port-card { overflow: hidden; }
+    .port-img { overflow: hidden; border-radius: var(--radius) var(--radius) 0 0; }
+    .port-img-inner {
+      width: 100%;
+      aspect-ratio: 4/3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: rgba(255,255,255,0.7);
+      transition: transform 0.5s;
+    }
+    .port-card:hover .port-img-inner { transform: scale(1.06); }
+    .port-body { padding: 1.5rem; }
+    .port-tag {
+      display: inline-block;
+      padding: 0.2rem 0.65rem;
+      border-radius: 0.4rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+    .port-body h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .port-body p { color: var(--muted); font-size: 0.88rem; }
+
+    /* ===== WHY ME ===== */
+    .why-card { padding: 2rem; display: flex; gap: 1.3rem; align-items: flex-start; }
+    .why-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .why-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .why-card p { color: var(--muted); font-size: 0.92rem; line-height: 1.8; }
+
+    /* ===== CONTACT ===== */
+    .contact-card { display: flex; align-items: center; gap: 1.2rem; padding: 1.5rem 2rem; }
+    .contact-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .contact-card .label { font-weight: 700; font-size: 1rem; }
+    .contact-card .sub { color: var(--muted); font-size: 0.82rem; }
+
+    /* ===== FOOTER ===== */
+    .footer { border-top: 1px solid rgba(255,255,255,0.04); padding: 2rem 0; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+    .footer-copy { color: var(--muted); font-size: 0.82rem; }
+    .footer-socials { display: flex; gap: 1rem; }
+    .footer-socials a { color: var(--muted); font-size: 1.15rem; transition: color 0.3s; }
+    .footer-socials a:hover { color: var(--accent); }
+
+    #bgCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .grid-3, .grid-2, .about-grid { grid-template-columns: 1fr; }
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+      .nav-links, .nav-cta { display: none !important; }
+      .hamburger { display: flex; }
+      .hero-title { font-size: 3.2rem; }
+      .section-title { font-size: 2rem; }
+      .section { padding: 5rem 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="bgCanvas"></canvas>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" id="mobileClose"><i class="fas fa-times"></i></button>
+    <a href="#home" class="mob-link">الرئيسية</a>
+    <a href="#about" class="mob-link">عني</a>
+    <a href="#services" class="mob-link">خدماتي</a>
+    <a href="#work" class="mob-link">أعمالي</a>
+    <a href="#contact" class="mob-link">تواصل</a>
+  </div>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner glass">
+      <a href="#home" class="logo">
+        <div class="logo-icon">ك</div>
+        <span class="logo-text">KARAM</span>
+      </a>
+      <div class="nav-links">
+        <a href="#home" class="nav-link">الرئيسية</a>
+        <a href="#about" class="nav-link">عني</a>
+        <a href="#services" class="nav-link">خدماتي</a>
+        <a href="#work" class="nav-link">أعمالي</a>
+        <a href="#contact" class="nav-link">تواصل</a>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.8rem;">
+        <a href="#contact" class="btn btn-fill nav-cta">ابدأ مشروعك</a>
+        <button class="hamburger" id="hamburger">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero" id="home">
+    <div class="glow" style="background:var(--accent);top:15%;right:8%;"></div>
+    <div class="reveal">
+      <div class="tag">مصمم جرافيك • مبدع رقمي</div>
+      <h1 class="hero-title grad-text">كرم</h1>
+      <p class="hero-sub">أحوّل الأفكار إلى تجارب بصرية مستقبلية تتفاعل مع الزائر وتترك أثراً لا يُنسى</p>
+      <div class="hero-btns">
+        <a href="#work" class="btn btn-fill">استعرض أعمالي</a>
+        <a href="#contact" class="btn btn-ghost">تواصل معي</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="work">
+    <div class="container reveal">
+      <div class="section-header">
+        <h2 class="section-title">أعمالي المختارة</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="grid-3">
+        <div class="glass port-card card-hover">
+          <div class="port-img">
+            <div class="port-img-inner" style="background:#1e3a5f;">ENERGY BRAND</div>
+          </div>
+          <div class="port-body">
+            <h3>هوية طاقية</h3>
+            <p>تصميم مبتكر لقطاع الطاقة.</p>
+          </div>
+        </div>
+        </div>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
+    <div class="container reveal">
+      <div class="section-header">
+        <h2 class="section-title">تواصل معي</h2>
+      </div>
+      <div class="grid-2" style="max-width:600px;margin:0 auto;">
+        <a href="https://wa.me/9647511672958" class="glass contact-card card-hover">
+          <div class="contact-icon" style="color:#25d366;"><i class="fab fa-whatsapp"></i></div>
+          <div><div class="label">WhatsApp</div></div>
+        </a>
+        <a href="https://instagram.com/23.iqk" class="glass contact-card card-hover">
+          <div class="contact-icon" style="color:#e4405f;"><i class="fab fa-instagram"></i></div>
+          <div><div class="label">Instagram</div></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span class="footer-copy">&copy; 2040 كرم - جميع الحقوق محفوظة</span>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile Menu Logic
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileClose = document.getElementById('mobileClose');
+
+    hamburger.onclick = () => { mobileMenu.classList.add('open'); };
+    mobileClose.onclick = () => { mobileMenu.classList.remove('open'); };
+
+    // Scroll Reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('show');
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Canvas Background
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.onresize = resize;
+    resize();
+
+    for(let i=0; i<80; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: Math.random() - 0.5,
+        vy: Math.random() - 0.5,
+        r: Math.random() * 2
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0,0,canvas.width, canvas.height);
+      ctx.fillStyle = 'rgba(59,130,246,0.2)';
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if(p.x<0 || p.x>canvas.width) p.vx *= -1;
+        if(p.y<0 || p.y>canvas.height) p.vy *= -1;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+        ctx.fill();
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  </script>
+</body>
+</html>
