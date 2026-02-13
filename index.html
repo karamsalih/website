@@ -9,46 +9,49 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
 
-<!-- Three.js for 3D Neon Effects -->
+<!-- Three.js -->
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
 <style>
 :root {
-  --bg: #0b0c17;
+  --bg-dark: #0b0c17;
+  --bg-light: #fefefe;
+  --text-dark: #e5e7eb;
+  --text-light: #0b0c17;
   --neon: #3b82f6;
   --accent: #8b5cf6;
+  --card-dark: rgba(255,255,255,0.05);
+  --card-light: rgba(0,0,0,0.05);
 }
 
 body {
   margin: 0;
   font-family: 'Cairo', sans-serif;
-  background: var(--bg);
-  color: #e5e7eb;
+  background: var(--bg-dark);
+  color: var(--text-dark);
+  transition: background 0.5s, color 0.5s;
   overflow-x: hidden;
 }
 
 /* Canvas background */
-#bg {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-}
+#bg { position: fixed; inset:0; z-index:-2; }
 
-/* Neon glow */
-.neon-text {
+/* Neon text */
+.neon-text { 
   color: var(--neon);
   text-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon), 0 0 30px var(--accent);
 }
 
-/* Glass effect */
+/* Glass card */
 .glass {
-  background: rgba(255,255,255,0.05);
+  background: var(--card-dark);
   backdrop-filter: blur(25px);
   border-radius: 1.5rem;
   border: 1px solid rgba(255,255,255,0.08);
+  transition: background 0.5s;
 }
 
-/* Cards hover effect */
+/* Portfolio hover effect */
 .portfolio-card {
   transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -75,18 +78,35 @@ body {
   transform: translateX(-100%);
   animation: scan 4s infinite;
 }
-@keyframes scan {
-  to { transform: translateX(100%); }
+@keyframes scan { to { transform: translateX(100%); } }
+
+/* Theme toggle button */
+#themeToggle {
+  position: fixed;
+  top: 20px; right: 20px;
+  z-index: 100;
+  padding: 0.6rem 1.2rem;
+  background: var(--neon);
+  color: white;
+  border-radius: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0 15px var(--neon);
+  transition: all 0.3s;
 }
+#themeToggle:hover { transform: scale(1.1); }
 </style>
 </head>
-<body class="scroll-smooth">
+<body>
 
 <canvas id="bg"></canvas>
 
+<!-- Theme Toggle -->
+<div id="themeToggle">🌞 / 🌙</div>
+
 <header class="fixed top-0 w-full p-6 z-50">
   <div class="max-w-7xl mx-auto flex justify-between items-center glass p-4">
-    <span class="text-neon-text font-black text-xl">@23.iqk</span>
+    <span class="neon-text font-black text-xl">@23.iqk</span>
     <nav class="hidden md:flex gap-8">
       <a href="#home" class="navlink hover:text-blue-400">الرئيسية</a>
       <a href="#about" class="navlink hover:text-blue-400">عني</a>
@@ -111,7 +131,7 @@ body {
     <h2 class="text-5xl font-black neon-text mb-10">مصمم 2040</h2>
     <p class="text-gray-300 leading-relaxed text-lg">
       أبني تجارب رقمية حية تتفاعل مع الزائر وتخلق بعد جديد للهوية البصرية.
-      أعمل على دمج الإبداع والتقنية في كل مشروع لأجعل التصميم ينبض بالحياة.
+      أدمج الإبداع والتقنية في كل مشروع لأجعل التصميم ينبض بالحياة.
     </p>
   </div>
 </section>
@@ -149,7 +169,24 @@ body {
 </footer>
 
 <script>
-/* ---------- Neon Particles Background ---------- */
+/* ---------- Theme Switcher ---------- */
+const themeToggle = document.getElementById('themeToggle');
+let dark = true;
+
+themeToggle.addEventListener('click', () => {
+  dark = !dark;
+  if(dark) {
+    document.body.style.background = 'var(--bg-dark)';
+    document.body.style.color = 'var(--text-dark)';
+    document.querySelectorAll('.glass').forEach(c=>c.style.background='var(--card-dark)');
+  } else {
+    document.body.style.background = 'var(--bg-light)';
+    document.body.style.color = 'var(--text-light)';
+    document.querySelectorAll('.glass').forEach(c=>c.style.background='var(--card-light)');
+  }
+});
+
+/* ---------- Neon Particles ---------- */
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ canvas: bg, alpha:true });
@@ -157,11 +194,9 @@ renderer.setSize(innerWidth, innerHeight);
 camera.position.z = 2;
 
 const particlesGeometry = new THREE.BufferGeometry();
-const particlesCount = 1000;
+const particlesCount = 1200;
 const posArray = new Float32Array(particlesCount*3);
-for(let i=0;i<particlesCount*3;i++) {
-  posArray[i] = (Math.random()-0.5)*10;
-}
+for(let i=0;i<particlesCount*3;i++) posArray[i]=(Math.random()-0.5)*12;
 particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray,3));
 const particlesMaterial = new THREE.PointsMaterial({ color:0x3b82f6, size:0.05, transparent:true });
 const particles = new THREE.Points(particlesGeometry, particlesMaterial);
